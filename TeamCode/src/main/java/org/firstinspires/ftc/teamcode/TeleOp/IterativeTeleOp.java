@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
 
@@ -12,12 +14,14 @@ public class IterativeTeleOp extends OpMode {
 
     //Timer
     ElapsedTime runtime = new ElapsedTime();
+    Drivetrain drivetrain;
 
     @Override
     public void init() {
         //Set timer to 0
         runtime.reset();
         //Code that runs when you hit init
+        drivetrain = new Drivetrain(hardwareMap);
     }
 
     @Override
@@ -28,14 +32,15 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
+        drivetrain.drive();
     }
 
     @Override
     public void stop(){
         //Code that runs when you hit stop
 
-        multTelemetry.addData("Runtime", runtime);
-        multTelemetry.update();
+        telemetry.addData("Runtime", runtime);
+        telemetry.update();
 
     }
 
