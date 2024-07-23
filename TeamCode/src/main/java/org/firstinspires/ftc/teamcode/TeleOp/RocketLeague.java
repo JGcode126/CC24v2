@@ -33,8 +33,8 @@ public class RocketLeague extends OpMode {
     @Override
     public void stop(){
         //Code that runs when you hit stop
-        multTelemetry.addData("Runtime", runtime);
-        multTelemetry.update();
+        telemetry.addData("Runtime", runtime);
+        telemetry.update();
 
     }
 
