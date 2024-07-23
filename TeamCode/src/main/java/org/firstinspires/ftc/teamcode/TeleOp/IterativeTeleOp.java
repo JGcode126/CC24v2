@@ -5,11 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
 
     //Declare Subsystems
-
+    Drivetrain drive;
     //Timer
     ElapsedTime runtime = new ElapsedTime();
 
@@ -28,14 +30,15 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
+        drive.drive(gamepad1.right_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x, 0.5);
     }
 
     @Override
     public void stop(){
         //Code that runs when you hit stop
 
-        multTelemetry.addData("Runtime", runtime);
-        multTelemetry.update();
+        telemetry.addData("Runtime", runtime);
+        telemetry.update();
 
     }
 
