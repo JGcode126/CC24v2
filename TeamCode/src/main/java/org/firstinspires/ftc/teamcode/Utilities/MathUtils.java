@@ -18,6 +18,13 @@ public class MathUtils {
         double alternateTargetDelta = -1 * (360 - simpleTargetDelta);
         return StrictMath.abs(simpleTargetDelta) <= StrictMath.abs(alternateTargetDelta) ? currentAngle - simpleTargetDelta : currentAngle - alternateTargetDelta;
     }
+    public static Point shift(Point p, double shiftAngle){
+        double rawX = p.x;
+        double rawY = p.y;
+        double x = (rawX * Math.cos(Math.toRadians(shiftAngle))) - (rawY * Math.sin(Math.toRadians(shiftAngle)));
+        double y = (rawX * Math.sin(Math.toRadians(shiftAngle))) + (rawY * Math.cos(Math.toRadians(shiftAngle)));
+        return new Point(x, y);
+    }
 
     /*
     public static double closestAngle(double targetAngle, double currentAngle, boolean ticks) {

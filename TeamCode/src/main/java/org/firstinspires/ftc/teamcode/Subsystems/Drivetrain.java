@@ -21,6 +21,7 @@ public class Drivetrain {
     }
 
     //Callable drive functions
+
     public void drive(double drive, double strafe, double turn, double slow){
         if (slow > 0.05) {
             fr.setPower((drive - strafe - turn) * 0.25);
