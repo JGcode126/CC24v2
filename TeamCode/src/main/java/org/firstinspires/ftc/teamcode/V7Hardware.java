@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.yHardware;
+package org.firstinspires.ftc.teamcode;
 
 //hardware variables followed by hardware objects
 
