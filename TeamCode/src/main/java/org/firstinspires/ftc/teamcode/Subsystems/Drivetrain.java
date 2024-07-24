@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
+
 public class Drivetrain {
     //Declare Motors
 DcMotor bl;
@@ -21,10 +23,24 @@ DcMotor fr;
     }
 
     //Callable drive functions
-    public void drive(double drive){
-        bl.setPower(drive);
-        br.setPower(drive);
-        fl.setPower(drive);
-        fr.setPower(drive);
+    public void drive(double drive, double turn, double strafe){
+        bl.setPower(drive + strafe - turn);
+        br.setPower( drive - strafe + turn);
+        fl.setPower(drive - strafe - turn);
+        fr.setPower(drive + strafe + turn);
+    }
+    public void driveDO(double drive, double strafe, double turn, double slow, double heading){
+        Vector2d driveVector = new Vector2d(strafe, drive);
+        Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
+
+        drive = rotatedVector.y;
+        strafe = rotatedVector.x;
+
+        bl.setPower((drive + strafe - turn) * .5);
+        br.setPower(( drive - strafe + turn) * .5);
+        fl.setPower((drive - strafe - turn) * .5);
+        fr.setPower((drive + strafe + turn) * .5);
+
+
     }
 }
