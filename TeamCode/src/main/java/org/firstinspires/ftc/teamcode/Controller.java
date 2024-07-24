@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.yHardware;
+package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.zLibraries.Utilities.MathUtils.distance2D;
+import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.distance2D;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Derivative;
-import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
+import org.firstinspires.ftc.teamcode.Utilities.Vector2d;
 
 public class Controller {
 	
