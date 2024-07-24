@@ -95,4 +95,12 @@ public class MathUtils {
     public static double convertTicks2Inches(double inches){
         return (0.0207 * inches) + 4.38; // Calculated using desmos
     }
+
+    public static Point shift(Point p, double shiftAngle){
+        double rawX = p.x;
+        double rawY = p.y;
+        double x = (rawX * Math.cos(Math.toRadians(shiftAngle))) - (rawY * Math.sin(Math.toRadians(shiftAngle)));
+        double y = (rawX * Math.sin(Math.toRadians(shiftAngle))) + (rawY * Math.cos(Math.toRadians(shiftAngle)));
+        return new Point(x, y);
+    }
 }

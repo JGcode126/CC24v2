@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
+
 public class Drivetrain {
     //Declare Motors
     DcMotor bl;
@@ -26,7 +28,11 @@ public class Drivetrain {
     }
 
     //Callable drive functions
-    public void drive(double drive, double strafe, double turn, double speed){
+    public void driveDO(double drive, double strafe, double turn, double speed, double heading) {
+
+        Vector2d driveVector = new Vector2d(strafe, drive);
+
+        Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
 
         if (speed > .05) {
             bl.setPower((drive - strafe + turn) * .3);
