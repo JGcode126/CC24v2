@@ -32,7 +32,7 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        drivetrain.drive();
+        drivetrain.drive(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x, 0.5);
     }
 
     @Override
