@@ -13,6 +13,15 @@ import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.angleMode.RADIA
 
 public class MathUtils {
 
+
+    public static Point shift(Point p, double shiftAngle) {
+        double rawX = p.x;
+        double rawY = p.y;
+        double x = (rawX * Math.cos(Math.toRadians(shiftAngle))) - (rawY * Math.sin(Math.toRadians(shiftAngle)));
+        double y = (rawX * Math.sin(Math.toRadians(shiftAngle))) + (rawY * Math.cos(Math.toRadians(shiftAngle)));
+        return new Point(x, y);
+    }
+
     public static double closestAngle(double targetAngle, double currentAngle) {
         double simpleTargetDelta = floorMod(Math.round((360 - targetAngle) + currentAngle), 360);
         double alternateTargetDelta = -1 * (360 - simpleTargetDelta);
