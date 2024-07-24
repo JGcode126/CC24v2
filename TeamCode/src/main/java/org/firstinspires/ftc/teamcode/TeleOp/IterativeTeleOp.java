@@ -34,7 +34,7 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        dt.driveForward(gamepad1.left_stick_y);
+        dt.driveForward();
     }
 
     @Override
