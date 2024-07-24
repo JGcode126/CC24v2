@@ -20,11 +20,25 @@ public class Drivetrain {
     }
 
     //Callable drive functions
-    public void driveForward(){
-        fr.setPower(1);
-        fl.setPower(1);
-        br.setPower(1);
-        bl.setPower(1);
-
+    public void drive(double drive){
+        fr.setPower(drive);
+        fl.setPower(drive);
+        br.setPower(drive);
+        bl.setPower(drive);
     }
+
+    public void strafe(double drive) {
+        fl.setPower(drive);
+        bl.setPower(-drive);
+        fr.setPower(-drive);
+        br.setPower(drive);
+    }
+
+    public void turn(double drive) {
+        fl.setPower(drive);
+        bl.setPower(drive);
+        fr.setPower(-drive);
+        br.setPower(-drive);
+    }
+
 }
