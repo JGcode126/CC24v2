@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -15,7 +18,7 @@ public class IterativeTeleOp extends OpMode {
 
     //Declare Subsystems
 
-
+    IMU gyro;
     //Timer
     ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
@@ -24,17 +27,23 @@ public class IterativeTeleOp extends OpMode {
         //Set timer to 0
         runtime.reset();
         dt = new Drivetrain(hardwareMap);
+
+        gyro = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters perameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         //Code that runs when you hit init
     }
 
     @Override
     public void start(){
+        gyro.resetYaw();
         //Code that runs when you hit start
     }
 
     @Override
     public void loop() {
-     dt.drive(gamepad2.left_stick_y, gamepad2.left_stick_x, gamepad2.right_stick_x);
+     dt.driveDO(gamepad2.left_stick_y, gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         //Code that *LOOPS* after you hit start
 
     }
