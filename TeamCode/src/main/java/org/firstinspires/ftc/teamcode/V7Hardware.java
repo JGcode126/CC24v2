@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.yHardware;
+package org.firstinspires.ftc.teamcode;
 
 //hardware variables followed by hardware objects
 
 //DCMotorEx: https://ftctechnh.github.io/ftc_app/doc/javadoc/index.html?com/qualcomm/robotcore/hardware/DcMotorEx.html
 
-import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
+import org.firstinspires.ftc.teamcode.Hardware;
+import org.firstinspires.ftc.teamcode.Utilities.Vector2d;
 
-public class V7Hardware extends Hardware{
+public class V7Hardware extends Hardware {
 
     protected static final String
             verticalEncoder = "verticalEncoder", horizontalEncoder = "horizontalEncoder";

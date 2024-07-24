@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.zLibraries.Utilities;
+package org.firstinspires.ftc.teamcode.Utilities;
 
-import static org.firstinspires.ftc.teamcode.zLibraries.Utilities.TrigExtensions.AngleMode.DEGREES;
+import static org.firstinspires.ftc.teamcode.Utilities.TrigExtensions.AngleMode.DEGREES;
+import static org.firstinspires.ftc.teamcode.Utilities.TrigExtensions.AngleMode.DEGREES;
 import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 
