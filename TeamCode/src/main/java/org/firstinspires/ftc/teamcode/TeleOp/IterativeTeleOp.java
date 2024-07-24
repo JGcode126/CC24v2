@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import android.graphics.Point;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 
@@ -18,6 +21,7 @@ public class IterativeTeleOp extends OpMode {
     //Timer
     ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
+    IMU gyro;
 
     @Override
     public void init() {
@@ -25,23 +29,29 @@ public class IterativeTeleOp extends OpMode {
         runtime.reset();
         dt = new Drivetrain(hardwareMap);
 
+
+        gyro = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+              RevHubOrientationOnRobot.LogoFacingDirection.UP,
+              RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+
+        gyro.initialize(parameters);
         //Code that runs when you hit init
     }
 
     @Override
     public void start(){
+
+        gyro.resetYaw();
         //Code that runs when you hit start
-        dt.drive(gamepad1.right_stick_y);
-        dt.turn(gamepad1.left_stick_x);
-        dt.strafe(gamepad1.right_stick_x);
+
     }
 
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        double drive = MathUtils.shift(gamepad1.right_stick_y, robot.imu.getAngle()).y;
-        double strafe = MathUtils.shift(gamepad1.right_stick_x, robot.imu.getAngle()).x;
-        double turn = gamepad1.left_stick_x;
+        dt.driveDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        //dt.drivenonDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger);
     }
 
     @Override
