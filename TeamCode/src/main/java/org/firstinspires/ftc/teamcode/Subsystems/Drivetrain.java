@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
+
 public class Drivetrain {
     //Declare Motors
     DcMotor motorfr;
@@ -54,4 +56,25 @@ public class Drivetrain {
         motorbl.setPower(-turn);
         motorbr.setPower(turn);
     }
+    public void driveDO(double drive, double strafe, double turn, double slow, double heading){
+        Vector2d driveVector = new Vector2d(strafe, drive);
+        Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
+
+        drive = rotatedVector.y;
+        strafe = rotatedVector.x;
+
+        if(slow> 0.05){
+            motorfl.setPower((drive + strafe + turn) * -0.25);
+            motorfr.setPower((drive + strafe + turn) * -0.25);
+            motorbr.setPower((drive + strafe + turn) * -0.25);
+            motorbl.setPower((drive + strafe + turn) * -0.25);
+        }else {
+            motorbl.setPower((drive + strafe + turn) * -0.75);
+            motorbr.setPower((drive + strafe + turn) * -0.75);
+            motorfl.setPower((drive + strafe + turn) * -0.75);
+            motorfr.setPower((drive + strafe + turn) * -0.75);
+        }
+    }
+
+
 }
