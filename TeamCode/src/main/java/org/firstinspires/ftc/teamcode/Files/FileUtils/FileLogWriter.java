@@ -4,8 +4,9 @@ import android.os.Environment;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import org.firstinspires.ftc.teamcode.zLibraries.Files.FileUtils.
 
-public class FileLogWriter implements LogWriter {
+public class FileLogWriter implements org.firstinspires.ftc.teamcode.zLibraries.Files.FileUtils.LogWriter {
 
     private static final String BASE_FOLDER_NAME = "FIRST";
 

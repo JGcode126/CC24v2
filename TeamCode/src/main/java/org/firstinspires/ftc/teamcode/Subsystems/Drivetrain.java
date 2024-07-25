@@ -35,7 +35,7 @@ public class Drivetrain {
     motorbr.setPower(drivePower);
     motorfl.setPower(drivePower);
     }
-    public void drive00(double drive, double strafe, double turn, double slow, double heading){
+    public void driveDO(double drive, double strafe, double turn, double slow, double heading){
         Vector2d driveVector  = new Vector2d(strafe, drive);
         Vector2d rotatedvector = driveVector.rotate(Math.toRadians(heading));
         drive = rotatedvector.y;
