@@ -43,6 +43,9 @@ public class IterativeTeleOp extends OpMode {
     public void loop() {
         //Code that *LOOPS* after you hit start
         drive.driveDO(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        if (gamepad1.right_trigger <= 0.05) {
+            gyro.resetYaw();
+        }
     }
 
     @Override
