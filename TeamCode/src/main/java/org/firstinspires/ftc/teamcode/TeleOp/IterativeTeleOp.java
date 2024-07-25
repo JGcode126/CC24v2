@@ -20,6 +20,7 @@ public class IterativeTeleOp extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
     IMU gyro;
+    Boolean driverOriented=true;
 
     @Override
     public void init() {
@@ -44,7 +45,12 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        dt.driveDO(gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        if(gamepad1.options){
+            driverOriented=true;
+            gyro.resetYaw();
+        }
+        if(gamepad1.share){driverOriented=false;}
+        dt.driveDO(gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), driverOriented);
     }
 
     @Override

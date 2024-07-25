@@ -28,19 +28,27 @@ DcMotor fr;
         br.setPower( drive - strafe + turn);
         fl.setPower(drive - strafe - turn);
         fr.setPower(drive + strafe + turn);
+
     }
-    public void driveDO(double drive, double strafe, double turn, double slow, double heading){
+    public void driveDO(double drive, double strafe, double turn, double slow, double heading, Boolean driverOrientied){
         Vector2d driveVector = new Vector2d(strafe, drive);
         Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
-
-        drive = rotatedVector.y;
-        strafe = rotatedVector.x;
-
+if (driverOrientied) {
+    drive = rotatedVector.y;
+    strafe = rotatedVector.x;
+}
+if (slow == 1){
         bl.setPower((drive + strafe - turn) * .5);
         br.setPower(( drive - strafe + turn) * .5);
         fl.setPower((drive - strafe - turn) * .5);
         fr.setPower((drive + strafe + turn) * .5);
 
 
+    }else{
+        bl.setPower(drive + strafe - turn);
+        br.setPower( drive - strafe + turn);
+        fl.setPower(drive - strafe - turn);
+        fr.setPower(drive + strafe + turn);
+        }
     }
 }
