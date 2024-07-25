@@ -25,13 +25,13 @@ public class IterativeTeleOp extends OpMode {
         runtime.reset();
         drive = new Drivetrain(hardwareMap);
 
-        gyro = hardwareMap.get(IMU.class, "IMU");
+        gyro = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
                 gyro.initialize(parameters);
-
         //Code that runs when you hit init
+
     }
 
     @Override
@@ -43,7 +43,7 @@ public class IterativeTeleOp extends OpMode {
     public void loop() {
         //Code that *LOOPS* after you hit start
         drive.driveDO(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        if (gamepad1.right_trigger <= 0.05) {
+        if (gamepad1.left_trigger <= 0.05) {
             gyro.resetYaw();
         }
     }
