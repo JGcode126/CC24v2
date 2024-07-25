@@ -8,16 +8,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
 
     //Declare Subsystems
-
+    ServoMode arm;
+    ServoMode spin;
     IMU gyro;
     //Timer
     ElapsedTime runtime = new ElapsedTime();
@@ -33,6 +30,8 @@ public class IterativeTeleOp extends OpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         //Code that runs when you hit init
+        arm = new ServoMode(hardwareMap);
+        spin = new ServoMode(hardwareMap);
     }
 
     @Override
@@ -45,8 +44,19 @@ public class IterativeTeleOp extends OpMode {
     public void loop() {
      dt.driveDO(gamepad2.left_stick_y, gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         //Code that *LOOPS* after you hit start
-
+    if(gamepad2.triangle) {
+        arm.pos1();
     }
+    if(gamepad2.square){
+        arm.armBack();
+        }
+    if(gamepad2.left_bumper){
+        spin.spinServo();
+    }else{
+        spin.stopSpin();
+        }
+    }
+
 
     @Override
     public void stop(){
