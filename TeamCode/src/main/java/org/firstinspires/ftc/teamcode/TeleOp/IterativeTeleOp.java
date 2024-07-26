@@ -19,6 +19,7 @@ public class IterativeTeleOp extends OpMode {
     //Timer
     ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
+
     @Override
     public void init() {
         //Set timer to 0
@@ -35,36 +36,39 @@ public class IterativeTeleOp extends OpMode {
     }
 
     @Override
-    public void start(){
+    public void start() {
         gyro.resetYaw();
         //Code that runs when you hit start
     }
 
     @Override
     public void loop() {
-     dt.driveDO(gamepad2.left_stick_y, gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        dt.driveDO(gamepad2.left_stick_y, gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         //Code that *LOOPS* after you hit start
-    if(gamepad2.triangle) {
-        arm.pos1();
-    }
-    if(gamepad2.square){
-        arm.armBack();
+        if (gamepad2.triangle) {
+            arm.pos1();
         }
-    if(gamepad2.left_bumper){
-        spin.spinServo();
-    }else{
-        spin.stopSpin();
+        if (gamepad2.square) {
+            arm.armBack();
         }
+        if (gamepad2.left_bumper) {
+            spin.spinServo();
+        }
+        if (gamepad2.right_bumper) {
+            spin.spinN();
+        }
+        if (!gamepad2.right_bumper && !gamepad2.left_bumper) {
+            spin.stopSpin();
+        }}
+
+
+        @Override
+        public void stop () {
+            //Code that runs when you hit stop
+
+            telemetry.addData("Runtime", runtime);
+            telemetry.update();
+
+        }
+
     }
-
-
-    @Override
-    public void stop(){
-        //Code that runs when you hit stop
-
-        telemetry.addData("Runtime", runtime);
-        telemetry.update();
-
-    }
-
-}

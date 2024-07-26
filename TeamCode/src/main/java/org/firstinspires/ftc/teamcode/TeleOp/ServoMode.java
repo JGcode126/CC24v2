@@ -14,11 +14,13 @@ public class ServoMode {
 
     }
 
-    public void pos1(){servo.setPosition(0.5);}
+    public void pos1(){servo.setPosition(0.42);}
 
     public void spinServo(){spin.setPower(1);}
 
     public void stopSpin(){spin.setPower(0);}
 
     public void armBack(){servo.setPosition(0);}
+
+    public void spinN(){spin.setPower(-1);}
 }
