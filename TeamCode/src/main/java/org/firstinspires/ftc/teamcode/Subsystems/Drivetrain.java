@@ -32,6 +32,11 @@ public class Drivetrain {
     public double integral;
     public double dervative;
 
+    public double inputTurn;
+
+    public double targetAngle;
+    public double releaseAngle;
+
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Instantiate motors
@@ -98,30 +103,30 @@ public class Drivetrain {
 
         if (turn != 0) {
             inputTurn = turn;
-            releaseAngle = Math.toDegrees(rotation);
+            releaseAngle = heading;
         } else {
             targetAngle = releaseAngle + 0.5;
-            inputTurn = PID(targetAngle-Math.toDegrees(rotation), 0.05, 0, 0);
+            inputTurn = PIDCorrection( 0.05, 0.0005, 0.01,targetAngle-heading);
         }
 
 
 
 
         if (slow > 0.25) {
-            motorfl.setPower((drive + strafe + turn) * -0.5);
-            motorfr.setPower((drive - strafe - turn) * -0.5);
-            motorbl.setPower((drive - strafe + turn) * -0.5);
-            motorbr.setPower((drive + strafe - turn) * -0.5);
+            motorfl.setPower((drive + strafe + (inputTurn)) * -0.5);
+            motorfr.setPower((drive - strafe - (inputTurn)) * -0.5);
+            motorbl.setPower((drive - strafe + (inputTurn)) * -0.5);
+            motorbr.setPower((drive + strafe - (inputTurn)) * -0.5);
         } else if (superSlow > 0.25) {
-            motorfl.setPower((drive + strafe + turn) * -0.25);
-            motorfr.setPower((drive - strafe - turn) * -0.25);
-            motorbl.setPower((drive - strafe + turn) * -0.25);
-            motorbr.setPower((drive + strafe - turn) * -0.25);
+            motorfl.setPower((drive + strafe * 1.5 + inputTurn) * -0.25);
+            motorfr.setPower((drive - strafe * 1.5 - inputTurn) * -0.25);
+            motorbl.setPower((drive - strafe * 1.5 + inputTurn) * -0.25);
+            motorbr.setPower((drive + strafe * 1.5 - inputTurn) * -0.25);
         } else {
-            motorfl.setPower((drive + strafe + turn) * -1);
-            motorfr.setPower((drive - strafe - turn) * -1);
-            motorbl.setPower((drive - strafe + turn) * -1);
-            motorbr.setPower((drive + strafe - turn) * -1);
+            motorfl.setPower((drive + strafe + inputTurn * 0.9) * -1);
+            motorfr.setPower((drive - strafe - inputTurn * 0.9) * -1);
+            motorbl.setPower((drive - strafe + inputTurn * 0.9) * -1);
+            motorbr.setPower((drive + strafe - inputTurn * 0.9) * -1);
         }
     }
 
