@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
 public class Drivetrain {
@@ -21,6 +22,17 @@ public class Drivetrain {
 
     Servo claw;
 
+
+    public double target;
+    public double Kp;
+    public double Ki;
+    public double Kd;
+    public double value;
+    public double error;
+    public double integral;
+    public double dervative;
+
+
     public Drivetrain(HardwareMap hardwareMap) {
         //Instantiate motors
         motorfr = hardwareMap.get(DcMotor.class, "motorfr");
@@ -34,8 +46,20 @@ public class Drivetrain {
 
         claw = hardwareMap.get(Servo.class, "claw");
 
-        motorbr.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorfr.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorbr.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorfr.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorbl.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorfl.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public double PIDCorrection(double Kp, double Ki, double Kd, double heading) {
+        double lastError = error;
+        double value = heading;
+        double error = target - value;
+        integral = integral + error;
+        double derivative = error - lastError;
+        return (error * Kp) + (integral * Ki) + (dervative * Kd);
     }
 
     //Callable drive functions
@@ -61,12 +85,27 @@ public class Drivetrain {
         motorbr.setPower(-drive);
     }
 
-    public void driveDO(double drive, double strafe, double turn, double slow, double heading, double superSlow) {
+    public void driveDO(double drive, double strafe, double turn, double slow, double heading, double superSlow, boolean PIDon) {
         Vector2d driveVector = new Vector2d(strafe, drive);
         Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
 
         drive = rotatedVector.y;
         strafe = rotatedVector.x;
+
+        if (PIDon) {
+            turn = PIDCorrection(-0.05, 0, 0, heading);
+        }
+
+        if (turn != 0) {
+            inputTurn = turn;
+            releaseAngle = Math.toDegrees(rotation);
+        } else {
+            targetAngle = releaseAngle + 0.5;
+            inputTurn = PID(targetAngle-Math.toDegrees(rotation), 0.05, 0, 0);
+        }
+
+
+
 
         if (slow > 0.25) {
             motorfl.setPower((drive + strafe + turn) * -0.5);
