@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
@@ -28,6 +29,7 @@ public class IterativeTeleOp extends OpMode {
         //Set timer to 0
         runtime.reset();
         dt = new Drivetrain(hardwareMap);
+        scoring = new Scoring(hardwareMap);
 
         gyro = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -35,11 +37,14 @@ public class IterativeTeleOp extends OpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         gyro.initialize(parameters);
         //Code that runs when you hit init
+
     }
 
     @Override
     public void start(){
+        scoring.armUp();
         gyro.resetYaw();
+        scoring.open();
         //Code that runs when you hit start
     }
 
@@ -54,13 +59,20 @@ public class IterativeTeleOp extends OpMode {
         dt.driveDO(gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), driverOriented);
 
         if(gamepad1.left_bumper){
+            telemetry.addData("Claw pos", "open");
             scoring.open();
+            for (double m = 0; m <= 500; m++){
+
+            }
             scoring.armUp();
         } else if (gamepad1.right_bumper){
             scoring.closed();
-        } else if(gamepad1.x){
+        } else if(gamepad1.square){
             scoring.armDown();
         }
+
+        telemetry.addData("Gyro Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.update();
     }
 
     @Override
