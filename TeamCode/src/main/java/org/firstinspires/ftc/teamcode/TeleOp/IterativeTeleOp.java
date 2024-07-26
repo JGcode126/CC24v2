@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
@@ -41,17 +42,7 @@ public class IterativeTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        //Code that *LOOPS* after you hit start
-        dt.drive(gamepad1.left_stick_y);
-        dt.strafe(gamepad1.left_stick_x);
-        dt.turn(gamepad1.right_stick_x);
-
-        if (gamepad1.right_trigger > .5){
-            dt.drive(.5);
-            dt.strafe(.5);
-            dt.strafe(.5);
-        }
-
+    dt.driveDO(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
 
     }
 

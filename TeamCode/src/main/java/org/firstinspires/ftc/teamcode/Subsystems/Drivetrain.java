@@ -65,14 +65,14 @@ public class Drivetrain {
 
         if(slow> 0.05){
             motorfl.setPower((drive + strafe + turn) * -0.25);
-            motorfr.setPower((drive + strafe + turn) * -0.25);
-            motorbr.setPower((drive + strafe + turn) * -0.25);
-            motorbl.setPower((drive + strafe + turn) * -0.25);
+            motorfr.setPower((drive - strafe - turn) * -0.25);
+            motorbr.setPower((drive - strafe + turn) * -0.25);
+            motorbl.setPower((drive + strafe - turn) * -0.25);
         }else {
             motorbl.setPower((drive + strafe + turn) * -0.75);
-            motorbr.setPower((drive + strafe + turn) * -0.75);
-            motorfl.setPower((drive + strafe + turn) * -0.75);
-            motorfr.setPower((drive + strafe + turn) * -0.75);
+            motorbr.setPower((drive - strafe - turn) * -0.75);
+            motorfl.setPower((drive - strafe + turn) * -0.75);
+            motorfr.setPower((drive + strafe - turn) * -0.75);
         }
     }
 
