@@ -21,6 +21,7 @@ public class IterativeTeleOp extends OpMode {
     Drivetrain dt;
     IMU gyro;
     Scoring scoring;
+    boolean blue;
 
     @Override
     public void init() {
@@ -38,6 +39,17 @@ public class IterativeTeleOp extends OpMode {
     }
 
     @Override
+    public void init_loop() {
+        if (gamepad1.a) {
+            blue = true;
+        }
+        if (gamepad1.b) {
+            blue = false;
+        }
+        telemetry.addData("Are you on blue alliance", blue);
+    }
+
+    @Override
     public void start(){
         //Code that runs when you hit start
         gyro.resetYaw();
@@ -46,7 +58,7 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        dt.driveDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), gamepad1.left_trigger);
+        dt.driveDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         if (gamepad1.y) {
             gyro.resetYaw();
         }
@@ -60,16 +72,19 @@ public class IterativeTeleOp extends OpMode {
             scoring.down();
         }
         if (gamepad1.dpad_up) {
+            scoring.score();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             scoring.intake();
         }
-        if (gamepad1.a) {
-            scoring.score();
+        if (gamepad1.left_trigger > .05) {
+            scoring.spin(blue);
         }
-        if (gamepad1.x) {
-            scoring.duckSpinner();
-        }
-    }
 
+    }
 
     @Override
     public void stop(){
@@ -79,5 +94,4 @@ public class IterativeTeleOp extends OpMode {
         telemetry.update();
 
     }
-
 }

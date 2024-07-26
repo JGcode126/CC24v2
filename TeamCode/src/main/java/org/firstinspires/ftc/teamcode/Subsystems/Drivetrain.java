@@ -1,4 +1,9 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Ki;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kp;
+import static org.firstinspires.ftc.teamcode.zLibraries.Utilities.VisionDash.target;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,9 +18,11 @@ public class Drivetrain {
     DcMotor fl;
     DcMotor br;
     DcMotor bl;
-    double integral = 0;
-    double lastError = 0;
-    boolean clawDown;
+    double integral;
+    double lastError;
+    double inputTurn;
+    double releaseAngle;
+    double targetAngle;
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Instantiate motors
@@ -48,42 +55,39 @@ public class Drivetrain {
         }
 
     }
-    public void driveDO(double drive, double strafe, double turn, double slow, double heading, double medium) {
+    public void driveDO(double drive, double strafe, double turn, double slow, double heading) {
         Vector2d driveVector = new Vector2d(strafe, drive);
         Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
 
+        if (turn != 0) {
+            inputTurn = turn;
+            releaseAngle = Math.toDegrees(heading);
+        } else {
+            releaseAngle = 0;
+            targetAngle = releaseAngle + 0.5;
+            inputTurn = pid(targetAngle, 0.03, 0.00001, 0.001, heading);
+        }
+
         drive = rotatedVector.y;
         strafe = rotatedVector.x;
-
+        // turn += pid(0, 0.03, 0.00001, 0.001, heading);
         if (slow > 0.05) {
-            fr.setPower((drive - strafe - turn) * 0.35);
-            fl.setPower((drive + strafe + turn) * 0.35);
-            br.setPower((drive + strafe - turn) * 0.35);
-            bl.setPower((drive - strafe + turn) * 0.35);
+            fr.setPower((drive - strafe - inputTurn) * 0.2);
+            fl.setPower((drive + strafe + inputTurn) * 0.2);
+            br.setPower((drive + strafe - inputTurn) * 0.2);
+            bl.setPower((drive - strafe + inputTurn) * 0.2);
         }
-        else if (medium > 0.05) {
-            fr.setPower((drive - strafe - turn) * 0.6);
-            fl.setPower((drive + strafe + turn) * 0.6);
-            br.setPower((drive + strafe - turn) * 0.6);
-            bl.setPower((drive - strafe + turn) * 0.6);
-        }
-        else if (clawDown) {
-            fr.setPower((drive - strafe - turn) * 0.35);
-            fl.setPower((drive + strafe + turn) * 0.35);
-            br.setPower((drive + strafe - turn) * 0.35);
-            bl.setPower((drive - strafe + turn) * 0.35);
-
-        } else {
-            fr.setPower((drive - strafe - turn) * 1);
-            fl.setPower((drive + strafe + turn) * 1);
-            br.setPower((drive + strafe - turn) * 1);
-            bl.setPower((drive - strafe + turn) * 1);
+        else {
+            fr.setPower((drive - strafe - inputTurn) * 1);
+            fl.setPower((drive + strafe + inputTurn) * 1);
+            br.setPower((drive + strafe - inputTurn) * 1);
+            bl.setPower((drive - strafe + inputTurn) * 1);
         }
     }
-    public double pid(double target, double kp, double ki, double kd, double heading) {
-        double error = target - heading;
+    public double pid(double target, double kp, double ki, double kd, double error) {
         integral += error;
         double derivative = error - lastError;
+        error = target - error;
         double correction = (error * kp) + (integral * ki) + (derivative * kd);
         return correction;
     }
