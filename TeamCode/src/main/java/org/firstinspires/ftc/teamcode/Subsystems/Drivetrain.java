@@ -38,7 +38,7 @@ public class Drivetrain {
     double lastError;
     double target;
     double value;
-    public double PID (double Kp, double Ki, double Kd, double heading, double target) {
+    public double headingPID (double Kp, double Ki, double Kd, double heading, double target) {
         value = heading;
         lastError = error;
         error = target - value;
@@ -69,8 +69,11 @@ public class Drivetrain {
             releaseAngle = heading;
         } else {
             target = releaseAngle + 0.5;
-            turn = PID (0.03, 0.0001, 0.05, heading, target);
+            turn = headingPID (0.03, 0.0001, 0.05, heading, target);
           }
+
+
+
 
         if (slow > 0.05) {
             fl.setPower((drive + strafe + turn) * 0.25);
