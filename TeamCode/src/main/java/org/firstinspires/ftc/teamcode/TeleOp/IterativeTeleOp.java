@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.angleMode.DEGREES;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,7 +22,6 @@ public class IterativeTeleOp extends OpMode {
     IMU gyro;
     //Timer
     ElapsedTime runtime = new ElapsedTime();
-
     @Override
     public void init() {
         //Set timer to 0
@@ -35,18 +38,24 @@ public class IterativeTeleOp extends OpMode {
     }
 
     @Override
-    public void start(){
+    public void start() {
         //Code that runs when you hit start
+            gyro.resetYaw();
     }
-
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
         drive.driveDO(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        if (gamepad1.left_trigger <= 0.05) {
+
+        if (gamepad1.left_trigger == 1) {
             gyro.resetYaw();
         }
+
+         telemetry.addData("Heading", -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.update();
     }
+
+
 
     @Override
     public void stop(){

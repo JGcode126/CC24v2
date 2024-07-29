@@ -14,6 +14,7 @@ public class Arm {
     }
     public void In() {
         if (gamepad1.cross) {
+            arm.setDirection(DcMotorSimple.Direction.FORWARD);
             arm.setPower(0.3);
         }
     }
@@ -21,6 +22,9 @@ public class Arm {
         if (gamepad1.triangle) {
             arm.setDirection(DcMotorSimple.Direction.REVERSE);
             arm.setPower(0.3);
+        }
+        else {
+           arm.setPower(0);
         }
     }
 }

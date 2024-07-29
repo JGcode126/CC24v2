@@ -14,7 +14,6 @@ public class Claw {
         if (gamepad1.dpad_left) {
             claw.setPosition(0);
         }
-
     }
     public void ring() {
         if (gamepad1.dpad_right) {
