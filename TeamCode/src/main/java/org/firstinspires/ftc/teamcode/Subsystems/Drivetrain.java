@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+
+import android.widget.Switch;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
@@ -37,6 +41,9 @@ public class Drivetrain {
     public double targetAngle;
     public double releaseAngle;
 
+    ElapsedTime time;
+
+
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Instantiate motors
@@ -44,7 +51,7 @@ public class Drivetrain {
         motorfl = hardwareMap.get(DcMotor.class, "motorfl");
         motorbr = hardwareMap.get(DcMotor.class, "motorbr");
         motorbl = hardwareMap.get(DcMotor.class, "motorbl");
-
+        ElapsedTime time = new ElapsedTime();
         armLift = hardwareMap.get(DcMotor.class, "armlift");
 
         duckSpinner = hardwareMap.get(CRServo.class, "duckSpinner");
@@ -62,13 +69,15 @@ public class Drivetrain {
         double lastError = error;
         double value = heading;
         double error = target - value;
+        if (error>180){error-=360;}
+        else if (error <-180){error+=360;}
         integral = integral + error;
         double derivative = error - lastError;
         return (error * Kp) + (integral * Ki) + (dervative * Kd);
     }
 
     //Callable drive functions
-    public void drive(double drive){
+    public void drive(double drive) {
         motorfr.setPower(drive);
         motorfl.setPower(drive);
         motorbr.setPower(drive);
@@ -105,9 +114,9 @@ public class Drivetrain {
             inputTurn = turn;
             releaseAngle = heading;
         } else {
-            //targetAngle = releaseAngle + 0.5;
+            targetAngle = releaseAngle + 0.5;
 //            inputTurn = PIDCorrection( 0.05, 0.0005, 0.01,targetAngle-heading);
-            inputTurn = PIDCorrection( 0.1, 0, 0,targetAngle-heading);
+            inputTurn = PIDCorrection(0.025, 0, 0, targetAngle - heading);
 
         }
 
@@ -156,8 +165,6 @@ public class Drivetrain {
 //        }
 //    }
 
-    public double getData() {
-        return target;
-    }
+
 
 }
