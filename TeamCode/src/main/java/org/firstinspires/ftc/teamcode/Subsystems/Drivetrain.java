@@ -74,9 +74,13 @@ if (slow == 1){
         }}
 public double pid(double target, double value){
     error =  target - value;
+    if (error>180){error-=360;}
+    else if (error<-180){error+=360;}
     integral += error;
     derivitive = error - oldError;
 
+//target - current
+    //-360 if >180, +360 if <-180
    double turn = (error * (-kp)) + (integral * (-ki)) + (derivitive * (-kd));
     oldError = error;
     return turn;

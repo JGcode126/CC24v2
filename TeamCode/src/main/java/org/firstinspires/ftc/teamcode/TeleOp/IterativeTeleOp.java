@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+
+
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -18,13 +21,18 @@ public class IterativeTeleOp extends OpMode {
     //Declare Subsystems
 
     //Timer
-    ElapsedTime runtime = new ElapsedTime();
+ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
     IMU gyro;
     Boolean driverOriented=true;
     Scoring scoring;
+    ElapsedTime clawTimer = new ElapsedTime();
+
+
+
 
     @Override
+
     public void init() {
         //Set timer to 0
         runtime.reset();
@@ -51,24 +59,27 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
+
+
         if(gamepad1.options){
             driverOriented=true;
             gyro.resetYaw();
         }
         if(gamepad1.share){driverOriented=false;}
         dt.driveDO(gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), driverOriented);
-
+        telemetry.addData("time", scoring.getTime());
         if(gamepad1.left_bumper){
             telemetry.addData("Claw pos", "open");
             scoring.open();
-            for (double m = 0; m <= 500; m++){
 
-            }
             scoring.armUp();
         } else if (gamepad1.right_bumper){
             scoring.closed();
         } else if(gamepad1.square){
             scoring.armDown();
+        }
+        if(gamepad1.cross){
+            scoring.setDuckSpinner(Scoring.SpinDuck.ON);
         }
 
         telemetry.addData("Gyro Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
