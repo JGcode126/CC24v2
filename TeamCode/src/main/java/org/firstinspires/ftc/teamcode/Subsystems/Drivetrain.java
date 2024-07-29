@@ -49,14 +49,14 @@ if (driverOrientied) {
     drive = rotatedVector.y;
     strafe = rotatedVector.x;
 }
-/*
+
        if(turn != 0){
            inputTurn = turn;
            releaseAngle = heading;
        }else{
            turn = releaseAngle +0.5;
            inputTurn = pid(turn,heading);
-       }*/
+       }
 if (slow == 1){
         bl.setPower((drive + strafe - inputTurn) * .25);
         br.setPower(( drive - strafe + inputTurn) * .25);

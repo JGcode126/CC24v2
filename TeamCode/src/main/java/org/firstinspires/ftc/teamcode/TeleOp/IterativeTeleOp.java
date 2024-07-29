@@ -31,7 +31,7 @@ public class IterativeTeleOp extends OpMode {
         dt = new Drivetrain(hardwareMap);
         scoring = new Scoring(hardwareMap);
 
-        gyro = hardwareMap.get(IMU.class, "imu");
+        gyro = hardwareMap.get(IMU.class, "imuA");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
