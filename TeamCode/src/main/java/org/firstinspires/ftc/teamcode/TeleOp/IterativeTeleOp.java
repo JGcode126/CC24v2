@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
@@ -20,6 +21,7 @@ public class IterativeTeleOp extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
     IMU gyro;
+    Scoring servoMove;
     Boolean driverOriented=true;
 
     @Override
@@ -51,6 +53,17 @@ public class IterativeTeleOp extends OpMode {
         }
         if(gamepad1.share){driverOriented=false;}
         dt.driveDO(gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), driverOriented);
+        if (gamepad1.square) {
+            servoMove.clawOpen();
+        } else if (gamepad1.x) {
+            servoMove.clawClose();
+        }
+        else if (gamepad1.circle) {
+            servoMove.armDown();
+        }
+        else if (gamepad1.share) {
+            servoMove.armUp();
+        }
     }
 
     @Override

@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.kd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.ki;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.kp;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +16,12 @@ DcMotor bl;
 DcMotor br;
 DcMotor fl;
 DcMotor fr;
+
+    double error;
+    double integral = 0;
+    double derivative;
+    double lastError = 0;
+    double correction;
     public Drivetrain(HardwareMap hardwareMap) {
         //Instantiate motors
         bl = hardwareMap.get(DcMotor.class, "bl");
@@ -37,18 +47,29 @@ if (driverOrientied) {
     drive = rotatedVector.y;
     strafe = rotatedVector.x;
 }
+turn = turn +pid(heading,turn,ki,kd,kp);
 if (slow == 1){
         bl.setPower((drive + strafe - turn) * .5);
-        br.setPower(( drive - strafe + turn) * .5);
+        br.setPower((drive - strafe + turn) * .5);
         fl.setPower((drive - strafe - turn) * .5);
         fr.setPower((drive + strafe + turn) * .5);
 
 
     }else{
         bl.setPower(drive + strafe - turn);
-        br.setPower( drive - strafe + turn);
+        br.setPower(drive - strafe + turn);
         fl.setPower(drive - strafe - turn);
         fr.setPower(drive + strafe + turn);
         }
+    }
+    public double pid(double value, double target, double ki, double kd, double kp){
+
+        error = target - value;
+        integral += error;
+        derivative = error - lastError;
+        lastError = error;
+        double correction = (error * kp) + (integral * ki) + (derivative * kd);
+        return correction;
+
     }
 }
