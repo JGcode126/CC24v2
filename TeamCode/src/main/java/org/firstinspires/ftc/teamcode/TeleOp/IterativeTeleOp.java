@@ -23,7 +23,6 @@ public class IterativeTeleOp extends OpMode {
     Drivetrain dt;
     IMU gyro;
 
-    boolean condition;
 
     @Override
     public void init() {
@@ -60,10 +59,10 @@ public class IterativeTeleOp extends OpMode {
             dt.liftArm(-.75);
         } else if (gamepad1.dpad_up) {
             dt.liftArm(.75);
-//        } else if (gamepad1.dpad_left) {
-//            dt.claw(-0.15);
-//        } else if (gamepad1.dpad_right) {
-//            dt.claw(0.15);
+        } else if (gamepad1.dpad_left) {
+            dt.claw(-0.15);
+        } else if (gamepad1.dpad_right) {
+            dt.claw(0.15);
         } else if (gamepad1.right_bumper) {
             dt.duckSpinner(-1);
         } else {
@@ -71,23 +70,35 @@ public class IterativeTeleOp extends OpMode {
             dt.liftArm(0);
         }
 
-        if (gamepad1.triangle && condition) {
-            dt.claw(-0.15);
-            condition = false;
-        } else if (gamepad1.triangle && !condition) {
-            dt.claw(0.15);
-            condition = true;
-        }
+//        if (gamepad1.triangle) {
+//            dt.claw(-0.15);
+//        } else if (gamepad1.square) {
+//            dt.claw(0.15);
+//
+//        }
 
         if (gamepad1.cross) {
             gyro.resetYaw();
         }
 
+
+        //dt.drivenonDO(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger);
+
+
+
+        telemetry.addData("input turn", dt.inputTurn);
+        telemetry.addData("release angle", dt.releaseAngle);
+        telemetry.addData("target", dt.target);
+        telemetry.addData("target angle", dt.targetAngle);
+        telemetry.addData("Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.update();
     }
 
     @Override
     public void stop(){
         //Code that runs when you hit stop
+
+
 
         telemetry.addData("Runtime", runtime);
         telemetry.update();

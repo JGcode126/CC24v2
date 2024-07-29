@@ -105,11 +105,11 @@ public class Drivetrain {
             inputTurn = turn;
             releaseAngle = heading;
         } else {
-            targetAngle = releaseAngle + 0.5;
-            inputTurn = PIDCorrection( 0.05, 0.0005, 0.01,targetAngle-heading);
+            //targetAngle = releaseAngle + 0.5;
+//            inputTurn = PIDCorrection( 0.05, 0.0005, 0.01,targetAngle-heading);
+            inputTurn = PIDCorrection( 0.1, 0, 0,targetAngle-heading);
+
         }
-
-
 
 
         if (slow > 0.25) {
@@ -155,5 +155,9 @@ public class Drivetrain {
 //            motorbr.setPower((drive + strafe - turn) * -0.75);
 //        }
 //    }
+
+    public double getData() {
+        return target;
+    }
 
 }
