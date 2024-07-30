@@ -85,4 +85,8 @@ public double pid(double target, double value){
     oldError = error;
     return turn;
     }
+    public double getReleaseAngle(){
+        return releaseAngle;
+    }
 }
+

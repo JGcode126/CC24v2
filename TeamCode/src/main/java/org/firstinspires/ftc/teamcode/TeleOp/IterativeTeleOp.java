@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,9 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-
+import org.firstinspires.ftc.robotcontroller.external.samples.UtilityOctoQuadConfigMenu;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
@@ -35,6 +37,7 @@ ElapsedTime runtime = new ElapsedTime();
 
     public void init() {
         //Set timer to 0
+        setOpMode(this);
         runtime.reset();
         dt = new Drivetrain(hardwareMap);
         scoring = new Scoring(hardwareMap);
@@ -44,6 +47,7 @@ ElapsedTime runtime = new ElapsedTime();
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         gyro.initialize(parameters);
+
         //Code that runs when you hit init
 
     }
@@ -70,20 +74,25 @@ ElapsedTime runtime = new ElapsedTime();
         telemetry.addData("time", scoring.getTime());
         if(gamepad1.left_bumper){
             telemetry.addData("Claw pos", "open");
-            scoring.open();
+            scoring.setArmState(Scoring.ArmSwitchStatement.UPOPEN);
 
-            scoring.armUp();
         } else if (gamepad1.right_bumper){
-            scoring.closed();
+            scoring.setArmState(Scoring.ArmSwitchStatement.UPCLOSED);
         } else if(gamepad1.square){
-            scoring.armDown();
+            scoring.setArmState(Scoring.ArmSwitchStatement.DOWNCLOSED);
         }
         if(gamepad1.cross){
-            scoring.setDuckSpinner(Scoring.SpinDuck.ON);
+            scoring.setState(Scoring.SpinDuck.ON);
         }
+        scoring.spinState();
+        scoring.arm();
+        scoring.clawColorBlue();
+        scoring.clawColorRed();
 
-        telemetry.addData("Gyro Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.update();
+        multTelemetry.addData("Gyro Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        multTelemetry.addData("Release Angle", dt.getReleaseAngle());
+        multTelemetry.addData("duck state", scoring.getState());
+        multTelemetry.update();
     }
 
     @Override
