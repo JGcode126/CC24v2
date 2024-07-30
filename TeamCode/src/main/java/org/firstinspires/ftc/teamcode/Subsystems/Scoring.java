@@ -12,6 +12,11 @@ public class Scoring {
     Servo arm;
     CRServo spinner;
 
+    public enum DuckSpin {
+        BLUE, RED, OFF
+    }
+
+
     public Scoring(HardwareMap hardwareMap) {
         clawR = hardwareMap.get(Servo.class, "rightClaw");
         clawL = hardwareMap.get(Servo.class, "leftClaw");
@@ -27,6 +32,7 @@ public class Scoring {
         arm.setPosition(0);
         clawR.setPosition(0.5);
         clawL.setPosition(0.5);
+//        superSlow = true;
     }
     public void pixelGrab() {
         clawR.setPosition(0.1);
@@ -34,17 +40,22 @@ public class Scoring {
     }
     public void down() {
         arm.setPosition(0.395);
+//        superSlow = false;
     }
     public void score() {
         clawR.setPosition(0.5);
         clawL.setPosition(0.5);
     }
-    public void spin(boolean blue) {
-        if (blue) {
+    public void spin(boolean team) {
+        if (team) {
             spinner.setPower(1);
-        }
-        if (!blue) {
+        } else if (!team) {
             spinner.setPower(-1);
         }
+
+    }
+
+    public void stopSpin() {
+        spinner.setPower(0);
     }
 }

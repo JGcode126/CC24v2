@@ -1,13 +1,20 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+//import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.lineScal;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorSparkFunOTOS;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
@@ -22,20 +29,42 @@ public class IterativeTeleOp extends OpMode {
     IMU gyro;
     Scoring scoring;
     boolean blue;
+    SparkFunOTOS myOtos;
+
+//    public static boolean superSlow;
 
     @Override
     public void init() {
+
+        setOpMode(this);
         //Set timer to 0
         timer.reset();
         //Code that runs when you hit init
         dt = new Drivetrain(hardwareMap);
-
-        gyro = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        gyro.initialize(parameters);
         scoring = new Scoring(hardwareMap);
+
+        myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
+        myOtos.setLinearUnit(DistanceUnit.INCH);
+        myOtos.setAngularUnit(AngleUnit.DEGREES);
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
+        // X 3.8 Y 5.1
+        myOtos.setOffset(offset);
+        myOtos.setLinearScalar(1);
+        myOtos.setAngularScalar(1.0);
+        myOtos.calibrateImu();
+        myOtos.resetTracking();
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        myOtos.setPosition(currentPosition);
+        myOtos.getPosition().y = 0;
+        myOtos.getPosition().x = 0;
+
+
+//        gyro = hardwareMap.get(IMU.class, "imu");
+//        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+//                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+//        gyro.initialize(parameters);
+//        scoring = new Scoring(hardwareMap);
     }
 
     @Override
@@ -52,15 +81,15 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void start(){
         //Code that runs when you hit start
-        gyro.resetYaw();
+
     }
 
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        dt.driveDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        dt.driveDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_trigger, -myOtos.getPosition().h);
         if (gamepad1.y) {
-            gyro.resetYaw();
+            gamepad1.rumble(1);
         }
         if (gamepad1.left_bumper) {
             scoring.ringGrab();
@@ -70,6 +99,7 @@ public class IterativeTeleOp extends OpMode {
         }
         if (gamepad1.dpad_down) {
             scoring.down();
+
         }
         if (gamepad1.dpad_up) {
             scoring.score();
@@ -82,7 +112,13 @@ public class IterativeTeleOp extends OpMode {
         }
         if (gamepad1.left_trigger > .05) {
             scoring.spin(blue);
+        } else {
+            scoring.stopSpin();
         }
+        if (gamepad1.dpad_left) {
+            dt.goToPos(0,0, myOtos.getPosition().x, myOtos.getPosition().y);
+        }
+        multTelemetry.update();
 
     }
 
