@@ -1,12 +1,11 @@
-package org.firstinspires.ftc.teamcode.zLibraries.Files.FileUtils;
+package org.firstinspires.ftc.teamcode.Files.FileUtils;
 
 import android.os.Environment;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import org.firstinspires.ftc.teamcode.zLibraries.Files.FileUtils.
-
-public class FileLogWriter implements org.firstinspires.ftc.teamcode.zLibraries.Files.FileUtils.LogWriter {
+import org.firstinspires.ftc.teamcode.zLibraries.Files.FileUtils.LogWriter;
+public class FileLogWriter implements LogWriter {
 
     private static final String BASE_FOLDER_NAME = "FIRST";
 

@@ -11,5 +11,5 @@ public class Spinner {
     }
     public void spinServo(){spinner.setPower(1);}
     public void stopSpinner(){spinner.setPower(1);}
-
+ 
 }

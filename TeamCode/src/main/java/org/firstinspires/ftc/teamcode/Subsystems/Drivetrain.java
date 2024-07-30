@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -56,4 +58,45 @@ public class Drivetrain {
 
 
     }
+
+  /*  public class PID{
+        private double proportionalW;
+        private double integralW;
+        private double derivativeW;
+
+        private boolean isTuning = true;
+
+        private double integralSum = 0;
+
+        private double previousError = 0;
+        private long previousTime = System.currentTimeMillis();
+
+        public PID(double proportional, double integral, double derivative){
+        this.proportionalW = proportional;
+        this.integralW = integral;
+        this.derivativeW = derivative;
+        }
+        public double update(double error, boolean isTuning){
+            integralSum += error;
+
+            double deltaTime = (System.currentTimeMillis() - previousTime) / 1000;
+            double deltaError = error - previousError;
+            double rateOfChange = deltaError/deltaTime;
+
+            previousError = error;
+            previousTime = System.currentTimeMillis();
+
+            double pComponent = error * proportionalW;
+            double iComponent = integralSum * integralW;
+            double dComponent = rateOfChange * derivativeW;
+
+            if (isTuning){
+                multTelemetry.addData("P", pComponent);
+                multTelemetry.addData("I", iComponent);
+                multTelemetry.addData("D", dComponent);
+            }
+
+            return pComponent + iComponent + dComponent;
+        }
+    }*/
 }
