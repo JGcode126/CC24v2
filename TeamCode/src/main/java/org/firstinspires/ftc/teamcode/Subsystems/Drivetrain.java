@@ -116,7 +116,7 @@ public class Drivetrain {
         } else {
             targetAngle = releaseAngle + 0.5;
 //            inputTurn = PIDCorrection( 0.05, 0.0005, 0.01,targetAngle-heading);
-            inputTurn = PIDCorrection(0.025, 0, 0, targetAngle - heading);
+            inputTurn = PIDCorrection(0.05, 0, 0.05, targetAngle - heading);
 
         }
 
