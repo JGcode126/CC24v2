@@ -32,10 +32,10 @@ public class Drivetrain {
         drive = rotatedVector.y;
         strafe = rotatedVector.x;
         if (slow >= 0.05) {
-            fl.setPower((drive + strafe + turn) * (speed / 2));
-            fr.setPower((drive - strafe - turn) * (speed / 2));
-            bl.setPower((drive - strafe + turn) * (speed / 2));
-            br.setPower((drive + strafe - turn) * (speed / 2));
+            fl.setPower((drive + strafe + turn) * (speed / 4));
+            fr.setPower((drive - strafe - turn) * (speed / 4));
+            bl.setPower((drive - strafe + turn) * (speed / 4));
+            br.setPower((drive + strafe - turn) * (speed / 4));
         } else {
             fl.setPower((drive + strafe + turn) * speed);
             fr.setPower((drive - strafe - turn) * speed);
