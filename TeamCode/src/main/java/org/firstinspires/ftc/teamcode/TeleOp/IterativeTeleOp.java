@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -7,13 +9,9 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-
-import android.graphics.Point;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Subsystems.Claw;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.Utilities.MathUtils;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
@@ -24,13 +22,16 @@ public class IterativeTeleOp extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
     IMU gyro;
+    Claw claw;
 
 
     @Override
     public void init() {
         //Set timer to 0
         runtime.reset();
+        setOpMode(this);
         dt = new Drivetrain(hardwareMap);
+        claw = new Claw(hardwareMap);
 
 
         gyro = hardwareMap.get(IMU.class, "imu");
@@ -58,11 +59,11 @@ public class IterativeTeleOp extends OpMode {
         if (gamepad1.left_bumper) {
             dt.duckSpinner(1);
         } else if (gamepad1.dpad_down) {
-            dt.liftArm(-.75);
+            dt.liftArm(-.25);
         } else if (gamepad1.dpad_up) {
-            dt.liftArm(.75);
+            dt.liftArm(.25);
         } else if (gamepad1.dpad_left) {
-            dt.claw(-0.15);
+            dt.claw(-0.10   );
         } else if (gamepad1.dpad_right) {
             dt.claw(0.20);
         } else if (gamepad1.right_bumper) {
@@ -83,11 +84,21 @@ public class IterativeTeleOp extends OpMode {
             gyro.resetYaw();
         }
 
+//        if (!sense.breamBroken()) {
+//            dt.claw(0.20);
+//        } else {
+//            dt.claw(-0.10);
+//        }
+
+        claw.update();
+
+
+
 
         //dt.drivenonDO(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger);
 
 
-
+        telemetry.addData("beam broken", !claw.breamBroken());
         telemetry.addData("input turn", dt.inputTurn);
         telemetry.addData("release angle", dt.releaseAngle);
         telemetry.addData("target", dt.target);
