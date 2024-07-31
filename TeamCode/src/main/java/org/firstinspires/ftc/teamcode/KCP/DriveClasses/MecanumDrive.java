@@ -7,6 +7,7 @@ import static java.lang.Math.signum;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.KCP.DriveClasses.AbstractClasses.StaticDrive.StaticDriveTrain;
 import org.firstinspires.ftc.teamcode.KCP.DriveClasses.AbstractClasses.StaticDrive.StaticDriveWheel;
 import org.firstinspires.ftc.teamcode.Subsystems.Hardware;
@@ -68,7 +69,7 @@ public class MecanumDrive extends StaticDriveTrain {
         double rightHandWheelAngle = driveWheels[0].getAngle() + (-targetAngle);
         double leftHandWheelAngle = driveWheels[2].getAngle() + (-targetAngle);
 
-        multTelemetry.addData("target Angle (should suck)", targetAngle);
+        BaseOpMode.addData("target Angle (should suck)", targetAngle);
 
         double rightHandWheelX = signum(Math.cos(rightHandWheelAngle));
         double leftHandWheelX = signum(Math.cos(leftHandWheelAngle));

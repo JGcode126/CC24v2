@@ -143,12 +143,8 @@ public class TwoWheelOdometry extends Location{
     @Override
     public void aprilLocalize(AprilTagDetection tagNum, double x, double y, double heading, double cameraNumber) {
 
-        multTelemetry.addData("aprilTag Localizing","");
-        multTelemetry.addData("tagX",x);
-        multTelemetry.addData("tagY",y);
-        multTelemetry.addData("tagYaw",heading);
+
         double tagID = tagNum.id;
-        multTelemetry.addData("tagID",tagID);
 
         x -= Constants.camOffsetX;
         y += Constants.camOffsetY;
@@ -197,8 +193,6 @@ public class TwoWheelOdometry extends Location{
 
         location[0] = x;
         location[1] = y;
-        multTelemetry.addData("finalX",x);
-        multTelemetry.addData("finalY",y);
         Location.heading = heading;
     }
 

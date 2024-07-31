@@ -6,7 +6,9 @@ public class AAA_Paths {
 
     public enum Path {
         //BACK AND FORTH
-        ExamplePath(new double[][]{{0,0}, {0,80}});
+        ExamplePath(new double[][]{{0,0}, {0,80}}),
+
+        Stop;
 
 
 
@@ -65,7 +67,7 @@ public class AAA_Paths {
         }
 
         Path() {
-            this.pathPoints = new double[][]{{0}, {0}};
+            this.pathPoints = new double[][]{{0, 0}, {0, 0}};
             this.pathType = PathType.NONE;
         }
 

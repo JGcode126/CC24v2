@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.KCP.Localization;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -49,9 +51,9 @@ public abstract class Location extends Subsystem {
     public abstract void aprilLocalize(AprilTagDetection tagNum, double x, double y, double heading, double cameraNumber);
 
     public void update(AprilTagDetection tagNum, double x, double y, double heading, double cameraNumber) {
-        multTelemetry.addData("updated","");
+        BaseOpMode.addData("updated","");
         if(tagNum != null){
-            multTelemetry.addData("april localizing attempt","");
+            BaseOpMode.addData("april localizing attempt","");
             aprilLocalize(tagNum, x, y, heading, cameraNumber);
         }else {
             localize();

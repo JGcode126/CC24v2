@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.telemetry;
 
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.KCP.DriveClasses.AbstractClasses.DriveTrain;
 import org.firstinspires.ftc.teamcode.KCP.Localization.Location;
 
@@ -74,7 +75,7 @@ public abstract class StaticDriveTrain extends DriveTrain {
 
             power = Range.clip(power, -1 + Math.abs(headingPower), 1-Math.abs(headingPower));
 
-            telemetry.addData("Target Angle Used", 2);
+            BaseOpMode.addData("Target Angle Used", 2);
             setWheelPowers(targetAngle, power, headingPower);
         }else{
             stopDrive();
@@ -89,7 +90,7 @@ public abstract class StaticDriveTrain extends DriveTrain {
 
         targetAngle += Math.asin(perpendicularPower / power);
 
-        telemetry.addData("Target Angle Used", 3);
+        BaseOpMode.addData("Target Angle Used", 3);
         setWheelPowers(targetAngle, power, headingPower);
     }
 

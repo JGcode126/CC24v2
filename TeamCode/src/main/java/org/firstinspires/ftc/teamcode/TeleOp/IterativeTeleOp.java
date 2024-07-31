@@ -5,11 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.ServoMove;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
@@ -20,6 +22,7 @@ public class IterativeTeleOp extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     Drivetrain dt;
     IMU gyro;
+    ServoMove servoMove;
 
     @Override
     public void init() {
@@ -35,6 +38,8 @@ public class IterativeTeleOp extends OpMode {
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         gyro.initialize(parameters);
         //Code that runs ONCE when you hit init
+
+        servoMove = new ServoMove(hardwareMap);
     }
 
     @Override
@@ -48,6 +53,13 @@ public class IterativeTeleOp extends OpMode {
         //Code that *LOOPS* after you hit start
 
         dt.driveDO(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        //Servos
+        if (gamepad1.square){
+            servoMove.pos1();
+        }
+        else if (gamepad1.right_bumper){
+            servoMove.spinServo();
+        }
 
         //dt.drive(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger);
     }
