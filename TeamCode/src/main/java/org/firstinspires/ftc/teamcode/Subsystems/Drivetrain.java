@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import static org.firstinspires.ftc.teamcode.Subsystems.Drivetrain.DriveState.DRIVE;
+import static org.firstinspires.ftc.teamcode.Subsystems.Drivetrain.DriveState.HOLD;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.DeadZone;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdh;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kds;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kf;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kfd;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kfs;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kp;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kih;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kpd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kph;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kps;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static java.lang.Math.abs;
@@ -15,6 +20,8 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
 public class Drivetrain {
@@ -31,6 +38,13 @@ public class Drivetrain {
     double lastErrorDrive;
     double lastErrorStrafe;
 
+    double holdX;
+    double holdY;
+    double holdH;
+    DriveState driveState;
+
+    int holdNum;
+
     SparkFunOTOS myOtos;
 
     double inputDrive;
@@ -38,6 +52,7 @@ public class Drivetrain {
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Instantiate motors
+        driveState = DRIVE;
         fr = hardwareMap.get(DcMotor.class, "drivefr");
         fl = hardwareMap.get(DcMotor.class, "drivefl");
         br = hardwareMap.get(DcMotor.class, "drivebr");
@@ -53,6 +68,20 @@ public class Drivetrain {
         br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
+        myOtos.setLinearUnit(DistanceUnit.INCH);
+        myOtos.setAngularUnit(AngleUnit.DEGREES);
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
+        myOtos.setOffset(offset);
+        myOtos.setLinearScalar(1);
+        myOtos.setAngularScalar(1.0);
+        myOtos.calibrateImu();
+        myOtos.resetTracking();
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        myOtos.setPosition(currentPosition);
+        myOtos.getPosition().y = 0;
+        myOtos.getPosition().x = 0;
+
     }
     public void driveDO(double drive, double strafe, double turn, double slow, double heading) {
         Vector2d driveVector = new Vector2d(strafe, drive);
@@ -66,7 +95,10 @@ public class Drivetrain {
             inputTurn = pidHeading(targetAngle, 0.02, 0, 0, heading);
         }
 
-
+        if (abs(drive) < .0001 && abs(strafe) < .0001 && abs(turn) < .0001) {
+            holdNum = 0;
+            setDriveState(HOLD);
+        }
 
         drive = rotatedVector.y;
         strafe = rotatedVector.x;
@@ -111,17 +143,60 @@ public class Drivetrain {
         return correction;
     }
 
-    public void goToPos(double targetX, double targetY, double currentX, double currentY) {
-        multTelemetry.addData("TargetX", targetX);
-        multTelemetry.addData("TargetY", targetY);
-        multTelemetry.addData("CurrentX", currentX);
-        multTelemetry.addData("CurrentY", currentY);
+    public void goToPos(double targetX, double targetY, double targetHeading, double currentX, double currentY, double currentHeading) {
 
-        double driveCorrection = pfdDrive(Kp, 0, Kf, targetY - currentY * 1.2);
-        double strafeCorrection = pfdStrafe(Kps, 0, Kfs, targetX - currentX * 1.2);
-        fr.setPower((driveCorrection - strafeCorrection - 0) * 1);
-        fl.setPower((driveCorrection + strafeCorrection + 0) * 1);
-        br.setPower((driveCorrection + strafeCorrection - 0) * 1);
-        bl.setPower((driveCorrection - strafeCorrection + 0) * 1);
+
+        Vector2d driveVector = new Vector2d(targetX - currentX, targetY - currentY);
+        Vector2d rotatedVector = driveVector.rotate(Math.toRadians(currentHeading));
+
+        inputTurn = pidHeading(targetHeading, Kph, Kih, Kdh, currentHeading);
+
+        double driveCorrection = pfdDrive(Kpd, Kdd, Kfd, rotatedVector.y);
+        double strafeCorrection = pfdStrafe(Kps, Kds, Kfs, rotatedVector.x);
+        fr.setPower((driveCorrection - strafeCorrection - inputTurn) * 1);
+        fl.setPower((driveCorrection + strafeCorrection + inputTurn) * 1);
+        br.setPower((driveCorrection + strafeCorrection - inputTurn) * 1);
+        bl.setPower((driveCorrection - strafeCorrection + inputTurn) * 1);
     }
+    public void hold(double xCoordinate, double yCoordinate, double heading, double x, double y, double h) {
+        if (myOtos.getPosition().x != xCoordinate || myOtos.getPosition().y != yCoordinate || myOtos.getPosition().h != heading) {
+            if (holdNum < 1) {
+                holdX = myOtos.getPosition().x;
+                holdY = myOtos.getPosition().y;
+                holdH = myOtos.getPosition().h;
+            }
+            goToPos(xCoordinate, yCoordinate, heading, myOtos.getPosition().x, myOtos.getPosition().y, myOtos.getPosition().h);
+            holdNum ++;
+        }
+        if (abs(x) > .0001 || abs(y) > .0001 || abs(h) > .0001) {
+            setDriveState(DRIVE);
+        }
+    }
+
+    public enum DriveState  {
+        DRIVE, HOLD
+    }
+    public void driving (double x, double y, double h, double slow, double gyro) {
+        switch (driveState) {
+            case DRIVE:
+                driveDO(x, y, h, slow, gyro);
+                break;
+            case HOLD:
+                hold(holdX, holdY, holdH, x, y ,h);
+                break;
+        }
+        multTelemetry.addData("state", driveState);
+        multTelemetry.addData("X",x);
+        multTelemetry.addData("Y",y);
+        multTelemetry.addData("H",h);
+
+    }
+    public void setDriveState(DriveState state) {
+        driveState = state;
+    }
+
+
+
+
+
 }

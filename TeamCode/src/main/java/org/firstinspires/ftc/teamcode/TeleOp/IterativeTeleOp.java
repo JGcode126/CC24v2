@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
+import static java.lang.Math.abs;
+
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorSparkFunOTOS;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -46,8 +48,7 @@ public class IterativeTeleOp extends OpMode {
         myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
         myOtos.setLinearUnit(DistanceUnit.INCH);
         myOtos.setAngularUnit(AngleUnit.DEGREES);
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, 0);
-        // X 3.8 Y 5.1
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
         myOtos.setOffset(offset);
         myOtos.setLinearScalar(1);
         myOtos.setAngularScalar(1.0);
@@ -87,7 +88,6 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        dt.driveDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_trigger, -myOtos.getPosition().h);
         if (gamepad1.y) {
             gamepad1.rumble(1);
         }
@@ -116,10 +116,16 @@ public class IterativeTeleOp extends OpMode {
             scoring.stopSpin();
         }
         if (gamepad1.dpad_left) {
-            dt.goToPos(0,0, myOtos.getPosition().x, myOtos.getPosition().y);
+            dt.goToPos(0,0, 0, myOtos.getPosition().x, myOtos.getPosition().y, -myOtos.getPosition().h);
         }
-        multTelemetry.update();
+        dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger, -myOtos.getPosition().h);
 
+
+        multTelemetry.addData("x", -gamepad1.left_stick_x);
+        multTelemetry.addData("CurrentX", myOtos.getPosition().x);
+        multTelemetry.addData("CurrentY", myOtos.getPosition().y);
+        multTelemetry.addData("CurrentHeading", -myOtos.getPosition().h);
+        multTelemetry.update();
     }
 
     @Override
