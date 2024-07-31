@@ -5,10 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+
+import static org.firstinspires.ftc.teamcode.TeleOp.IterativeTeleOp.DuckSpinnerSpinning.ON;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.DuckSpinner;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
 
@@ -23,12 +25,20 @@ public class IterativeTeleOp extends OpMode {
     IMU gyro;
     Scoring servoMove;
     Boolean driverOriented=true;
+    public DuckSpinner spinner;
+    public enum DuckSpinnerSpinning {
+        ON, OFF
+    }
+    DuckSpinnerSpinning duckSpinner = DuckSpinnerSpinning.OFF;
+    ElapsedTime timer = new ElapsedTime();
+
 
     @Override
     public void init() {
         //Set timer to 0
         runtime.reset();
         dt = new Drivetrain(hardwareMap);
+        spinner = new DuckSpinner(hardwareMap);
 
         gyro = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -64,6 +74,26 @@ public class IterativeTeleOp extends OpMode {
         else if (gamepad1.share) {
             servoMove.armUp();
         }
+
+
+        switch (duckSpinner) {
+            case ON:
+                timer.reset();
+            duckSpinner = DuckSpinnerSpinning.ON;
+            spinner.spin();
+            if (timer.seconds()>10){
+                duckSpinner = DuckSpinnerSpinning.OFF;
+            }
+                    break;
+            case OFF:
+                duckSpinner = DuckSpinnerSpinning.OFF;
+                spinner.notSpin();
+                if (gamepad1.left_bumper){
+                    duckSpinner = DuckSpinnerSpinning.ON;
+                }
+                break;
+        }
+
     }
 
     @Override

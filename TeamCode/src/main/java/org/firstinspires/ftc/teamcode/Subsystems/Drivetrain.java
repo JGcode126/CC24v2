@@ -68,7 +68,7 @@ if (slow == 1){
         integral += error;
         derivative = error - lastError;
         lastError = error;
-        double correction = (error * kp) + (integral * ki) + (derivative * kd);
+        double correction = (error * (-kp)) + (integral * (-ki)) + (derivative * (-kd));
         return correction;
 
     }
