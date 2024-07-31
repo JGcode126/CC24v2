@@ -64,7 +64,9 @@ ElapsedTime runtime = new ElapsedTime();
     public void loop() {
         //Code that *LOOPS* after you hit start
 
-
+        multTelemetry.addData("R",scoring.getR());
+        multTelemetry.addData("G",scoring.getG());
+        multTelemetry.addData("B",scoring.getB());
         if(gamepad1.options){
             driverOriented=true;
             gyro.resetYaw();

@@ -9,14 +9,18 @@ import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash.servoLOpen;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash.servoRClosed;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash.servoROpen;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash;
 
 public class Scoring {
@@ -24,11 +28,14 @@ public class Scoring {
     Servo servoL;
     Servo servoArm;
     CRServo duckSpinner;
-    ColorSensor clawSensor;
+    RevColorSensorV3 clawSensor;
     public SpinDuck spinDuck = OFF;
     public ArmSwitchStatement armSwitch = UPOPEN;
     ElapsedTime timer = new ElapsedTime();
     ScoringDash scoringDash;
+    MultipleTelemetry multTelemetry;
+
+
 
 
 
@@ -38,14 +45,24 @@ public class Scoring {
         servoL = hardwareMap.get(Servo.class, "servoL");
         servoArm = hardwareMap.get(Servo.class, "servoArm");
         duckSpinner = hardwareMap.get(CRServo.class, "duckSpinner");
-        clawSensor = hardwareMap.get(ColorSensor.class, "clawSensor" );
+        clawSensor = hardwareMap.get(RevColorSensorV3.class, "clawSensor" );
         scoringDash = new ScoringDash();
+        multTelemetry = new MultipleTelemetry();
     }
     public void open(){
         servoR.setPosition(servoROpen);
         //opens forward
         servoL.setPosition(servoLOpen);
-        // opens bachwards
+        // opens backwards
+    }
+    public int getR(){
+        return clawSensor.red();
+    }
+    public int getG(){
+        return clawSensor.green();
+    }
+    public int getB(){
+        return clawSensor.blue();
     }
     public void closed(){
         servoR.setPosition(servoRClosed);
@@ -64,16 +81,30 @@ public class Scoring {
     public  void  openDown(){
         open();
         armDown();
+        setArmState(UPOPEN);
     }
     public void closedDown(){
         closed();
         armDown();
-        if(clawColorBlue()){
+        if(clawColorBlue() && clawDistClose()){
             setArmState(DOWNOPEN);
-        } else if (clawColorRed()) {
+        } else if (clawColorRed() && clawDistClose()) {
             setArmState(DOWNOPEN);
         }
     }
+    public boolean clawColorYellow(){
+        if(clawSensor.red() > 70 && clawSensor.green() > 110 && clawSensor.blue() > 50){
+            return true;
+        } else {
+            return false;
+        }
+    }
+public void autoOpenYellow(){
+        if(clawColorYellow() && clawDistClose()){
+            setArmState(DOWNOPEN);
+        }
+}
+
     public void closedUp(){
         closed();
         armUp();
@@ -89,11 +120,15 @@ public class Scoring {
             return false;
         }
     }
+
     public boolean clawColorRed(){
         if (clawSensor.red() > scoringDash.getRedThreshold()){
             return true;
         } else {return false;}
 
+    }
+    public boolean clawDistClose(){
+        return clawSensor.getDistance(DistanceUnit.MM) < scoringDash.getDistThreshold();
     }
     public void stopSpinDuck() {duckSpinner.setPower(0);}
     public double getTime(){
@@ -122,6 +157,7 @@ public class Scoring {
         UPOPEN, DOWNOPEN, DOWNCLOSED, UPCLOSED
    }
    public void arm() {
+        double dist = clawSensor.getDistance(DistanceUnit.MM);
        switch (armSwitch) {
            case UPOPEN:
                openUp();

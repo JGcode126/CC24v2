@@ -11,6 +11,7 @@ public class ScoringDash {
     public static double  servoLClosed = .35;
     public static double blueThreshold = 500;
     public static double redThreshold = 500;
+    public static double distThreshold = 40;
 
     public double getServoROpen(){
         return servoROpen;
@@ -20,5 +21,7 @@ public class ScoringDash {
     public double getServoLClosed(){return servoLClosed;}
     public double getBlueThreshold(){return blueThreshold;}
     public double getRedThreshold(){return redThreshold;}
+    public double getDistThreshold(){return distThreshold;}
+
 }
 
