@@ -31,7 +31,7 @@ public class IterativeTeleOp extends OpMode {
     IMU gyro;
     Scoring scoring;
     boolean blue;
-    SparkFunOTOS myOtos;
+
 
 //    public static boolean superSlow;
 
@@ -45,19 +45,8 @@ public class IterativeTeleOp extends OpMode {
         dt = new Drivetrain(hardwareMap);
         scoring = new Scoring(hardwareMap);
 
-        myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
-        myOtos.setLinearUnit(DistanceUnit.INCH);
-        myOtos.setAngularUnit(AngleUnit.DEGREES);
-        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
-        myOtos.setOffset(offset);
-        myOtos.setLinearScalar(1);
-        myOtos.setAngularScalar(1.0);
-        myOtos.calibrateImu();
-        myOtos.resetTracking();
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
-        myOtos.setPosition(currentPosition);
-        myOtos.getPosition().y = 0;
-        myOtos.getPosition().x = 0;
+
+
 
 
 //        gyro = hardwareMap.get(IMU.class, "imu");
@@ -115,17 +104,10 @@ public class IterativeTeleOp extends OpMode {
         } else {
             scoring.stopSpin();
         }
-        if (gamepad1.dpad_left) {
-            dt.goToPos(0,0, 0, myOtos.getPosition().x, myOtos.getPosition().y, -myOtos.getPosition().h);
-        }
-        dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger, -myOtos.getPosition().h);
+        dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
 
 
-        multTelemetry.addData("x", -gamepad1.left_stick_x);
-        multTelemetry.addData("CurrentX", myOtos.getPosition().x);
-        multTelemetry.addData("CurrentY", myOtos.getPosition().y);
-        multTelemetry.addData("CurrentHeading", -myOtos.getPosition().h);
-        multTelemetry.update();
+
     }
 
     @Override

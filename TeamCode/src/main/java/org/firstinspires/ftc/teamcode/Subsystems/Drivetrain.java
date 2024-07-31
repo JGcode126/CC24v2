@@ -176,10 +176,10 @@ public class Drivetrain {
     public enum DriveState  {
         DRIVE, HOLD
     }
-    public void driving (double x, double y, double h, double slow, double gyro) {
+    public void driving (double x, double y, double h, double slow) {
         switch (driveState) {
             case DRIVE:
-                driveDO(x, y, h, slow, gyro);
+                driveDO(-y, -x, h, slow, myOtos.getPosition().h);
                 break;
             case HOLD:
                 hold(holdX, holdY, holdH, x, y ,h);
