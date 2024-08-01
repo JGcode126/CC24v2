@@ -30,11 +30,7 @@ public class IterativeTeleOp extends OpMode {
     IMU gyro;
     ServoMove servoMove;
 
-    //Vision related stuff
-    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
-    private AprilTagProcessor aprilTag;
-    private WebcamName webcam1, webcam2;
-    private VisionPortal visionPortal;
+
 
 
     @Override
@@ -53,30 +49,6 @@ public class IterativeTeleOp extends OpMode {
         //Code that runs ONCE when you hit init
 
         servoMove = new ServoMove(hardwareMap);
-
-//Vision related stuff:
-
-        aprilTag = new AprilTagProcessor.Builder()
-                .build();
-        telemetry.update();
-        webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
-        webcam2 = hardwareMap.get(WebcamName.class, "Webcam 2");
-        CameraName switchableCamera = ClassFactory.getInstance()
-                .getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
-
-        // Create the vision portal by using a builder
-        if (USE_WEBCAM) {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(switchableCamera)
-                    .addProcessors(pipeline, aprilTag)
-                    .build();
-        } else {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessors(pipeline, aprilTag)
-                    .build();
-        }
-
     }
 
     @Override
