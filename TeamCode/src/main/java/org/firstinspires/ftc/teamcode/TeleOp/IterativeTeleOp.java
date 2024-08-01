@@ -9,9 +9,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.ServoMove;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
@@ -23,6 +29,13 @@ public class IterativeTeleOp extends OpMode {
     Drivetrain dt;
     IMU gyro;
     ServoMove servoMove;
+
+    //Vision related stuff
+    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
+    private AprilTagProcessor aprilTag;
+    private WebcamName webcam1, webcam2;
+    private VisionPortal visionPortal;
+
 
     @Override
     public void init() {
@@ -40,6 +53,30 @@ public class IterativeTeleOp extends OpMode {
         //Code that runs ONCE when you hit init
 
         servoMove = new ServoMove(hardwareMap);
+
+//Vision related stuff:
+
+        aprilTag = new AprilTagProcessor.Builder()
+                .build();
+        telemetry.update();
+        webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
+        webcam2 = hardwareMap.get(WebcamName.class, "Webcam 2");
+        CameraName switchableCamera = ClassFactory.getInstance()
+                .getCameraManager().nameForSwitchableCamera(webcam1, webcam2);
+
+        // Create the vision portal by using a builder
+        if (USE_WEBCAM) {
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(switchableCamera)
+                    .addProcessors(pipeline, aprilTag)
+                    .build();
+        } else {
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(BuiltinCameraDirection.BACK)
+                    .addProcessors(pipeline, aprilTag)
+                    .build();
+        }
+
     }
 
     @Override
@@ -50,6 +87,7 @@ public class IterativeTeleOp extends OpMode {
 
     @Override
     public void loop() {
+        telemetry.update();
         //Code that *LOOPS* after you hit start
 
         dt.driveDO(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
