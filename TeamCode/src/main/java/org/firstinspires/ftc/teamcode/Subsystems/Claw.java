@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -44,9 +46,11 @@ public class Claw {
         }
 
         public void update(){
+
+                multTelemetry.addData("claw state", currentClawState);
                 switch(currentClawState) {
                         case OPEN:
-                                claw.setPosition(-0.10);
+                                claw.setPosition(0.20);
                                 if (!breamBroken()) {currentClawState = ClawState.WAIT; }
                                 break;
 
@@ -55,13 +59,17 @@ public class Claw {
                                 break;
 
                         case CLOSE:
-                                claw.setPosition(0.20);
+                                claw.setPosition(-0.10);
                                 break;
                 }
         }
 
         public void open(){
                 currentClawState = ClawState.OPEN;
+        }
+
+        public void close() {
+                currentClawState = ClawState.CLOSE;
         }
 
 

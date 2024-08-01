@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -63,9 +64,9 @@ public class IterativeTeleOp extends OpMode {
         } else if (gamepad1.dpad_up) {
             dt.liftArm(.25);
         } else if (gamepad1.dpad_left) {
-            dt.claw(-0.10   );
+            claw.close();
         } else if (gamepad1.dpad_right) {
-            dt.claw(0.20);
+            claw.open();
         } else if (gamepad1.right_bumper) {
             dt.duckSpinner(-1);
         } else {
@@ -98,13 +99,13 @@ public class IterativeTeleOp extends OpMode {
         //dt.drivenonDO(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger);
 
 
-        telemetry.addData("beam broken", !claw.breamBroken());
-        telemetry.addData("input turn", dt.inputTurn);
-        telemetry.addData("release angle", dt.releaseAngle);
-        telemetry.addData("target", dt.target);
-        telemetry.addData("target angle", dt.targetAngle);
-        telemetry.addData("Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        telemetry.update();
+        multTelemetry.addData("beam broken", claw.breamBroken());
+        multTelemetry.addData("input turn", dt.inputTurn);
+        multTelemetry.addData("release angle", dt.releaseAngle);
+        multTelemetry.addData("target", dt.target);
+        multTelemetry.addData("target angle", dt.targetAngle);
+        multTelemetry.addData("Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        multTelemetry.update();
     }
 
     @Override
