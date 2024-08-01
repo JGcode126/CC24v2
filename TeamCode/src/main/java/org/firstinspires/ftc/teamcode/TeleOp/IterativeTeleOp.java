@@ -106,7 +106,7 @@ public class IterativeTeleOp extends OpMode {
         }
         dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
 
-
+        multTelemetry.update();
 
     }
 

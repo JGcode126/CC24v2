@@ -19,6 +19,7 @@ import static java.lang.Math.signum;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -38,12 +39,16 @@ public class Drivetrain {
     double lastErrorDrive;
     double lastErrorStrafe;
 
+    boolean reset = true;
+
     double holdX;
     double holdY;
     double holdH;
     DriveState driveState;
 
     int holdNum;
+
+    ElapsedTime timer;
 
     SparkFunOTOS myOtos;
 
@@ -73,7 +78,7 @@ public class Drivetrain {
         myOtos.setAngularUnit(AngleUnit.DEGREES);
         SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
         myOtos.setOffset(offset);
-        myOtos.setLinearScalar(1);
+        myOtos.setLinearScalar(1.01951);
         myOtos.setAngularScalar(1.0);
         myOtos.calibrateImu();
         myOtos.resetTracking();
@@ -82,22 +87,32 @@ public class Drivetrain {
         myOtos.getPosition().y = 0;
         myOtos.getPosition().x = 0;
 
+        timer = new ElapsedTime();
+
     }
     public void driveDO(double drive, double strafe, double turn, double slow, double heading) {
         Vector2d driveVector = new Vector2d(strafe, drive);
-        Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
+        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(heading));
 
         if (turn != 0) {
             inputTurn = turn;
             releaseAngle = heading;
         } else {
-            targetAngle = releaseAngle + 0.5;
-            inputTurn = pidHeading(targetAngle, 0.02, 0, 0, heading);
+            targetAngle = releaseAngle;// + 0.5;
+            inputTurn = pidHeading(targetAngle, -0.02, 0, 0, heading);
         }
+        multTelemetry.addData("gyro", heading);
 
         if (abs(drive) < .0001 && abs(strafe) < .0001 && abs(turn) < .0001) {
             holdNum = 0;
-            setDriveState(HOLD);
+            if (reset) {
+                reset = false;
+                timer.reset();
+            }
+            if (timer.seconds() > .5) {
+                setDriveState(HOLD);
+            }
+
         }
 
         drive = rotatedVector.y;
@@ -115,12 +130,21 @@ public class Drivetrain {
             bl.setPower((drive - strafe + inputTurn) * 1);
         }
     }
-    public double pidHeading(double target, double kp, double ki, double kd, double error) {
+    public double pidHeading(double target, double kp, double ki, double kd, double current) {
+        double error = target - current;
         integral += error;
         double derivative = error - lastErrorHeading;
-        error = target - error;
+
+        if (error > 180) {
+            error -= 360;
+        } else if (error < -180) {
+            error += 360;
+        }
         double correction = (error * kp) + (integral * ki) + (derivative * kd);
         lastErrorHeading = error;
+        multTelemetry.addData("target", target);
+        multTelemetry.addData("current", current);
+        multTelemetry.addData("error", error);
         return correction;
     }
 
@@ -147,7 +171,7 @@ public class Drivetrain {
 
 
         Vector2d driveVector = new Vector2d(targetX - currentX, targetY - currentY);
-        Vector2d rotatedVector = driveVector.rotate(Math.toRadians(currentHeading));
+        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(currentHeading));
 
         inputTurn = pidHeading(targetHeading, Kph, Kih, Kdh, currentHeading);
 
@@ -193,6 +217,7 @@ public class Drivetrain {
     }
     public void setDriveState(DriveState state) {
         driveState = state;
+        reset = true;
     }
 
 
