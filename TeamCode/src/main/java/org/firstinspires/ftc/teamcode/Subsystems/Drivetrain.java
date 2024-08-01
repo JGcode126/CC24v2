@@ -1,19 +1,12 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
-
-import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
 public class Drivetrain {
     //Declare Motors
-    IMU gyro;
     DcMotor bl;
     DcMotor br;
     DcMotor fl;
@@ -49,13 +42,6 @@ public class Drivetrain {
         return ((error * Kp) + (integral * Ki) + (derivative * Kd));
     }
 
-    public void drive(double drive, double turn, double strafe, double speed) {
-        ;bl.setPower((drive - strafe + turn) * speed);
-        br.setPower((drive + strafe - turn) * speed);
-        fl.setPower((drive + strafe + turn) * speed);
-        fr.setPower((drive - strafe - turn) * speed);
-    }
-
     public void driveDO(double drive, double strafe, double turn, double slow, double heading) {
         Vector2d driveVector = new Vector2d(strafe, drive);
         Vector2d rotatedVector = driveVector.rotate(toRadians(heading));
@@ -64,7 +50,6 @@ public class Drivetrain {
         strafe = rotatedVector.x;
 
 
-        double inputTurn;
         if(turn != 0) {
             releaseAngle = heading;
         } else {

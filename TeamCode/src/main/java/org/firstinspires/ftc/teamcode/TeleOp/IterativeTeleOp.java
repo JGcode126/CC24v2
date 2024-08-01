@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
-
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.teamcode.Utilities.MathUtils.angleMode.DEGREES;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.DuckSpinner;
 
@@ -20,16 +18,20 @@ import org.firstinspires.ftc.teamcode.Subsystems.DuckSpinner;
 public class IterativeTeleOp extends OpMode {
 
     //Declare Subsystems
+    DcMotor arm;
     Drivetrain drive;
     IMU gyro;
     DuckSpinner duckSpinner;
     Servo claw;
+    TouchSensor beam;
     //Timer
     ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {
         //Set timer to 0
+        beam = hardwareMap.get(TouchSensor.class, "breakbeam");
+        arm = hardwareMap.get(DcMotor.class, "arm");
         duckSpinner = new DuckSpinner(hardwareMap);
         runtime.reset();
         drive = new Drivetrain(hardwareMap);
@@ -40,6 +42,12 @@ public class IterativeTeleOp extends OpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
                 gyro.initialize(parameters);
         //Code that runs when you hit init
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setTargetPosition(0);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setPower(0.5);
 
     }
 
@@ -48,6 +56,7 @@ public class IterativeTeleOp extends OpMode {
         //Code that runs when you hit start
             gyro.resetYaw();
     }
+    int position = 0;
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
@@ -58,10 +67,7 @@ public class IterativeTeleOp extends OpMode {
         }
         if (gamepad1.left_bumper) {
             duckSpinner.duckSpinnerSwitch(1);
-        } else {
-            duckSpinner.duckSpinnerSwitch(0);
-        }
-        if (gamepad1.right_bumper) {
+        } else if (gamepad1.right_bumper) {
             duckSpinner.duckSpinnerSwitch(2);
         } else {
             duckSpinner.duckSpinnerSwitch(0);
@@ -72,22 +78,31 @@ public class IterativeTeleOp extends OpMode {
         if (gamepad1.dpad_right) {
             claw.setPosition(0.5);
         }
-        if (gamepad1.dpad_right) {
+        if (gamepad1.dpad_up) {
             claw.setPosition(0.35);
         }
-         telemetry.addData("Heading", -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        if (gamepad1.cross) {
+            position = 0;
+        }
+        if (gamepad1.triangle) {
+            position = 750;
+        }
+        if (beam.isPressed()) {
+            claw.setPosition(0);
+        }
+        arm.setTargetPosition(position);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        telemetry.addData("Heading", -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("Arm Position", arm.getCurrentPosition());
         telemetry.update();
+
     }
-
-
 
     @Override
     public void stop(){
         //Code that runs when you hit stop
-
         telemetry.addData("Runtime", runtime);
         telemetry.update();
-
     }
 
 }
