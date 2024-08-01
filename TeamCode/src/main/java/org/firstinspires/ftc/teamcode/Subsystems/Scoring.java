@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 
 import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ArmSwitchStatement.DOWNOPEN;
+import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ArmSwitchStatement.UPCLOSED;
 import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ArmSwitchStatement.UPOPEN;
 import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.SpinDuck.OFF;
 import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.SpinDuck.ON;
@@ -10,18 +11,24 @@ import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash.servoRClosed;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash.servoROpen;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.telemetry;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Utilities.DashConstants.ScoringDash;
+
+import java.text.BreakIterator;
 
 public class Scoring {
     Servo servoR;
@@ -34,7 +41,8 @@ public class Scoring {
     ElapsedTime timer = new ElapsedTime();
     ScoringDash scoringDash;
     MultipleTelemetry multTelemetry;
-
+    TouchSensor  clawBreakBeam;
+    boolean firstRun = true;
 
 
 
@@ -48,6 +56,8 @@ public class Scoring {
         clawSensor = hardwareMap.get(RevColorSensorV3.class, "clawSensor" );
         scoringDash = new ScoringDash();
         multTelemetry = new MultipleTelemetry();
+        clawBreakBeam = hardwareMap.get(TouchSensor.class, "clawBreakBeam");
+
     }
     public void open(){
         servoR.setPosition(servoROpen);
@@ -77,6 +87,15 @@ public class Scoring {
     public void openUp(){
         open();
         armUp();
+        if (clawBreakBeam.isPressed()) {
+            if (firstRun){
+                firstRun = false;
+                timer.reset();}
+            if (timer.seconds() > 1) {
+                setArmState(UPCLOSED);
+            }
+        }
+
     }
     public  void  openDown(){
         open();
@@ -127,6 +146,11 @@ public void autoOpenYellow(){
         } else {return false;}
 
     }
+    public boolean getBeam(){
+        return clawBreakBeam.isPressed();
+    }
+
+
     public boolean clawDistClose(){
         return clawSensor.getDistance(DistanceUnit.MM) < scoringDash.getDistThreshold();
     }
@@ -158,6 +182,8 @@ public void autoOpenYellow(){
    }
    public void arm() {
         double dist = clawSensor.getDistance(DistanceUnit.MM);
+        multTelemetry.addData("beam", clawBreakBeam.isPressed());
+        multTelemetry.update();
        switch (armSwitch) {
            case UPOPEN:
                openUp();
@@ -180,6 +206,7 @@ public void autoOpenYellow(){
    }
    public  void  setArmState(ArmSwitchStatement state){
         timer.reset();
+        firstRun = true;
         armSwitch = state;
    }
 

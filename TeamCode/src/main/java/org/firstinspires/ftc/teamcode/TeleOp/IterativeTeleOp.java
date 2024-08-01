@@ -94,6 +94,7 @@ ElapsedTime runtime = new ElapsedTime();
         multTelemetry.addData("Gyro Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         multTelemetry.addData("Release Angle", dt.getReleaseAngle());
         multTelemetry.addData("duck state", scoring.getState());
+        multTelemetry.addData("beam", scoring.getBeam());
         multTelemetry.update();
     }
 
