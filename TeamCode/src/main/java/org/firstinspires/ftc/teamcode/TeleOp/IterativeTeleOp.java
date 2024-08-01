@@ -56,13 +56,15 @@ public class IterativeTeleOp extends OpMode {
     public void loop() {
         //Code that *LOOPS* after you hit start
         dt.driveDO(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), gamepad1.right_trigger, gamepad1.triangle );
+        //dt.altDrive(gamepad1.right_trigger, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_trigger);
 
         if (gamepad1.left_bumper) {
             dt.duckSpinner(1);
         } else if (gamepad1.dpad_down) {
             dt.liftArm(-.25);
         } else if (gamepad1.dpad_up) {
-            dt.liftArm(.25);        } else if (gamepad1.dpad_left) {
+            dt.liftArm(.25);
+        } else if (gamepad1.dpad_left) {
             claw.close();
 
         } else if (gamepad1.dpad_right) {
@@ -96,6 +98,7 @@ public class IterativeTeleOp extends OpMode {
 //        }
 
         claw.update();
+
 
 
 

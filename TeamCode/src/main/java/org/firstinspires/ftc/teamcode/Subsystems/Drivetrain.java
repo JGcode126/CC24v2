@@ -151,6 +151,37 @@ public class Drivetrain {
         claw.setPosition(position);
     }
 
+    public void altDrive(double drive, double strafe, double turn, double reverse) {
+
+        if (drive > 0.05) {
+            motorfl.setPower(drive);
+            motorfr.setPower(-drive);
+            motorbl.setPower(drive);
+            motorbr.setPower(-drive);
+        }
+
+        if (strafe != 0) {
+            motorfl.setPower(drive);
+            motorbl.setPower(-drive);
+            motorfr.setPower(-drive);
+            motorbr.setPower(drive);
+        }
+
+        if (turn != 0) {
+            motorfl.setPower(drive);
+            motorbl.setPower(drive);
+            motorfr.setPower(-drive);
+            motorbr.setPower(-drive);
+        }
+
+        if (reverse > 0.05) {
+            motorfl.setPower(-drive);
+            motorfr.setPower(drive);
+            motorbl.setPower(-drive);
+            motorbr.setPower(drive);
+        }
+    }
+
 
 
 //    public void drivenonDO(double drive, double strafe, double turn, double slow){
