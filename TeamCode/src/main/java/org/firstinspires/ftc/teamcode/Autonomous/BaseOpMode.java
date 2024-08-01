@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -31,6 +32,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static Controller driver1, driver2;
     public static List<LynxModule> allHubs;
 
+    public static ColorSensor mySensor;
+
     /**
      * Initialize opMode Utilities
      * @param opMode
@@ -40,6 +43,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         isActive = false;
 
         hardware = opMode.hardwareMap;
+        mySensor = hardware.get(ColorSensor.class, "revColorSensor");
+        mySensor.
 
         telemetree = opMode.telemetry;
         telemetree.setMsTransmissionInterval(5);

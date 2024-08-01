@@ -55,4 +55,4 @@ public class StaticDriveWheel extends Motor {
     public double getAngle(){
         return angle;
     }
-}       
+}
