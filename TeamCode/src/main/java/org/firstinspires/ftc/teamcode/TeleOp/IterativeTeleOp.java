@@ -9,6 +9,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.lineScal;
+import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.DOWN;
+import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.PCLOSE;
+import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.RCLOSE;
+import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.TRANSFERUP;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
@@ -77,27 +81,17 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
-        if (gamepad1.y) {
-            gamepad1.rumble(1);
-        }
         if (gamepad1.left_bumper) {
-            scoring.ringGrab();
+            scoring.setScoreState(RCLOSE);
         }
         if (gamepad1.right_bumper) {
-            scoring.pixelGrab();
+            scoring.setScoreState(PCLOSE);
         }
         if (gamepad1.dpad_down) {
-            scoring.down();
-
+            scoring.setScoreState(DOWN);
         }
         if (gamepad1.dpad_up) {
-            scoring.score();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            scoring.intake();
+            scoring.setScoreState(TRANSFERUP);
         }
         if (gamepad1.left_trigger > .05) {
             scoring.spin(blue);
@@ -107,6 +101,8 @@ public class IterativeTeleOp extends OpMode {
         dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
 
         multTelemetry.update();
+
+        scoring.scoring();
 
     }
 
