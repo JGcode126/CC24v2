@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+
 /*
  * This OpMode demonstrates how to use a digital channel.
  *
@@ -44,14 +45,15 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
  */
 @TeleOp(name = "Sensor: digital channel", group = "Sensor")
 @Disabled
-public class SensorDigitalTouch extends LinearOpMode {
+public class
+SensorDigitalTouch extends LinearOpMode {
     DigitalChannel digitalTouch;  // Digital channel Object
 
     @Override
     public void runOpMode() {
 
         // get a reference to our touchSensor object.
-        digitalTouch = hardwareMap.get(DigitalChannel.class, "digitalTouch");
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "breakBeam");
 
         digitalTouch.setMode(DigitalChannel.Mode.INPUT);
         telemetry.addData("DigitalTouchSensorExample", "Press start to continue...");

@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
@@ -15,9 +16,6 @@ public class Drivetrain {
     DcMotor motorfl;
     DcMotor motorbr;
     DcMotor motorbl;
-    double Ki;
-    double Kp;
-    double Kd;
 
     double integralSum;
     double lastError;
@@ -36,9 +34,7 @@ public class Drivetrain {
 
         motorfl.setDirection(DcMotor.Direction.REVERSE);
         motorbl.setDirection(DcMotor.Direction.REVERSE);
-        Kp = -0.03;
-        Ki = 0.0;
-        Kd = 0.0;
+
     }
 
 
@@ -63,14 +59,14 @@ public class Drivetrain {
         drive = rotatedVector.y;
         strafe = rotatedVector.x;
 
-        /* if (turn != 0) {
+         if (turn != 0) {
             inputTurn = turn;
             releaseAngle = (heading);
         } else {
-            targetAngle = releaseAngle + 0.6;
+            targetAngle = releaseAngle;
             inputTurn = PID(targetAngle-heading);
-        } */
-        inputTurn = turn;
+        }
+
         if (slow > 0.05) {
             motorfr.setPower((drive + strafe + inputTurn) * -.25);
             motorfl.setPower((drive - strafe - inputTurn) * -.25);
@@ -78,10 +74,10 @@ public class Drivetrain {
             motorbl.setPower((drive + strafe - inputTurn) * -.25);
 
         } else {
-            motorfr.setPower((drive + strafe + inputTurn) * -.75);
-            motorfl.setPower((drive - strafe - inputTurn) * -.75);
-            motorbr.setPower((drive - strafe + inputTurn) * -.75);
-            motorbl.setPower((drive + strafe - inputTurn) * -.75);
+            motorfr.setPower((drive + strafe + inputTurn) * -.78);
+            motorfl.setPower((drive - strafe - inputTurn) * -.78);
+            motorbr.setPower((drive - strafe + inputTurn) * -.78);
+            motorbl.setPower((drive + strafe - inputTurn) * -.78);
         }
     }
     public double PID(double error){
@@ -89,14 +85,19 @@ public class Drivetrain {
 
             double ChangeTime = (System.currentTimeMillis() - PreTime) / 1000.0;
             double ChangeError = error - lastError;
+            if (ChangeError < 0){
+                ChangeError += 360;
+            } else if (ChangeError > 360){
+                ChangeError -= 360;
+            }
             double ChangeRate = ChangeError / ChangeTime;
 
             lastError = error;
             PreTime = System.currentTimeMillis();
 
-            double pComponent = error * Kp;
-            double iComponent = integralSum * Ki;
-            double dComponent = ChangeRate * Kd;
+            double pComponent = error * DrivetrainDash.kP;
+            double iComponent = integralSum * DrivetrainDash.kI;
+            double dComponent = ChangeRate * DrivetrainDash.kD;
 
             return pComponent +iComponent +dComponent;
     }

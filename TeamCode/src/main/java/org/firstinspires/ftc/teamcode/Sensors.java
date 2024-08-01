@@ -9,6 +9,7 @@ public class Sensors {
     private static long currentTimeMillis;
     public static long loopTime;
     private static long pastTime;
+
     public static ElapsedTime intakeTime = new ElapsedTime();
 
 
@@ -27,5 +28,6 @@ public class Sensors {
     public static long currentTimeMillis(){ return currentTimeMillis; }
 
 
-}
+    }
+
 
