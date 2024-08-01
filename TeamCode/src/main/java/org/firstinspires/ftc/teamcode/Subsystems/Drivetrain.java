@@ -111,7 +111,7 @@ public class Drivetrain {
         }
 
         if (turn != 0) {
-            ;inputTurn = turn;
+            inputTurn = turn;
             releaseAngle = heading;
         } else {
             targetAngle = releaseAngle + 0.5;
@@ -150,6 +150,8 @@ public class Drivetrain {
     public void claw(double position) {
         claw.setPosition(position);
     }
+
+
 
 //    public void drivenonDO(double drive, double strafe, double turn, double slow){
 //        if (slow > 0.05) {

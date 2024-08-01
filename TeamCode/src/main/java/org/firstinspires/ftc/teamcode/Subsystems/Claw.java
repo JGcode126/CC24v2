@@ -72,6 +72,10 @@ public class Claw {
                 currentClawState = ClawState.CLOSE;
         }
 
+        public void resetBreakBeam() {
+                currentClawState = ClawState.WAIT;
+        }
+
 
 
 

@@ -62,9 +62,9 @@ public class IterativeTeleOp extends OpMode {
         } else if (gamepad1.dpad_down) {
             dt.liftArm(-.25);
         } else if (gamepad1.dpad_up) {
-            dt.liftArm(.25);
-        } else if (gamepad1.dpad_left) {
+            dt.liftArm(.25);        } else if (gamepad1.dpad_left) {
             claw.close();
+
         } else if (gamepad1.dpad_right) {
             claw.open();
         } else if (gamepad1.right_bumper) {
@@ -72,6 +72,10 @@ public class IterativeTeleOp extends OpMode {
         } else {
             dt.duckSpinner(0);
             dt.liftArm(0);
+        }
+
+        if (gamepad1.square) {
+            claw.resetBreakBeam();
         }
 
 //        if (gamepad1.triangle) {
