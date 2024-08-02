@@ -20,6 +20,11 @@ public class PID {
         this.integralWeight = integral;
         this.derivativeWeight = derivative;
     }
+    public void setPID(double proportional, double integral, double derivative){
+        proportionalWeight = proportional;
+        integralWeight = integral;
+        derivativeWeight = derivative;
+    }
 
     public double update(double error, boolean isTuning){
 
