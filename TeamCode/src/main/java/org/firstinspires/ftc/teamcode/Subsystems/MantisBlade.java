@@ -10,6 +10,7 @@ public class MantisBlade {
 
     public MantisBlade(HardwareMap hardwareMap) {
         bladeMotor = hardwareMap.get(DcMotorEx.class, "bladeMotor");
+
     }
 
     public void extend(double power) {
@@ -20,8 +21,8 @@ public class MantisBlade {
         bladeMotor.setPower(power);
     }
 
-    public void still(double power) {
-        bladeMotor.setPower(power);
+    public void still() {
+        bladeMotor.setPower(0);
     }
 
 }
