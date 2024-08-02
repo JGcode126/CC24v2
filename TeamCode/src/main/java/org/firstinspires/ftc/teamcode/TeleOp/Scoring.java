@@ -24,9 +24,9 @@ public class Scoring {
             limitSwitch = hardwareMap.get(TouchSensor.class, "789");
 
         }
-        while(){
+
 
         }
-    }
+
 
 
