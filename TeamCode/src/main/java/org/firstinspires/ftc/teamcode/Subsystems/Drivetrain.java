@@ -25,13 +25,13 @@ public class Drivetrain {
     }
 
     //Callable drive functions
-    public void driverOriented(double drive, double strafe, double turn, double heading, double speed, double slow) {
+    public void driverOriented(double drive, double strafe, double turn, double heading, double speed, boolean slow) {
         Vector2d driveVector = new Vector2d(strafe, drive);
         Vector2d rotatedVector = driveVector.rotate(Math.toRadians(heading));
 
         drive = rotatedVector.y;
         strafe = rotatedVector.x;
-        if (slow >= 0.05) {
+        if (slow) {
             fl.setPower((drive + strafe + turn) * (speed / 4));
             fr.setPower((drive - strafe - turn) * (speed / 4));
             bl.setPower((drive - strafe + turn) * (speed / 4));

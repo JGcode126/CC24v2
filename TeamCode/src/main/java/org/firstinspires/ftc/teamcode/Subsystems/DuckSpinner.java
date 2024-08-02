@@ -12,10 +12,8 @@ public class DuckSpinner {
 
     public void spinDuckForward() {
         duckSpin.setPower(1);
-        duckSpin.setPower(0);
     }
     public void spinDuckBackward() {
         duckSpin.setPower(-1);
-        duckSpin.setPower(0);
     }
 }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.TeleOp.IterativeTeleOp.duckSpin.OFF;
+import static org.firstinspires.ftc.teamcode.TeleOp.IterativeTeleOp.duckSpin.ON;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kd;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Ki;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kp;
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -33,6 +36,12 @@ public class IterativeTeleOp extends OpMode {
     Scoring scoring;
     DuckSpinner spin;
     DcMotor arm;
+    TouchSensor breakbeam;
+    public enum duckSpin {
+        ON, OFF
+    }
+    duckSpin spinner1;
+    duckSpin spinner2;
 
 
     @Override
@@ -54,7 +63,10 @@ public class IterativeTeleOp extends OpMode {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setPower(1);
+        arm.setPower(0.5);
+        breakbeam = hardwareMap.get(TouchSensor.class, "breakbeam");
+        spinner1 = ON;
+        spinner2 = ON;
     }
 
     @Override
@@ -78,17 +90,15 @@ public class IterativeTeleOp extends OpMode {
     int armD = 0;
     boolean left = false;
     boolean right = false;
-    public enum duckSpin {
-        ON, OFF
-    }
-    duckSpin spinner;
+    double speed = 0.7;
+    boolean goal = true;
 
 
     @Override
     public void loop() {
         //Code that *LOOPS* after you hit start
         if (gamepad1.right_stick_x != 0) {
-            drivetrain.driverOriented(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES),0.7, gamepad1.right_trigger);
+            drivetrain.driverOriented(gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES),speed, gamepad1.square);
             target = gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         } else {
             error = target - gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
@@ -96,36 +106,46 @@ public class IterativeTeleOp extends OpMode {
             derivative = lastError - error;
             lastError = error;
             turn = (error * Kp) + (integral * Ki) + (derivative * Kd);
-            drivetrain.driverOriented(gamepad1.left_stick_y, -gamepad1.left_stick_x, -turn, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), 1, gamepad1.right_trigger);
+            drivetrain.driverOriented(gamepad1.left_stick_y, -gamepad1.left_stick_x, -turn, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), speed, gamepad1.square);
         }
-        if (gamepad1.left_trigger >= 0.05) {
+        if (gamepad1.dpad_up) {
             gyro.resetYaw();
             target = 0;
         }
-        if (gamepad1.cross) {
+        if (gamepad1.left_bumper) {
             scoring.open();
+        }
+        if (breakbeam.isPressed()) {
+            goal = false;
+            if (runtime.seconds() > 1) {
+                scoring.open();
+                goal = true;
+            }
+        }
+        if (goal) {
+            runtime.reset();
         }
         if (gamepad1.circle) {
             scoring.ring();
         }
-        if (gamepad1.triangle) {
+        if (gamepad1.right_bumper) {
             scoring.pixel();
         }
-        if (gamepad1.right_bumper) {
+        if (gamepad1.dpad_left) {
             runtime.reset();
             left = true;
             right = false;
         }
-        if (gamepad1.left_bumper) {
+        if (gamepad1.dpad_right) {
             runtime.reset();
             left = false;
             right = true;
         }
         if (left) {
-            switch (spinner) {
+            switch (spinner1) {
                 case ON:
                     if (getRuntime() <= 30) {
-                        spinner = duckSpin.OFF;
+                        spinner1 = OFF;
                     }
                     spin.spinDuckForward();
                     break;
@@ -133,11 +153,11 @@ public class IterativeTeleOp extends OpMode {
                     break;
             }
         }
-        if (left) {
-            switch (spinner) {
+        if (right) {
+            switch (spinner2) {
                 case ON:
                     if (getRuntime() <= 30) {
-                        spinner = duckSpin.OFF;
+                        spinner2 = OFF;
                     }
                     spin.spinDuckBackward();
                     break;
@@ -145,29 +165,29 @@ public class IterativeTeleOp extends OpMode {
                     break;
             }
         }
-        if (gamepad1.dpad_down) {
-            distance = 300;
+        if (distance > 50) {
+            speed = 0.3;
+        } else {
+            speed = 0.7;
+        }
+        if (gamepad1.right_trigger > 0.05) {
+            distance = 825;
             telemetry.addData("dpad down", distance);
         }
-        if (gamepad1.dpad_up) {
-            distance = 0;
+        if (gamepad1.left_trigger > 0.05) {
+            distance = 50;
             telemetry.addData("dpad up", distance);
         }
         telemetry.addData("heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.addData("target", target);
         arm.setTargetPosition(distance);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        armError = distance - arm.getCurrentPosition();
 //        armP = armError;
 //        armI += armError;
 //        armD = armLastError - armError;
 //        armLastError = armError;
-//        if ((armP * pGain) + (armI * iGain) + (armD * dGain) <= arm.getCurrentPosition()) {
-//            arm.setPower(0.5);
-//        } else if ((armP * pGain) + (armI * iGain) + (armD * dGain) >= arm.getCurrentPosition()) {
-//            arm.setPower(-0.5);
-//        } else {
-//            arm.setPower(0);
-//        }
+//        arm.setPower((armP * pGain) + (armI * iGain) + (armD * dGain));
     }
 
     @Override
