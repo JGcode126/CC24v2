@@ -19,10 +19,10 @@ public class Drivetrain {
 
     public Drivetrain(HardwareMap hardwareMap) {
         //Instantiate motors
-        motorfr = hardwareMap.get(DcMotor.class, "drivefr");
-        motorfl = hardwareMap.get(DcMotor.class, "drivefl");
-        motorbr = hardwareMap.get(DcMotor.class, "drivebr");
-        motorbl = hardwareMap.get(DcMotor.class, "drivebl");
+        motorfr = hardwareMap.get(DcMotor.class, "fr");
+        motorfl = hardwareMap.get(DcMotor.class, "fl");
+        motorbr = hardwareMap.get(DcMotor.class, "br");
+        motorbl = hardwareMap.get(DcMotor.class, "bl");
         //fr br reverse
         motorfr.setDirection(DcMotor.Direction.REVERSE);
         motorbr.setDirection(DcMotor.Direction.REVERSE);

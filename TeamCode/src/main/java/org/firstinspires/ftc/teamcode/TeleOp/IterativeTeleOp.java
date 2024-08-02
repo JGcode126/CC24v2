@@ -63,12 +63,18 @@ public class IterativeTeleOp extends OpMode {
         //Code that *LOOPS* after you hit start
 
         dt.driveDO(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, -gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+
         //Servos
         if (gamepad1.square){
             servoMove.pos1();
         }
         else if (gamepad1.right_bumper){
             servoMove.spinServo();
+        }
+
+
+        if (gamepad1.left_trigger >= 0.05) {
+            gyro.resetYaw();
         }
 
         //dt.drive(-gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger);
