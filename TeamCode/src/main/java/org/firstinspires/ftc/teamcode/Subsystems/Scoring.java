@@ -32,8 +32,11 @@ public class Scoring {
 
     }
 
+
+    // RINGS
+
     public boolean colorSensorOrange() {
-        if (colorSensor.red() > 245 && colorSensor.green() > 250 && colorSensor.blue() > 78) {
+        if (colorSensor.red() > 245 && colorSensor.red() > 255 && colorSensor.green() > 250 && colorSensor.green() > 260 && colorSensor.blue() > 78 && colorSensor.blue() > 88) {
             return true;
         } else {
             return false;
@@ -41,7 +44,7 @@ public class Scoring {
     }
 
     public boolean colorSensorRed() {
-        if (colorSensor.red() > 130 && colorSensor.green() > 70 && colorSensor.blue() > 47) {
+        if (colorSensor.red() > 130 && colorSensor.red() < 145 && colorSensor.green() > 70 && colorSensor.green() < 82 && colorSensor.blue() > 47 && colorSensor.blue() < 55) {
             return true;
         } else {
             return false;
@@ -49,31 +52,17 @@ public class Scoring {
     }
 
     public boolean colorSensorBlue() {
-        if (colorSensor.red() > 245 && colorSensor.green() > 250 && colorSensor.blue() > 78) {
+        if (colorSensor.red() > 35 && colorSensor.red() < 45 && colorSensor.green() > 105 && colorSensor.green() < 115 && colorSensor.blue() > 240 && colorSensor.blue() < 250) {
             return true;
         } else {
             return false;
         }
     }
+
+    // PIXELS
 
     public boolean colorSensorWhite() {
-        if (colorSensor.red() > 225 && colorSensor.green() > 390 && colorSensor.blue() > 345) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean colorSensorYellow() {
-        if (colorSensor.red() > 100 && colorSensor.green() > 150 && colorSensor.blue() > 38) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean colorSensorGreen() {
-        if (colorSensor.red() > 33 && colorSensor.green() > 105 && colorSensor.blue() > 35) {
+        if (colorSensor.red() > 195 && colorSensor.red() < 205 && colorSensor.green() > 330 && colorSensor.green() < 340 && colorSensor.blue() > 290 && colorSensor.blue() < 300) {
             return true;
         } else {
             return false;
@@ -81,7 +70,23 @@ public class Scoring {
     }
 
     public boolean colorSensorPurple() {
-        if (colorSensor.red() > 100 && colorSensor.green() > 145 && colorSensor.blue() > 195) {
+        if (colorSensor.red() > 78 && colorSensor.red() < 78 && colorSensor.green() > 96 && colorSensor.green() < 106 && colorSensor.blue() > 135 && colorSensor.blue() < 145) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean colorSensorGreen() {
+        if (colorSensor.red() > 50 && colorSensor.red() < 60 && colorSensor.green() > 164 && colorSensor.green() < 174 && colorSensor.blue() > 59 && colorSensor.blue() < 69) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean colorSensorYellow() {
+        if (colorSensor.red() > 162 && colorSensor.red() < 172 && colorSensor.green() > 233 && colorSensor.green() < 243 && colorSensor.blue() > 61 && colorSensor.blue() < 71) {
             return true;
         } else {
             return false;

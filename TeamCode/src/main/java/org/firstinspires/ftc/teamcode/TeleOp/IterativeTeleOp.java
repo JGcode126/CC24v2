@@ -107,6 +107,12 @@ public class IterativeTeleOp extends OpMode {
         multTelemetry.addData("R", scoring.getR()/25);
         multTelemetry.addData("G", scoring.getG()/25);
         multTelemetry.addData("B", scoring.getB()/25);
+        multTelemetry.addData("Red", scoring.colorSensorRed());
+        multTelemetry.addData("Green", scoring.colorSensorGreen());
+        multTelemetry.addData("Blue", scoring.colorSensorBlue());
+        multTelemetry.addData("Purple", scoring.colorSensorPurple());
+        multTelemetry.addData("Orange", scoring.colorSensorOrange());
+        multTelemetry.addData("White", scoring.colorSensorWhite());
 
     }
 
