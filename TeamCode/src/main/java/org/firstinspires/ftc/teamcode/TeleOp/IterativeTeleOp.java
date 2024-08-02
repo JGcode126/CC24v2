@@ -104,6 +104,10 @@ public class IterativeTeleOp extends OpMode {
 
         scoring.scoring();
 
+        multTelemetry.addData("R", scoring.getR()/25);
+        multTelemetry.addData("G", scoring.getG()/25);
+        multTelemetry.addData("B", scoring.getB()/25);
+
     }
 
     @Override

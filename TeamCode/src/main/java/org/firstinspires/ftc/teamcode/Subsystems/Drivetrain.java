@@ -142,16 +142,16 @@ public class Drivetrain {
         }
         double correction = (error * kp) + (integral * ki) + (derivative * kd);
         lastErrorHeading = error;
-        multTelemetry.addData("target", target);
-        multTelemetry.addData("current", current);
-        multTelemetry.addData("error", error);
+//        multTelemetry.addData("target", target);
+//        multTelemetry.addData("current", current);
+//        multTelemetry.addData("error", error);
         return correction;
     }
 
     public double pfdDrive(double kp, double kd, double kf, double error) {
         double derivative = error - lastErrorDrive;
         double correction = (error * kp) + (derivative * kd);
-        multTelemetry.addData("driveError", error);
+        //multTelemetry.addData("driveError", error);
         if (abs(error) > DeadZone) {
             correction += signum(error) * kf;
         }
@@ -160,7 +160,7 @@ public class Drivetrain {
     public double pfdStrafe(double kp, double kd, double kf, double error) {
         double derivative = error - lastErrorStrafe;
         double correction = (error * kp) + (derivative * kd);
-        multTelemetry.addData("strafeError", error);
+        //multTelemetry.addData("strafeError", error);
         if (abs(error) > DeadZone) {
             correction += signum(error) * kf;
         }
@@ -209,10 +209,7 @@ public class Drivetrain {
                 hold(holdX, holdY, holdH, x, y ,h);
                 break;
         }
-        multTelemetry.addData("state", driveState);
-        multTelemetry.addData("X",x);
-        multTelemetry.addData("Y",y);
-        multTelemetry.addData("H",h);
+
 
     }
     public void setDriveState(DriveState state) {
