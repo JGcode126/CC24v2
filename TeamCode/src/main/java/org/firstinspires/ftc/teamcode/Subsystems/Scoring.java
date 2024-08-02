@@ -28,45 +28,45 @@ public class Scoring {
         spinner = hardwareMap.get(CRServo.class, "spinner");
         colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
         scoreState = ScoreState.TRANSFERUP;
+    }
+
+    public void resetHSV() {
         Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
-
-
     }
     public float getH() {return hsvValues[0];}
-    public float getS() {return hsvValues[0];}
-    public float getV() {return hsvValues[0];}
+    public float getS() {return hsvValues[1];}
+    public float getV() {return hsvValues[2];}
 
     // RINGS
 
     public boolean colorSensorOrange() {
-        return getH() > 7400 && getH() < 7600 && getS() > 6850 && getS() < 7100 && getV() > 2000 && getV() < 2250;
     }
 
-    public boolean colorSensorRed() {
-        return getH() > 5000 && getH() < 5200 && getS() > 2500 && getS() < 2700 && getV() > 1350 && getV() < 1550;
-    }
+//    public boolean colorSensorRed() {
+//        return getV() > 120 && getV() < 150;
+//    }
 
-    public boolean colorSensorBlue() {
-        return getH() > 850 && getH() < 1050 && getS() > 2550 && getS() < 2750 && getV() > 5500 && getV() < 5750;
-    }
+//    public boolean colorSensorBlue() {
+//        return getV() > 100 && getV() < 180;
+//    }
 
     // PIXELS
 
     public boolean colorSensorWhite() {
-        return getH() > 4000 && getH() < 10000 && getS() > 7000 && getS() < 14000 && getV() > 7000 && getV() < 14000;
+        return getV() > 270 && getV() < 450;
     }
 
     public boolean colorSensorPurple() {
-        return getH() > 3600 && getH() < 3850 && getS() > 5200 && getS() < 5400 && getV() > 7200 && getV() < 7400;
+        return getV() > 140 && getV() < 160;
     }
 
     public boolean colorSensorGreen() {
-        return getH() > 850 && getH() < 1050 && getS() > 2700 && getS() < 3100 && getV() > 950 && getV() < 1150;
+        return getV() > 100 && getV() < 140;
     }
 
-    public boolean colorSensorYellow() {
-        return getH() > 2700 && getH() < 2990 && getS() > 3800 && getS() < 4100 && getV() > 950 && getV() < 1150;
-    }
+//    public boolean colorSensorYellow() {
+//        return getH() > 2700 && getH() < 2990 && getS() > 3800 && getS() < 4100 && getV() > 950 && getV() < 1150;
+//    }
 
     public void ringGrab() {
         clawR.setPosition(0.16);

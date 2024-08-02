@@ -43,8 +43,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         isActive = false;
 
         hardware = opMode.hardwareMap;
-        mySensor = hardware.get(ColorSensor.class, "revColorSensor");
-        mySensor.
+
 
         telemetree = opMode.telemetry;
         telemetree.setMsTransmissionInterval(5);
