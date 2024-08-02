@@ -47,7 +47,7 @@ public class IterativeTeleOp extends OpMode {
     @Override
     public void start(){
 
-        gyro.resetYaw();
+        gyro.resetDeviceConfigurationForOpMode();
         //Code that runs when you hit start
 
     }
