@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 public class Scoring {
@@ -18,9 +17,9 @@ public class Scoring {
 
     ColorSensor colorSensor;
     boolean bLedOn = true;
-    public int getR() {return colorSensor.red()/25;}
-    public int getG() {return colorSensor.green()/25;}
-    public int getB() {return colorSensor.blue()/25;}
+
+
+    float hsvValues[] = {0F,0F,0F};
 
     public Scoring(HardwareMap hardwareMap) {
         clawR = hardwareMap.get(Servo.class, "rightClaw");
@@ -29,68 +28,44 @@ public class Scoring {
         spinner = hardwareMap.get(CRServo.class, "spinner");
         colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
         scoreState = ScoreState.TRANSFERUP;
+        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+
 
     }
-
+    public float getH() {return hsvValues[0];}
+    public float getS() {return hsvValues[0];}
+    public float getV() {return hsvValues[0];}
 
     // RINGS
 
     public boolean colorSensorOrange() {
-        if (colorSensor.red() > 245 && colorSensor.red() > 255 && colorSensor.green() > 250 && colorSensor.green() > 260 && colorSensor.blue() > 78 && colorSensor.blue() > 88) {
-            return true;
-        } else {
-            return false;
-        }
+        return getH() > 7400 && getH() < 7600 && getS() > 6850 && getS() < 7100 && getV() > 2000 && getV() < 2250;
     }
 
     public boolean colorSensorRed() {
-        if (colorSensor.red() > 130 && colorSensor.red() < 145 && colorSensor.green() > 70 && colorSensor.green() < 82 && colorSensor.blue() > 47 && colorSensor.blue() < 55) {
-            return true;
-        } else {
-            return false;
-        }
+        return getH() > 5000 && getH() < 5200 && getS() > 2500 && getS() < 2700 && getV() > 1350 && getV() < 1550;
     }
 
     public boolean colorSensorBlue() {
-        if (colorSensor.red() > 35 && colorSensor.red() < 45 && colorSensor.green() > 105 && colorSensor.green() < 115 && colorSensor.blue() > 240 && colorSensor.blue() < 250) {
-            return true;
-        } else {
-            return false;
-        }
+        return getH() > 850 && getH() < 1050 && getS() > 2550 && getS() < 2750 && getV() > 5500 && getV() < 5750;
     }
 
     // PIXELS
 
     public boolean colorSensorWhite() {
-        if (colorSensor.red() > 195 && colorSensor.red() < 205 && colorSensor.green() > 330 && colorSensor.green() < 340 && colorSensor.blue() > 290 && colorSensor.blue() < 300) {
-            return true;
-        } else {
-            return false;
-        }
+        return getH() > 4000 && getH() < 10000 && getS() > 7000 && getS() < 14000 && getV() > 7000 && getV() < 14000;
     }
 
     public boolean colorSensorPurple() {
-        if (colorSensor.red() > 78 && colorSensor.red() < 78 && colorSensor.green() > 96 && colorSensor.green() < 106 && colorSensor.blue() > 135 && colorSensor.blue() < 145) {
-            return true;
-        } else {
-            return false;
-        }
+        return getH() > 3600 && getH() < 3850 && getS() > 5200 && getS() < 5400 && getV() > 7200 && getV() < 7400;
     }
 
     public boolean colorSensorGreen() {
-        if (colorSensor.red() > 50 && colorSensor.red() < 60 && colorSensor.green() > 164 && colorSensor.green() < 174 && colorSensor.blue() > 59 && colorSensor.blue() < 69) {
-            return true;
-        } else {
-            return false;
-        }
+        return getH() > 850 && getH() < 1050 && getS() > 2700 && getS() < 3100 && getV() > 950 && getV() < 1150;
     }
 
     public boolean colorSensorYellow() {
-        if (colorSensor.red() > 162 && colorSensor.red() < 172 && colorSensor.green() > 233 && colorSensor.green() < 243 && colorSensor.blue() > 61 && colorSensor.blue() < 71) {
-            return true;
-        } else {
-            return false;
-        }
+        return getH() > 2700 && getH() < 2990 && getS() > 3800 && getS() < 4100 && getV() > 950 && getV() < 1150;
     }
 
     public void ringGrab() {

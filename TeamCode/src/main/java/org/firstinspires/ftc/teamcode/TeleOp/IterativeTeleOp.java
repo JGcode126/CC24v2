@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -18,9 +15,6 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import static java.lang.Math.abs;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorSparkFunOTOS;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
@@ -104,15 +98,16 @@ public class IterativeTeleOp extends OpMode {
 
         scoring.scoring();
 
-        multTelemetry.addData("R", scoring.getR()/25);
-        multTelemetry.addData("G", scoring.getG()/25);
-        multTelemetry.addData("B", scoring.getB()/25);
+        multTelemetry.addData("R", scoring.getH());
+        multTelemetry.addData("G", scoring.getS());
+        multTelemetry.addData("B", scoring.getV());
         multTelemetry.addData("Red", scoring.colorSensorRed());
         multTelemetry.addData("Green", scoring.colorSensorGreen());
         multTelemetry.addData("Blue", scoring.colorSensorBlue());
         multTelemetry.addData("Purple", scoring.colorSensorPurple());
         multTelemetry.addData("Orange", scoring.colorSensorOrange());
         multTelemetry.addData("White", scoring.colorSensorWhite());
+        multTelemetry.addData("Yellow", scoring.colorSensorYellow());
 
     }
 
