@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
 public class Drivetrain {
@@ -20,7 +19,7 @@ DcMotor fr;
     double inputTurn;
     double releaseAngle;
 double integral = 0;
-double derivitive;
+double derivative;
 double error = 0;
 double target;
 double oldError;
@@ -77,11 +76,11 @@ public double pid(double target, double value){
     if (error>180){error-=360;}
     else if (error<-180){error+=360;}
     integral += error;
-    derivitive = error - oldError;
+    derivative = error - oldError;
 
 //target - current
     //-360 if >180, +360 if <-180
-   double turn = (error * (-kp)) + (integral * (-ki)) + (derivitive * (-kd));
+   double turn = (error * (-kp)) + (integral * (-ki)) + (derivative * (-kd));
     oldError = error;
     return turn;
     }
