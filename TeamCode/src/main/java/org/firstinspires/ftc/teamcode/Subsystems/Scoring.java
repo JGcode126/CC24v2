@@ -48,6 +48,7 @@ public class Scoring {
 
 
 
+
     public Scoring(HardwareMap hardwareMap){
         servoR = hardwareMap.get(Servo.class, "servoR");
         servoL = hardwareMap.get(Servo.class, "servoL");
@@ -64,6 +65,7 @@ public class Scoring {
         //opens forward
         servoL.setPosition(servoLOpen);
         // opens backwards
+
     }
     public int getR(){
         return clawSensor.red();
@@ -73,6 +75,7 @@ public class Scoring {
     }
     public int getB(){
         return clawSensor.blue();
+
     }
     public void closed(){
         servoR.setPosition(servoRClosed);
@@ -84,6 +87,7 @@ public class Scoring {
     public void armDown(){
         servoArm.setPosition(0);
     }
+
     public void openUp(){
         open();
         armUp();
