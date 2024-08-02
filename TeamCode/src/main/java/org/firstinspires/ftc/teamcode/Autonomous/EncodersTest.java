@@ -22,4 +22,6 @@ public class EncodersTest extends BaseOpMode{
         BaseOpMode.addData("y", Location.y());
         BaseOpMode.addData("heading", Location.heading());
     }
+    //78 / 104.13  * -0.00091912743
+    //78 / -52.36 * -0.0005236551576
 }
