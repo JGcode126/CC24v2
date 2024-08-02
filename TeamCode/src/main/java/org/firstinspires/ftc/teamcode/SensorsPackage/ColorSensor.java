@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Sensors;
+package org.firstinspires.ftc.teamcode.SensorsPackage;
 
 public class ColorSensor {
     //Declare Color Sensor from SDK
