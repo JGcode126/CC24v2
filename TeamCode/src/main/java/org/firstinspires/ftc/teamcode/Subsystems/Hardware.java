@@ -18,7 +18,7 @@ public class Hardware {
     public static final String
    //         verticalEncoder = "bl", horizontalEncoder = "fr";
     //V2:
-    verticalEncoder = "fr", horizontalEncoder = "br";
+    verticalEncoder = "fr", horizontalEncoder = "fl";
 
     public static final String
             intakeV4bServo = "Iv4bL", intakeWrist = "IWrist", intakeV4bServoR = "Iv4bR";

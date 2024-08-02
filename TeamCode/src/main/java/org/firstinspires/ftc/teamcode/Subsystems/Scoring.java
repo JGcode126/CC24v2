@@ -182,8 +182,7 @@ public void autoOpenYellow(){
    }
    public void arm() {
         double dist = clawSensor.getDistance(DistanceUnit.MM);
-        multTelemetry.addData("beam", clawBreakBeam.isPressed());
-        multTelemetry.update();
+
        switch (armSwitch) {
            case UPOPEN:
                openUp();

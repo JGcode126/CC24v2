@@ -33,6 +33,7 @@ ElapsedTime runtime = new ElapsedTime();
 
 
 
+
     @Override
 
     public void init() {
@@ -64,18 +65,16 @@ ElapsedTime runtime = new ElapsedTime();
     public void loop() {
         //Code that *LOOPS* after you hit start
 
-        multTelemetry.addData("R",scoring.getR());
-        multTelemetry.addData("G",scoring.getG());
-        multTelemetry.addData("B",scoring.getB());
+
         if(gamepad1.options){
             driverOriented=true;
             gyro.resetYaw();
         }
         if(gamepad1.share){driverOriented=false;}
         dt.driveDO(gamepad1.right_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x, gamepad1.right_trigger, gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), driverOriented);
-        telemetry.addData("time", scoring.getTime());
+
         if(gamepad1.left_bumper){
-            telemetry.addData("Claw pos", "open");
+
             scoring.setArmState(Scoring.ArmSwitchStatement.UPOPEN);
 
         } else if (gamepad1.right_bumper){
@@ -91,19 +90,14 @@ ElapsedTime runtime = new ElapsedTime();
         scoring.clawColorBlue();
         scoring.clawColorRed();
 
-        multTelemetry.addData("Gyro Heading", gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
-        multTelemetry.addData("Release Angle", dt.getReleaseAngle());
-        multTelemetry.addData("duck state", scoring.getState());
-        multTelemetry.addData("beam", scoring.getBeam());
-        multTelemetry.update();
+
     }
 
     @Override
     public void stop(){
         //Code that runs when you hit stop
 
-        telemetry.addData("Runtime", runtime);
-        telemetry.update();
+
 
     }
 

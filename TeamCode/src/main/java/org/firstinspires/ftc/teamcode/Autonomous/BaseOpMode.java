@@ -32,7 +32,6 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static Controller driver1, driver2;
     public static List<LynxModule> allHubs;
 
-    public static ColorSensor mySensor;
 
     /**
      * Initialize opMode Utilities
@@ -43,8 +42,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         isActive = false;
 
         hardware = opMode.hardwareMap;
-        mySensor = hardware.get(ColorSensor.class, "revColorSensor");
-        mySensor.
+
 
         telemetree = opMode.telemetry;
         telemetree.setMsTransmissionInterval(5);
