@@ -5,12 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.ThadDrive;
 
 public class PID  extends LinearOpMode{
 
     DcMotorEx motor;
-    Drivetrain dt;
+    ThadDrive dt;
 
     double integralSum = 0;
     double Kp = 0;

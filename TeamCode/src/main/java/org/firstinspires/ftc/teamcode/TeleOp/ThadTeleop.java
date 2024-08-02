@@ -12,16 +12,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Claw;
-import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.Subsystems.ThadDrive;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
-public class IterativeTeleOp extends OpMode {
+public class ThadTeleop extends OpMode {
 
     //Declare Subsystems
 
     //Timer
     ElapsedTime runtime = new ElapsedTime();
-    Drivetrain dt;
+    ThadDrive dt;
     IMU gyro;
     Claw claw;
 
@@ -31,7 +31,7 @@ public class IterativeTeleOp extends OpMode {
         //Set timer to 0
         runtime.reset();
         setOpMode(this);
-        dt = new Drivetrain(hardwareMap);
+        dt = new ThadDrive(hardwareMap);
         claw = new Claw(hardwareMap);
 
 

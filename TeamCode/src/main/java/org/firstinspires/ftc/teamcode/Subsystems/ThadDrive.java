@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 
-import android.widget.Switch;
-
 ;import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,10 +8,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
-public class Drivetrain {
+public class ThadDrive {
     //Declare Motors
     DcMotor motorfr;
     DcMotor motorfl;
@@ -45,7 +42,7 @@ public class Drivetrain {
 
 
 
-    public Drivetrain(HardwareMap hardwareMap) {
+    public ThadDrive(HardwareMap hardwareMap) {
         //Instantiate motors
         motorfr = hardwareMap.get(DcMotor.class, "motorfr");
         motorfl = hardwareMap.get(DcMotor.class, "motorfl");
