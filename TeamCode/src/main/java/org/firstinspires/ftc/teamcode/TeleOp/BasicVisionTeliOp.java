@@ -15,20 +15,24 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @TeleOp(name="AAAA vision", group="Iterative Opmode")
 public class BasicVisionTeliOp extends BaseOpMode {
-    private BasicVisionProcessor visionProcessor = new BasicVisionProcessor();
+    private BasicVisionProcessor visionProcessor;
     private VisionPortal visionPortal;
     private WebcamName webcam1;
     @Override
     public void externalInit() {
         telemetry.update();
         webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
+        visionProcessor = new BasicVisionProcessor();
+        int[] viewId = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.HORIZONTAL);
+
         visionPortal = new VisionPortal.Builder()
                 //setup for using webcam, there is a different way to set up a phone camera
                 .setCamera(webcam1)
                 .addProcessor(visionProcessor)
+                .setLiveViewContainerId(viewId[1])
                 .build();
         FtcDashboard.getInstance().startCameraStream(visionProcessor, 0);
-
+        visionPortal.resumeStreaming();
         waitForStart();
     }
 
