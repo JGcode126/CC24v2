@@ -31,6 +31,7 @@ public class IterativeTeleOp extends OpMode {
     boolean blue;
 
 
+
 //    public static boolean superSlow;
 
     @Override
@@ -92,24 +93,34 @@ public class IterativeTeleOp extends OpMode {
         } else {
             scoring.stopSpin();
         }
+        if (scoring.ring()) {
+            if (timer.seconds() > 2) {
+                scoring.setScoreState(RCLOSE);
+                timer.reset();
+            }
+        }
+        if (scoring.pixel()) {
+            if (timer.seconds() > 2) {
+                scoring.setScoreState(PCLOSE);
+                timer.reset();
+            }
+        }
         dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
 
         multTelemetry.update();
 
         scoring.scoring();
 
+        multTelemetry.addData("Ring", scoring.ring());
+        multTelemetry.addData("Pixel", scoring.pixel());
         multTelemetry.addData("H", scoring.getH());
-        multTelemetry.addData("S", scoring.getS());
         multTelemetry.addData("V", scoring.getV());
-//        multTelemetry.addData("Red", scoring.colorSensorRed());
-        multTelemetry.addData("Green", scoring.colorSensorGreen());
-//        multTelemetry.addData("Blue", scoring.colorSensorBlue());
-        multTelemetry.addData("Purple", scoring.colorSensorPurple());
-        multTelemetry.addData("Orange", scoring.colorSensorOrange());
-        multTelemetry.addData("White", scoring.colorSensorWhite());
-//        multTelemetry.addData("Yellow", scoring.colorSensorYellow());
+
+
 
         scoring.resetHSV();
+
+
 
     }
 

@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 public class Scoring {
@@ -14,8 +17,9 @@ public class Scoring {
     Servo arm;
     CRServo spinner;
     ScoreState scoreState;
+    public double distance = 9;
 
-    ColorSensor colorSensor;
+    RevColorSensorV3 colorSensor;
     boolean bLedOn = true;
 
 
@@ -26,7 +30,7 @@ public class Scoring {
         clawL = hardwareMap.get(Servo.class, "leftClaw");
         arm = hardwareMap.get(Servo.class, "arm");
         spinner = hardwareMap.get(CRServo.class, "spinner");
-        colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "sensor_color");
         scoreState = ScoreState.TRANSFERUP;
     }
 
@@ -40,50 +44,66 @@ public class Scoring {
     // RINGS
 
     public boolean colorSensorOrange() {
+        return getH() > 50 && getH() < 65 && colorSensor.getDistance(DistanceUnit.MM) < distance;
+
     }
 
-//    public boolean colorSensorRed() {
-//        return getV() > 120 && getV() < 150;
-//    }
+    public boolean colorSensorRed() {
+        return getH() > 13 && getH() < 23 && colorSensor.getDistance(DistanceUnit.MM) < distance;
+    }
 
-//    public boolean colorSensorBlue() {
-//        return getV() > 100 && getV() < 180;
-//    }
+    public boolean colorSensorBlue() {
+        return getH() > 208 && getH() < 212 && getV() > 215 && getV() < 222 && colorSensor.getDistance(DistanceUnit.MM) < distance;
+    }
 
     // PIXELS
 
     public boolean colorSensorWhite() {
-        return getV() > 270 && getV() < 450;
+        return getH() > 154 && getH() < 164 && colorSensor.getDistance(DistanceUnit.MM) < distance;
     }
 
     public boolean colorSensorPurple() {
-        return getV() > 140 && getV() < 160;
+        return getH() > 213 && getH() < 217 && getV() > 140 && getV() < 240 && colorSensor.getDistance(DistanceUnit.MM) < distance;
     }
 
     public boolean colorSensorGreen() {
-        return getV() > 100 && getV() < 140;
+        return getH() > 120 && getH() < 129 && colorSensor.getDistance(DistanceUnit.MM) < distance;         
     }
 
-//    public boolean colorSensorYellow() {
-//        return getH() > 2700 && getH() < 2990 && getS() > 3800 && getS() < 4100 && getV() > 950 && getV() < 1150;
-//    }
+    public boolean colorSensorYellow() {
+        return getH() > 75 && getH() < 85 && colorSensor.getDistance(DistanceUnit.MM) < distance;
+    }
+
+    public boolean pixel() {
+        return colorSensorGreen() || colorSensorPurple() || colorSensorYellow() || colorSensorGreen() || colorSensorWhite();
+    }
+
+    public boolean ring() {
+        return colorSensorBlue() || colorSensorRed() || colorSensorOrange();
+    }
+
 
     public void ringGrab() {
         clawR.setPosition(0.16);
         clawL.setPosition(0.8);
+        boolean bLedOn = false;
     }
     public void intake() {
         arm.setPosition(0);
         clawR.setPosition(0.5);
         clawL.setPosition(0.5);
+        boolean bLedOn = true;
     }
     public void pixelGrab() {
         clawR.setPosition(0.1);
         clawL.setPosition(0.9);
+        boolean bLedOn = false;
     }
     public void down() {
         arm.setPosition(0.395);
+        boolean bLedOn = false;
     }
+
 
     public void spin(boolean team) {
         if (team) {
@@ -99,7 +119,7 @@ public class Scoring {
     public enum ScoreState  {
         PCLOSE, RCLOSE, TRANSFERUP, DOWN
     }
-    public void scoring () {
+    public void scoring() {
         switch (scoreState) {
             case DOWN:
                 down();
@@ -115,7 +135,8 @@ public class Scoring {
                 break;
         }
     }
-    public void setScoreState(ScoreState state) {
+    public void setScoreState (ScoreState state) {
         scoreState = state;
+        colorSensor.enableLed(bLedOn);
     }
 }
