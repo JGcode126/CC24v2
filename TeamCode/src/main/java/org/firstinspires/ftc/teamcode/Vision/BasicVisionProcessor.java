@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -152,12 +153,16 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         drawContours(output, contours, -1, lightBlue);
 
 
-
+        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(output, b);
+        lastFrame.set(b);
 
         return output;
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
+        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
+
         //just here to make the class happy, not actually being used
     }
     @Override
