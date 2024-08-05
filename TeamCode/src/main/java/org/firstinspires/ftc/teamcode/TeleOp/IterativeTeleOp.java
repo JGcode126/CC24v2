@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,10 +10,13 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.DuckSpinner;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
@@ -26,6 +30,10 @@ public class IterativeTeleOp extends OpMode {
     TouchSensor beam;
     //Timer
     ElapsedTime runtime = new ElapsedTime();
+    WebcamName webcam1;
+    VisionPortal visionPortal;
+    org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor visionProcessor;
+    AprilTagProcessor aprilTag;
 
     @Override
     public void init() {
@@ -48,6 +56,14 @@ public class IterativeTeleOp extends OpMode {
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.5);
+
+        webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
+        visionPortal = new VisionPortal.Builder()
+                //setup for using webcam, there is a different way to set up a phone camera
+                .setCamera(webcam1)
+                .addProcessors(visionProcessor, aprilTag)
+                .build();
+        FtcDashboard.getInstance().startCameraStream(visionPortal, 0);
 
     }
 
