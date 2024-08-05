@@ -61,9 +61,9 @@ public class IterativeTeleOp extends OpMode {
         if (gamepad1.left_bumper) {
             dt.duckSpinner(1);
         } else if (gamepad1.dpad_down) {
-            dt.liftArm(-.25);
+            dt.liftArm(-.5);
         } else if (gamepad1.dpad_up) {
-            dt.liftArm(.25);
+            dt.liftArm(.5);
         } else if (gamepad1.dpad_left) {
             claw.close();
 
