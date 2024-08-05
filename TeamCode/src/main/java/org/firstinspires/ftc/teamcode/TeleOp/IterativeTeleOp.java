@@ -42,18 +42,17 @@ public class IterativeTeleOp extends OpMode {
         gyro.initialize(parameters);
 
         duckSpinner = new DuckSpinner(hardwareMap);
+    }
 
-        while (!gamepad1.b && !gamepad1.a) {
-            if (gamepad1.b) {
-                blue = true;
-                
-            }
-
-            if (gamepad1.a) {
-                blue = false;
-            }
+    @Override
+    public void init_loop() {
+        if (gamepad1.b) {
+            blue = true;
         }
-
+        if (gamepad1.a) {
+            blue = false;
+        }
+        telemetry.addData("Are you on blue alliance?" , blue);
     }
 
     @Override
