@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.yHardware;
+package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-public class Sensors {
+public class sensors {
 
     private static long currentTimeMillis;
     public static long loopTime;

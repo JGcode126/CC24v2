@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.yHardware;
+package org.firstinspires.ftc.teamcode;
 
 //hardware variables followed by hardware objects
 
@@ -6,7 +6,7 @@ package org.firstinspires.ftc.teamcode.yHardware;
 
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
-public class V7Hardware extends Hardware{
+public class V7Hardware extends org.firstinspires.ftc.teamcode.yHardware.Hardware {
 
     protected static final String
             verticalEncoder = "verticalEncoder", horizontalEncoder = "horizontalEncoder";
