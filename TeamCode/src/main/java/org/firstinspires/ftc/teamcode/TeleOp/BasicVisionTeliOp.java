@@ -29,9 +29,13 @@ public class BasicVisionTeliOp extends OpMode {
                 //setup for using webcam, there is a different way to set up a phone camera
                 .setCamera(webcam1)
                 .addProcessor(visionProcessor)
+                //.setLiveViewContainerId(portal2ViewId)
                 .setCameraResolution(size)
                 .build();
         FtcDashboard.getInstance().startCameraStream(visionProcessor, 0);
+
+        visionPortal.resumeStreaming();
+        visionPortal.resumeLiveView();
 
 
     }
