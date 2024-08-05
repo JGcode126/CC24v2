@@ -197,7 +197,5 @@ public class Drivetrain {
 //            motorbr.setPower((drive + strafe - turn) * -0.75);
 //        }
 //    }
-
-
-
+    
 }

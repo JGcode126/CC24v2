@@ -23,9 +23,9 @@ public class blade extends OpMode{
 
     @Override
     public void loop() {
-        if (gamepad1.left_trigger > 0.25 && mantisBlade.data1() != -940) {
+        if (gamepad1.left_trigger > 0.25 && mantisBlade.data1() >= -940) {
             mantisBlade.extend(-.05);
-        } else if (gamepad1.right_trigger > 0.25 && mantisBlade.data1() != 250) {
+        } else if (gamepad1.right_trigger > 0.25 && mantisBlade.data1() <= 250) {
             mantisBlade.retract(.05);
         } else {
             mantisBlade.still();
