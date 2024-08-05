@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -78,7 +79,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
     private final AtomicReference<Bitmap> lastFrame =
             new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
-    //this is for camera stream, don't fully understand yet
+    //this is for camera stream to dashboard
 
 
 
@@ -91,8 +92,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         IMG_WIDTH = input.cols();
         //just saving info
 
-        //Scalar MIN_THRESH_PROP = new Scalar(0, 35, 38);
-        //  Scalar MAX_THRESH_PROP = new Scalar(15, 100, 63);
 
         Scalar MIN_THRESH_PROP = new Scalar(min_H, min_S, min_V);
         Scalar MAX_THRESH_PROP = new Scalar(max_H, max_S, max_V);
@@ -119,8 +118,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //erode constant currently = 1, change to erode more or less
         dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U));
         //dilate constant currently 1, should have erode/dilate be equal
-
-
 
 
         contours = new ArrayList<>();
@@ -151,6 +148,9 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //draws contours around shapes
         drawContours(output, contours, -1, lightBlue);
 
+        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(output, b);
+        lastFrame.set(b);
 
 
 
@@ -158,7 +158,8 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
-        //just here to make the class happy, not actually being used
+        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
+        //More dashboard setup
     }
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
