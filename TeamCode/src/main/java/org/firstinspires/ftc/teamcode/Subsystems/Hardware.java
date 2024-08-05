@@ -18,7 +18,7 @@ public class Hardware {
     public static final String
    //         verticalEncoder = "bl", horizontalEncoder = "fr";
     //V2:
-    verticalEncoder = "fr", horizontalEncoder = "br";
+    verticalEncoder = "drivefr", horizontalEncoder = "drivebr";
 
     public static final String
             intakeV4bServo = "Iv4bL", intakeWrist = "IWrist", intakeV4bServoR = "Iv4bR";
@@ -48,8 +48,8 @@ public class Hardware {
     public static double verticalEncoderTicksToCM = -0.00091912743, horizontalEncoderTicksToCM = -0.0005236551576;
 
     public static final String
-            leftFront = "fl", rightFront  = "fr",
-            leftBack = "bl", rightBack = "br";
+            leftFront = "drivefl", rightFront  = "drivefr",
+            leftBack = "drivebl", rightBack = "drivebr";
 
 
 

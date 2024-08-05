@@ -53,7 +53,7 @@ public class Scoring {
     }
 
     public boolean colorSensorBlue() {
-        return getH() > 208 && getH() < 212 && getV() > 215 && getV() < 222 && colorSensor.getDistance(DistanceUnit.MM) < distance;
+        return getH() > 208 && getH() < 212 && getS() > 0.6 && getS() < 0.9 && colorSensor.getDistance(DistanceUnit.MM) < distance;
     }
 
     // PIXELS
@@ -63,11 +63,11 @@ public class Scoring {
     }
 
     public boolean colorSensorPurple() {
-        return getH() > 213 && getH() < 217 && getV() > 140 && getV() < 240 && colorSensor.getDistance(DistanceUnit.MM) < distance;
+        return getH() > 213 && getH() < 217 && getS() > 0.4 && getS() < 0.6 && colorSensor.getDistance(DistanceUnit.MM) < distance;
     }
 
     public boolean colorSensorGreen() {
-        return getH() > 120 && getH() < 129 && colorSensor.getDistance(DistanceUnit.MM) < distance;         
+        return getH() > 120 && getH() < 129 && colorSensor.getDistance(DistanceUnit.MM) < distance;
     }
 
     public boolean colorSensorYellow() {

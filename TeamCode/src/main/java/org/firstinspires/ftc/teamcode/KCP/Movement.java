@@ -1,9 +1,20 @@
 package org.firstinspires.ftc.teamcode.KCP;
 
 
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdh;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kds;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kfd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kfs;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kih;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kpd;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kph;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kps;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.signature.qual.IdentifierOrArray;
 import org.firstinspires.ftc.teamcode.Autonomous.AAA_Paths;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.KCP.DriveClasses.AbstractClasses.DriveTrain;
@@ -11,7 +22,10 @@ import org.firstinspires.ftc.teamcode.KCP.DriveClasses.MecanumDrive;
 import org.firstinspires.ftc.teamcode.KCP.Localization.Location;
 import org.firstinspires.ftc.teamcode.KCP.Localization.TwoWheelOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
+import org.firstinspires.ftc.teamcode.Utilities.PID;
+import org.firstinspires.ftc.teamcode.zLibraries.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Rotation2d;
+import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public class Movement extends Subsystem {
@@ -19,10 +33,21 @@ public class Movement extends Subsystem {
      * In this case odometry, but any extension of the localization class can be passed in
      */
     private final Location odo;
+    PID pidHeading;
+    PIDController pfdDrive;
+    PIDController pfdStrafe;
+    double inputTurn;
+    double error;
+    double fr;
+    double fl;
+    double bl;
+    double br;
+
     /**
      * Any type of drivebase that extends the drivetrain class
      */
     public final DriveTrain drive;
+    MecanumDrive directDrive;
     private final ElapsedTime runtime;
     int counter;
     @Config
@@ -50,6 +75,12 @@ public class Movement extends Subsystem {
 
         runtime = new ElapsedTime();
         runtime.reset();
+        pidHeading = new PID(Kph,Kih,Kdh);
+        pfdDrive = new PIDController(Kpd,0,Kdd,0);
+        pfdDrive.setFComponent(Kfd);
+        pfdStrafe = new PIDController(Kps,0,Kpd,0);
+        pfdStrafe.setFComponent(Kfs);
+        directDrive = new MecanumDrive();
     }
 
 
@@ -235,6 +266,23 @@ public class Movement extends Subsystem {
         double velocityMagnitude = Math.hypot(v[0], v[1]);
         return (Math.abs(headingVelocity) <= MovementDash.headingVelocityThreshold * hF && velocityMagnitude <= MovementDash.movementVelocityThreshold * mF);
         
+    }
+    public void holdPosition(double targetX, double targetY, double targetHeading, boolean trust){
+        Vector2d driveVector = new Vector2d(targetX - Location.x(), targetY - Location.y());
+        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(Location.heading()));
+
+        error = targetHeading - Location.heading();
+
+
+        inputTurn = pidHeading.update(error, false);
+
+        double driveCorrection = pfdDrive.update(rotatedVector.y);
+        double strafeCorrection = pfdStrafe.update(rotatedVector.x);
+        fr = (driveCorrection - strafeCorrection - inputTurn) * 1;
+        fl = (driveCorrection + strafeCorrection + inputTurn) * 1;
+        br = (driveCorrection + strafeCorrection - inputTurn) * 1;
+        bl = (driveCorrection - strafeCorrection + inputTurn) * 1;
+        directDrive.setWheelPowersDirect(fl, fr, bl, br);
     }
 
 

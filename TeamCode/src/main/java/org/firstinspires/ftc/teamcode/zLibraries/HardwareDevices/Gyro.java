@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -12,7 +15,7 @@ import java.util.ArrayList;
 
 public class Gyro {
 
-    private final BNO055IMU controlHubIMU;
+    public SparkFunOTOS otos;
 
     public static ArrayList<Gyro> gyros = new ArrayList<>();
     private double wrappedHeading = 0;
@@ -30,12 +33,10 @@ public class Gyro {
 //        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
 //        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 //        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        controlHubIMU = BaseOpMode.hardware.get(BNO055IMU.class, name);
+        otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
 //        controlHubIMU.initialize(new IMU.Parameters(orientationOnRobot));
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.calibrationDataFile = "AdafruitIMUCalibration.json";
-        controlHubIMU.initialize(parameters);
+        otos.calibrateImu();
 
 
         update();
@@ -106,7 +107,7 @@ public class Gyro {
     private void update(){
 
         //TODO revHub orientation might matter
-        Orientation angles = controlHubIMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        Orientation angles = otos.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
         rawHeading = angles.firstAngle;
 

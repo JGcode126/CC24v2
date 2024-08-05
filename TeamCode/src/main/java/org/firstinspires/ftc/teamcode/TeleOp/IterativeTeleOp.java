@@ -115,12 +115,9 @@ public class IterativeTeleOp extends OpMode {
         multTelemetry.addData("Pixel", scoring.pixel());
         multTelemetry.addData("H", scoring.getH());
         multTelemetry.addData("V", scoring.getV());
-
-
+        multTelemetry.addData("S", scoring.getS());
 
         scoring.resetHSV();
-
-
 
     }
 

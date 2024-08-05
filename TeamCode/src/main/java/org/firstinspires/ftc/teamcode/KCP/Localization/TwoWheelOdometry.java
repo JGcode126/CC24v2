@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.KCP.Localization;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorSparkFunOTOS;
 import org.firstinspires.ftc.teamcode.Utilities.DashConstants.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Hardware;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Gyro;
@@ -38,6 +42,7 @@ public class TwoWheelOdometry extends Location{
     public final MotorEncoder verticalEncoder;
     public final MotorEncoder horizontalEncoder;
     public final Gyro gyro;
+    public SparkFunOTOS otos;
     //public final BadBNO055 gyro;
 
     //intialize odometry
@@ -49,6 +54,7 @@ public class TwoWheelOdometry extends Location{
         horizontalEncoder = new MotorEncoder(Hardware.horizontalEncoder, Hardware.horizontalEncoderTicksToCM);
 
         gyro = new Gyro( "imuA");
+        otos = hardwareMap.get(SparkFunOTOS.class, "myOtos");
 
 
 
@@ -74,68 +80,70 @@ public class TwoWheelOdometry extends Location{
 
     //Uses Odo Pods
     public void localize(){
-
-        //get new reads on sensors (heading, Vertical encoder, and horizontal encoder)
-        newVertical = verticalEncoder.getPosition();
-        newHorizontal = horizontalEncoder.getPosition();
-//        newHeading = gyro.getHeading();
+//
+//        //get new reads on sensors (heading, Vertical encoder, and horizontal encoder)
+//        newVertical = verticalEncoder.getPosition();
+//        newHorizontal = horizontalEncoder.getPosition();
+////        newHeading = gyro.getHeading();
         newHeading = gyro.getHeading();
-
-        //get change in heading, Vertical encoder, and horizontal encoder
-        dVertical = newVertical - vPrevDist;
-        dHorizontal = newHorizontal - hPrevDist;
-        dHeading = newHeading - h;
-
-        while (dHeading < -Math.PI) { // For example 355 to 5 degrees
-            dHeading += 2 * Math.PI;
-        }
-        while (dHeading > Math.PI) { // For example 5 to 355 degrees // IDT NECESSARY
-            dHeading -= 2 * Math.PI;
-        }
-
-        //Math: https://www.desmos.com/calculator/sfpde8dhcw - incorrect
-        //needs more images to be properly explained
-
-        //catch the divide by 0
-        //TODO use line based when delta heading in range
-        if(dHeading == 0) {
-            dX = dHorizontal;
-            dY = dVertical;
-        }else {
-
-
-            //normal odometry
-
-//            double arcRad = (dVertical - (verticalOffset * dHeading)) / dHeading;
-//            ///  \/ highly debated
-//            double number = arcRad + dHorizontal - (horizontalOffset * dHeading);
 //
-//            dX = fastCos(dHeading) * (number) - arcRad;
-//            dY = fastSin(dHeading) * (number);
+//        //get change in heading, Vertical encoder, and horizontal encoder
+//        dVertical = newVertical - vPrevDist;
+//        dHorizontal = newHorizontal - hPrevDist;
+//        dHeading = newHeading - h;
 //
-//            dX = dHorizontal * fastCos(dHeading) + dVertical * fastSin(dHeading);
-//            dY = dHorizontal * fastSin(dHeading) + dVertical * fastCos(dHeading);
-
-            //
-            double arcRad1 = (dVertical - (verticalOffset * dHeading)) / dHeading;
-            //
-            double arcRad2 = (dHorizontal - (horizontalOffset * dHeading)) / dHeading;
-
-
-            dY = Math.sin(dHeading) * arcRad1 - Math.cos(dHeading) * arcRad2 + arcRad2;
-            dX = Math.sin(dHeading) * arcRad2 + Math.cos(dHeading) * arcRad1 - arcRad1;
-        }
-
-
-        //rotating to absolute coordinates vs robot relative calculated above
-        location[0] += Math.cos(h) * dX - Math.sin(h) * dY;
-        location[1] += Math.sin(h) * dX + Math.cos(h) * dY;
+//        while (dHeading < -Math.PI) { // For example 355 to 5 degrees
+//            dHeading += 2 * Math.PI;
+//        }
+//        while (dHeading > Math.PI) { // For example 5 to 355 degrees // IDT NECESSARY
+//            dHeading -= 2 * Math.PI;
+//        }
+//
+//        //Math: https://www.desmos.com/calculator/sfpde8dhcw - incorrect
+//        //needs more images to be properly explained
+//
+//        //catch the divide by 0
+//        //TODO use line based when delta heading in range
+//        if(dHeading == 0) {
+//            dX = dHorizontal;
+//            dY = dVertical;
+//        }else {
+//
+//
+//            //normal odometry
+//
+////            double arcRad = (dVertical - (verticalOffset * dHeading)) / dHeading;
+////            ///  \/ highly debated
+////            double number = arcRad + dHorizontal - (horizontalOffset * dHeading);
+////
+////            dX = fastCos(dHeading) * (number) - arcRad;
+////            dY = fastSin(dHeading) * (number);
+////
+////            dX = dHorizontal * fastCos(dHeading) + dVertical * fastSin(dHeading);
+////            dY = dHorizontal * fastSin(dHeading) + dVertical * fastCos(dHeading);
+//
+//            //
+//            double arcRad1 = (dVertical - (verticalOffset * dHeading)) / dHeading;
+//            //
+//            double arcRad2 = (dHorizontal - (horizontalOffset * dHeading)) / dHeading;
+//
+//
+//            dY = Math.sin(dHeading) * arcRad1 - Math.cos(dHeading) * arcRad2 + arcRad2;
+//            dX = Math.sin(dHeading) * arcRad2 + Math.cos(dHeading) * arcRad1 - arcRad1;
+//        }
+//
+//
+//        //rotating to absolute coordinates vs robot relative calculated above
+//        location[0] += Math.cos(h) * dX - Math.sin(h) * dY;
+//        location[1] += Math.sin(h) * dX + Math.cos(h) * dY;
         Location.heading = newHeading;
-
-        //update reference values to current position
-        vPrevDist = newVertical;
-        hPrevDist = newHorizontal;
+//
+//        //update reference values to current position
+//        vPrevDist = newVertical;
+//        hPrevDist = newHorizontal;
         h = newHeading;
+        location[0] = otos.getPosition().x;
+        location[1] = otos.getPosition().y;
     }
 
 
