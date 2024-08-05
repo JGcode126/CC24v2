@@ -44,7 +44,7 @@ public class IterativeTeleOp extends OpMode{
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     private WebcamName webcam1;
-    Size camRev = new Size(1280, 720);
+    Size camRev = new Size(800, 600);
 
 
 

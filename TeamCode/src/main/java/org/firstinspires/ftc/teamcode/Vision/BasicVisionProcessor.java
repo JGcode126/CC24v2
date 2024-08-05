@@ -173,4 +173,14 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
 
+    private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
+        int left = Math.round(rect.x * scaleBmpPxToCanvasPx);
+        int top = Math.round(rect.y * scaleBmpPxToCanvasPx);
+        int right = left + Math.round(rect.width * scaleBmpPxToCanvasPx);
+        int bottom = top + Math.round(rect.height * scaleBmpPxToCanvasPx);
+
+        return new android.graphics.Rect(left, top, right, bottom);
+
+    }
+
 }
