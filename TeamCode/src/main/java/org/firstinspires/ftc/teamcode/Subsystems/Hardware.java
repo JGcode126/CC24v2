@@ -45,7 +45,7 @@ public class Hardware {
     //public static double verticalEncoderTicksToCM = -0.00075491,   horizontalEncoderTicksToCM = -0.00075227449;
 
     //Multipliers for Jamie V2
-    public static double verticalEncoderTicksToCM = -0.00068848496, horizontalEncoderTicksToCM = -0.00078008216;
+    public static double verticalEncoderTicksToCM = 0.00068848496, horizontalEncoderTicksToCM = 0.00078008216;
 
     public static final String
             leftFront = "fl", rightFront  = "fr",

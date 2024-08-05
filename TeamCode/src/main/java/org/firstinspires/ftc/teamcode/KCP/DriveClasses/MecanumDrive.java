@@ -23,18 +23,18 @@ public class MecanumDrive extends StaticDriveTrain {
     @Config
     public static class MecanumDriveDash{
         //Values for Test Chassis - COMMENT these out when tuning for real robot
-        public static double FcConstant = 3175, DecelerationConstant = 0.002, TargetingThreshold = 0;
+        public static double FcConstant = 2000, DecelerationConstant = 0.002, TargetingThreshold = 0;
 
         
-        public static double headingP = -0.032, headingI = -0, headingD = -0.65;
-        public static double ppP = -0.6, ppI = -0.0001, ppD = -0.1;
+        public static double headingP = -0.65, headingI = -0, headingD = -0.032;
+        public static double ppP = -0, ppI = -0, ppD = -0;
         //Values for Test Chassis
         //public static double holdP = 0.25 , holdI = 0.05, holdD = 0.08; TODO This could be tuned better (at full battery)
-        public static double holdP = 0, holdI = 0, holdD = 0;
-        public static double driveMinimumPower = 0.2, headingMaxPower = 1;
+        public static double holdP = 0.14, holdI = 0, holdD = 0.012;
+        public static double driveMinimumPower = 0.05, headingMaxPower = 1;
 
         public static double vecX = .10, vecY = .10;
-        public static double maxMovePIDPower = .7;
+        public static double maxMovePIDPower = 1;
 
     }
 

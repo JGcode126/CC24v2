@@ -13,11 +13,11 @@ public class HoldPos extends BaseOpMode {
 
     public Movement movement;
     public ElapsedTime runtime = new ElapsedTime();
-    double heading = Math.PI/2;
+    double heading = Math.PI;
 
     @Override
     public void externalInit() {
-        movement = new Movement(0, 0,0);
+        movement = new Movement(0, 0,Math.PI);
     }
 
     @Override
@@ -35,14 +35,14 @@ public class HoldPos extends BaseOpMode {
         movement.holdPosition(0, 0, heading);
 
         //For rotation testing - comment the second runtime.reset() to use.
-        if (runtime.seconds() > 5){
-            heading    += Math.PI/2;
-            if (heading != Math.PI/2){
-                heading = 0;
-            }
-            runtime.reset();
-        }
-        runtime.reset();
+//        if (runtime.seconds() > 5){
+//            heading    += Math.PI/2;
+//            if (heading != Math.PI/2){
+//                heading = 0;
+//            }
+//            runtime.reset();
+//        }
+//        runtime.reset();
 
         BaseOpMode.addData("X", TwoWheelOdometry.x());
         BaseOpMode.addData("Y", TwoWheelOdometry.y());
