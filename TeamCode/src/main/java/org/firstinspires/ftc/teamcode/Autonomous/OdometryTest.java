@@ -18,6 +18,7 @@ public class OdometryTest extends BaseOpMode {
 
     @Override
     public void externalLoop(){
+        odo.localize();
         BaseOpMode.addData("x", Location.x());
         BaseOpMode.addData("y", Location.y());
         BaseOpMode.addData("h", Location.heading());
