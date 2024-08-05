@@ -48,8 +48,8 @@ public class Hardware {
     public static double verticalEncoderTicksToCM = -0.00091912743, horizontalEncoderTicksToCM = -0.0005236551576;
 
     public static final String
-            leftFront = "fl", rightFront  = "fr",
-            leftBack = "bl", rightBack = "br";
+            leftFront = "motorfl", rightFront  = "motorfr",
+            leftBack = "motorbl", rightBack = "motorbr";
 
 
 
