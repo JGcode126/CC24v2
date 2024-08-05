@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.KCP.Localization;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
+
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.Utilities.DashConstants.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Hardware;
@@ -23,8 +26,8 @@ public class TwoWheelOdometry extends Location{
 
     //defining the center of the robot to be the center of the robot
     //Values For JamieV2
-    double horizontalOffset = 0.5; //vertical distance from horizontal encoder to center of robot
-    double verticalOffset = 6; //
+    double horizontalOffset = 2; //vertical distance from horizontal encoder to center of robot
+    double verticalOffset = 1; //
     //Values for Test Chassis
     //double verticalOffset = 7.5;
     //double horizontalOffset  7.25;
@@ -48,7 +51,8 @@ public class TwoWheelOdometry extends Location{
         verticalEncoder = new MotorEncoder(Hardware.verticalEncoder, Hardware.verticalEncoderTicksToCM);
         horizontalEncoder = new MotorEncoder(Hardware.horizontalEncoder, Hardware.horizontalEncoderTicksToCM);
 
-        gyro = new Gyro( "imuA");
+        gyro = new Gyro("imu");
+
 
 
 

@@ -1,18 +1,28 @@
 package org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
+import org.firstinspires.ftc.teamcode.R;
 
 import java.util.ArrayList;
 
 public class Gyro {
 
-    private final BNO055IMU controlHubIMU;
+    private final IMU imu;
+    Quaternion quaternion;
+    public RevHubOrientationOnRobot orientationOnRobot;
 
     public static ArrayList<Gyro> gyros = new ArrayList<>();
     private double wrappedHeading = 0;
@@ -27,22 +37,19 @@ public class Gyro {
 
     public Gyro(String name){
         gyros.add(this);
+        orientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
 //        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
 //        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 //        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        controlHubIMU = BaseOpMode.hardware.get(BNO055IMU.class, name);
-//        controlHubIMU.initialize(new IMU.Parameters(orientationOnRobot));
+        IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.calibrationDataFile = "AdafruitIMUCalibration.json";
-        controlHubIMU.initialize(parameters);
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = BaseOpMode.hardware.get(IMU.class, name);
+        imu.initialize(parameters);
 
-
-        update();
-
-        setCurrentHeading(0);
-
-
+        // Start the logging of measured acceleration
     }
 
 
@@ -106,7 +113,7 @@ public class Gyro {
     private void update(){
 
         //TODO revHub orientation might matter
-        Orientation angles = controlHubIMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        Orientation angles = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
         rawHeading = angles.firstAngle;
 
