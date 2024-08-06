@@ -56,7 +56,7 @@ public class TwoWheelOdometry extends Location{
         verticalEncoder = new MotorEncoder(Hardware.verticalEncoder, Hardware.verticalEncoderTicksToCM);
         horizontalEncoder = new MotorEncoder(Hardware.horizontalEncoder, Hardware.horizontalEncoderTicksToCM);
 
-        gyro = new Gyro("sensor_otos");
+        gyro = new Gyro();
 
         otos = hardware.get(SparkFunOTOS.class, "sensor_otos");
         otos.setLinearUnit(DistanceUnit.INCH);

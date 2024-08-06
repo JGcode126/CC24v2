@@ -26,6 +26,7 @@ public class IterativeTeleOp extends BaseOpMode {
 
     //Timer
     ElapsedTime timer = new ElapsedTime();
+    ElapsedTime timerArm = new ElapsedTime();
     Drivetrain dt;
     IMU gyro;
     Scoring scoring;
@@ -41,6 +42,7 @@ public class IterativeTeleOp extends BaseOpMode {
         setOpMode(this);
         //Set timer to 0
         timer.reset();
+        timerArm.reset();
         //Code that runs when you hit init
         dt = new Drivetrain(hardwareMap);
         scoring = new Scoring(hardwareMap);
@@ -84,7 +86,13 @@ public class IterativeTeleOp extends BaseOpMode {
             scoring.setScoreState(PCLOSE);
         }
         if (gamepad1.dpad_down) {
-            scoring.setScoreState(DOWN);
+            if (timerArm.seconds() > .6) {
+                scoring.setScoreState(DOWN);
+                timerArm.reset();
+            } else {
+                timerArm.reset();
+            }
+
         }
         if (gamepad1.dpad_up) {
             scoring.setScoreState(TRANSFERUP);
@@ -95,17 +103,19 @@ public class IterativeTeleOp extends BaseOpMode {
             scoring.stopSpin();
         }
         if (scoring.ring()) {
-            if (timer.seconds() > 2) {
+            if (timer.seconds() > 5) {
                 scoring.setScoreState(RCLOSE);
                 timer.reset();
-            }
-        }
-        if (scoring.pixel()) {
-            if (timer.seconds() > 2) {
-                scoring.setScoreState(PCLOSE);
+            } else if (scoring.pixel()) {
+                if (timer.seconds() > 5) {
+                    scoring.setScoreState(PCLOSE);
+                    timer.reset();
+                }
+            } else {
                 timer.reset();
             }
         }
+
         dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
 
         multTelemetry.update();

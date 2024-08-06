@@ -17,7 +17,7 @@ public class Scoring {
     Servo arm;
     CRServo spinner;
     ScoreState scoreState;
-    public double distance = 9;
+    public double distance = 8;
 
     RevColorSensorV3 colorSensor;
     boolean bLedOn = true;

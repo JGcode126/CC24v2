@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.KCP;
 
 
+import static org.firstinspires.ftc.teamcode.Subsystems.Drivetrain.DriveState.DRIVE;
+import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.DeadZone;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdd;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdh;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kds;
@@ -10,6 +12,9 @@ import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kih
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kpd;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kph;
 import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kps;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.signum;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -36,18 +41,31 @@ public class Movement extends Subsystem {
     PID pidHeading;
     PIDController pfdDrive;
     PIDController pfdStrafe;
-    double inputTurn;
+
     double error;
     double fr;
     double fl;
     double bl;
     double br;
 
+    double lastErrorHeading;
+    double releaseAngle;
+    double targetAngle;
+    double lastErrorDrive;
+    double lastErrorStrafe;
+    double inputTurn;
+
+    double holdX;
+    double holdY;
+    double holdH;
+    int holdNum;
+
+    double integral;
+
     /**
      * Any type of drivebase that extends the drivetrain class
      */
     public final DriveTrain drive;
-    MecanumDrive directDrive;
     private final ElapsedTime runtime;
     int counter;
     @Config
@@ -71,8 +89,6 @@ public class Movement extends Subsystem {
         odo = new TwoWheelOdometry(startX, startY, heading);
 
 
-
-
         runtime = new ElapsedTime();
         runtime.reset();
         pidHeading = new PID(Kph,Kih,Kdh);
@@ -80,7 +96,7 @@ public class Movement extends Subsystem {
         pfdDrive.setFComponent(Kfd);
         pfdStrafe = new PIDController(Kps,0,Kpd,0);
         pfdStrafe.setFComponent(Kfs);
-        directDrive = new MecanumDrive();
+
     }
 
 
@@ -267,22 +283,88 @@ public class Movement extends Subsystem {
         return (Math.abs(headingVelocity) <= MovementDash.headingVelocityThreshold * hF && velocityMagnitude <= MovementDash.movementVelocityThreshold * mF);
         
     }
-    public void holdPosition(double targetX, double targetY, double targetHeading, boolean trust){
-        Vector2d driveVector = new Vector2d(targetX - Location.x(), targetY - Location.y());
-        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(Location.heading()));
+//    public void holdPosition(double targetX, double targetY, double targetHeading, boolean trust) {
+//        Vector2d driveVector = new Vector2d(targetX - Location.x(), targetY - Location.y());
+//        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(Location.heading()));
+//
+//        error = targetHeading - Location.heading();
+//
+//
+//        inputTurn = pidHeading.update(error, false);
+//
+//        double driveCorrection = pfdDrive.update(rotatedVector.y);
+//        double strafeCorrection = pfdStrafe.update(rotatedVector.x);
+//        fr = (driveCorrection - strafeCorrection - inputTurn) * 1;
+//        fl = (driveCorrection + strafeCorrection + inputTurn) * 1;
+//        br = (driveCorrection + strafeCorrection - inputTurn) * 1;
+//        bl = (driveCorrection - strafeCorrection + inputTurn) * 1;
+//        directDrive.setWheelPowersDirect(fl, fr, bl, br);
+//    }
 
-        error = targetHeading - Location.heading();
+    public double pidHeading(double target, double kp, double ki, double kd, double current) {
+        double error = target - current;
+        integral += error;
+        double derivative = error - lastErrorHeading;
+
+        if (error > 180) {
+            error -= 360;
+        } else if (error < -180) {
+            error += 360;
+        }
+        double correction = (error * kp) + (integral * ki) + (derivative * kd);
+        lastErrorHeading = error;
+//        multTelemetry.addData("target", target);
+//        multTelemetry.addData("current", current);
+//        multTelemetry.addData("error", error);
+        return -correction;
+    }
+
+    public double pfdDrive(double kp, double kd, double kf, double error) {
+        double derivative = error - lastErrorDrive;
+        double correction = (error * kp) + (derivative * kd);
+        //multTelemetry.addData("driveError", error);
+        if (abs(error) > DeadZone) {
+            correction += signum(error) * kf;
+        }
+        return correction;
+    }
+    public double pfdStrafe(double kp, double kd, double kf, double error) {
+        double derivative = error - lastErrorStrafe;
+        double correction = (error * kp) + (derivative * kd);
+        //multTelemetry.addData("strafeError", error);
+        if (abs(error) > DeadZone) {
+            correction += signum(error) * kf;
+        }
+        return correction;
+    }
 
 
-        inputTurn = pidHeading.update(error, false);
+    public void goToPos(double targetX, double targetY, double targetHeading, double currentX, double currentY, double currentHeading) {
 
-        double driveCorrection = pfdDrive.update(rotatedVector.y);
-        double strafeCorrection = pfdStrafe.update(rotatedVector.x);
-        fr = (driveCorrection - strafeCorrection - inputTurn) * 1;
-        fl = (driveCorrection + strafeCorrection + inputTurn) * 1;
-        br = (driveCorrection + strafeCorrection - inputTurn) * 1;
-        bl = (driveCorrection - strafeCorrection + inputTurn) * 1;
-        directDrive.setWheelPowersDirect(fl, fr, bl, br);
+
+        Vector2d driveVector = new Vector2d(targetX - currentX, targetY - currentY);
+        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(currentHeading));
+
+        inputTurn = pidHeading(targetHeading, Kph, Kih, Kdh, currentHeading);
+
+        double driveCorrection = pfdDrive(Kpd, Kdd, Kfd, rotatedVector.y);
+        double strafeCorrection = pfdStrafe(Kps, Kds, Kfs, rotatedVector.x);
+        fr = ((driveCorrection - strafeCorrection - inputTurn) * 1);
+        fl = ((driveCorrection + strafeCorrection + inputTurn) * 1);
+        br = ((driveCorrection + strafeCorrection - inputTurn) * 1);
+        bl = ((driveCorrection - strafeCorrection + inputTurn) * 1);
+        drive.veryDirectDrive(fl,fr,bl,br);
+    }
+    public void hold(double xCoordinate, double yCoordinate, double heading) {
+        if (Location.x() != xCoordinate || Location.y() != yCoordinate || Location.heading() != heading) {
+            if (holdNum < 1) {
+                holdX = Location.x();
+                holdY = Location.y();
+                holdH = Location.heading();
+            }
+            goToPos(xCoordinate, yCoordinate, heading, holdX = Location.x(), Location.y(), Location.heading());
+            holdNum ++;
+        }
     }
 
 

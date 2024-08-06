@@ -14,6 +14,6 @@ public class HoldPosTest extends BaseOpMode{
     }
     public void externalLoop(){
         drive.update();
-        drive.holdPosition(0,0,0,true);
+        drive.hold(0,0,0);
     }
 }

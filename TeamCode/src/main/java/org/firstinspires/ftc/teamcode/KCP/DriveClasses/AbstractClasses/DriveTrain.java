@@ -10,6 +10,8 @@ public abstract class DriveTrain {
     protected Motor[] driveWheels;
 
     public abstract void directDrive(double targetAngle, double power, double headingCorrection, double pathCorrection);
+    public abstract void superDirectDrive(double fl, double fr, double bl, double br);
+
 
     public void drive(double targetAngle, double power, double headingCorrection){
         drive(targetAngle, power, headingCorrection, 0);
@@ -17,6 +19,10 @@ public abstract class DriveTrain {
 
     public void drive(double targetAngle, double power, double headingCorrection, double pathCorrection){
         directDrive(targetAngle - Location.heading(), power, headingCorrection, pathCorrection);
+    }
+
+    public void veryDirectDrive(double fl, double fr, double bl, double br){
+        superDirectDrive(fl,fr,bl,br);
     }
 
     public abstract void followArc(double targetAngle, double power, double headingCorrection, double pathCorrection, double r, double[] velocity);

@@ -33,12 +33,12 @@ public class Gyro {
     //When Gyro reads -3.14 or 3.14 and goes over, it
     // goes to negative version of that which causes it to spin in a circle to reach what it was at before
 
-    public Gyro(String name){
+    public Gyro(){
         gyros.add(this);
 //        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
 //        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 //        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        otos = hardware.get(SparkFunOTOS.class, name);
+        otos = hardware.get(SparkFunOTOS.class, "sensor_otos");
         otos.setLinearUnit(DistanceUnit.INCH);
         otos.setAngularUnit(AngleUnit.DEGREES);
         SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
