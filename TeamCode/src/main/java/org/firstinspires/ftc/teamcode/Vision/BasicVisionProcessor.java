@@ -39,15 +39,15 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
     //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
-    public static int max_H = 110;
-    public static int max_S = 200;
-    public static int max_V = 255;
+    public static int max_H = 175;
+    public static int max_S = 155;
+    public static int max_V = 245;
 
     public static Rect largestRect;
 
-    public static int min_H = 85;
-    public static int min_S = 130;
-    public static int min_V = 150;
+    public static int min_H = 100;
+    public static int min_S = 100;
+    public static int min_V = 100;
 
     //sets up for erode/dilate to get rid of stray pixels
     public static int erodeConstant = 1;
