@@ -228,7 +228,16 @@ public class Movement extends Subsystem {
         BaseOpMode.addData("heading", getHeading());
         BaseOpMode.addData("hF", hF);
         double targetAngle = Math.atan2(target[1], target[0]);
-        drive.drive(targetAngle, drive.getHoldPositionPower(Math.hypot(target[0], target[1])) * drive.getDirectionalPowerScalar(targetAngle - Location.heading(), true), h - Location.heading());
+        double headingCorrection = h - getHeading();
+        while (headingCorrection > Math.PI){
+            headingCorrection -= 2 * Math.PI;
+        }
+
+        while (headingCorrection < -Math.PI){
+            headingCorrection += 2 * Math.PI;
+        }
+
+        drive.drive(targetAngle, drive.getHoldPositionPower(Math.hypot(target[0], target[1])) * drive.getDirectionalPowerScalar(targetAngle - Location.heading(), true), headingCorrection);
 
         double[] v = odo.getVelocity();
         double headingVelocity = v[2];

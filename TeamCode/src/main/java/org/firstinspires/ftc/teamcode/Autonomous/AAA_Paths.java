@@ -6,8 +6,8 @@ public class AAA_Paths {
 
     public enum Path {
 
-        Foth(new double[][]{{0,0}, {0,80}}),
-        Back(new double [][]{{0,80}, {0,0}}),
+        Forth(new double[][]{{0,0}, {0,100}}),
+        Back(new double [][]{{0,100}, {0,0}}),
 
         Stop;
 

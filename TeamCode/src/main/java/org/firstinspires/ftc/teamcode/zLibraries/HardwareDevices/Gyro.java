@@ -40,7 +40,6 @@ public class Gyro {
 
         update();
 
-        setCurrentHeading(0);
 
 
     }
@@ -64,6 +63,7 @@ public class Gyro {
         BaseOpMode.addData("Raw", rawHeading);
         offset = rawHeading;
     }
+
 
 
 
@@ -118,7 +118,7 @@ public class Gyro {
     private double wrapAngle(double angle){
 //        angle += 2 * Math.PI;
 
-        while (angle > 2 * Math.PI){
+        while (angle > Math.PI){
             angle -= 2 * Math.PI;
         }
 

@@ -119,7 +119,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         Servo.resetServoList();
         Motor.resetMotorList();
         MotorEncoder.resetEncoderList();
-        Gyro.resetGyroList();
+        //Gyro.resetGyroList();
         setOpMode(this);
     }
 

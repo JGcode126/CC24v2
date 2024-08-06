@@ -24,7 +24,7 @@ public class TwoWheelOdometry extends Location{
     //defining the center of the robot to be the center of the robot
     //Values For JamieV2
     double horizontalOffset = 6.3; //vertical distance from horizontal encoder to center of robot
-    double verticalOffset = 8.5; //
+    double verticalOffset = -1; //
     //Values for Test Chassis
     //double verticalOffset = 7.5;
     //double horizontalOffset  7.25;
