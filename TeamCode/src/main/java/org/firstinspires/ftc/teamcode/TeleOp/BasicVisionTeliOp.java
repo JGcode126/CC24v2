@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 
+import android.util.Size;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -14,9 +16,10 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 @TeleOp(name="AAAA vision", group="Iterative Opmode")
 public class BasicVisionTeliOp extends BaseOpMode {
-    private BasicVisionProcessor visionProcessor = new BasicVisionProcessor();
+    private  BasicVisionProcessor visionProcessor = new BasicVisionProcessor();
     private VisionPortal visionPortal;
     private WebcamName webcam1;
+    Size size = new Size(1280,720);
     @Override
     public void externalInit() {
         telemetry.update();
@@ -25,6 +28,7 @@ public class BasicVisionTeliOp extends BaseOpMode {
                 //setup for using webcam, there is a different way to set up a phone camera
                 .setCamera(webcam1)
                 .addProcessor(visionProcessor)
+                .setCameraResolution(size)
                 .build();
         FtcDashboard.getInstance().startCameraStream(visionProcessor, 0);
 
