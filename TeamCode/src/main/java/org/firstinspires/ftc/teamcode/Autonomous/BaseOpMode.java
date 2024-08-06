@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.yHardware.Controller;
+import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Controller;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Gyro;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Motor;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.MotorEncoder;
