@@ -15,10 +15,6 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-
-import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -36,7 +32,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-@Config
+
 public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource {
 
 
@@ -156,40 +152,24 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //draws contours around shapes
         drawContours(output, contours, -1, lightBlue);
 
-        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
-        Utils.matToBitmap(output, b);
+        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(modified, b);
 
 
         return output;
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
-        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
-        //More dashboard setup
+        //just here to make the class happy, not actually being used
     }
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-        Rect submatRect = new Rect(new Point(4, 135), new Point(IMG_WIDTH, IMG_HEIGHT));
-        Paint rectPaint = new Paint();
-        rectPaint.setColor(Color.CYAN);
-        rectPaint.setStyle(Paint.Style.STROKE);
-        rectPaint.setStrokeWidth(scaleCanvasDensity * 4);
-
-        canvas.drawRect(makeGraphicsRect(submatRect, scaleBmpPxToCanvasPx), rectPaint);
-        //rectangle showing camera view
+//this is not used, can be used to draw on image but not really that useful, easier to just do in the main area
     }
     @Override
     public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
         continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
-    private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
-        int left = Math.round(rect.x * scaleBmpPxToCanvasPx);
-        int top = Math.round(rect.y * scaleBmpPxToCanvasPx);
-        int right = left + Math.round(rect.width * scaleBmpPxToCanvasPx);
-        int bottom = top + Math.round(rect.height * scaleBmpPxToCanvasPx);
 
-        return new android.graphics.Rect(left, top, right, bottom);
-
-    }}
-
+}
 
