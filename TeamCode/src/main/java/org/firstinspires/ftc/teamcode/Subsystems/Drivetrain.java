@@ -107,7 +107,7 @@ public class Drivetrain {
         strafe = rotatedVector.x;
 
         if (PIDon) {
-            turn = PIDCorrection(-0.05, 0, 0, heading);
+            turn = PIDCorrection(0.05, 0, 0.05, heading);
         }
 
         if (turn != 0) {
