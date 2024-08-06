@@ -161,7 +161,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
-        //just here to make the class happy, not actually being used
+        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
     }
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
