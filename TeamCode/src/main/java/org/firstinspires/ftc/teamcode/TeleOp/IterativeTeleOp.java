@@ -13,11 +13,13 @@ import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.BasicVisionProcessor;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.DuckSpinner;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.teamcode.BasicVisionProcessor;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
 public class IterativeTeleOp extends OpMode {
@@ -33,7 +35,7 @@ public class IterativeTeleOp extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     WebcamName webcam1;
     VisionPortal visionPortal;
-    org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor visionProcessor;
+    BasicVisionProcessor visionProcessor;
     AprilTagProcessor aprilTag;
 
     @Override
@@ -57,15 +59,18 @@ public class IterativeTeleOp extends OpMode {
         arm.setTargetPosition(0);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setPower(0.5);
-aprilTag = new AprilTagProcessor.Builder()
-        .setOutputUnits(DistanceUnit.CM, AngleUnit.RADIANS)
-       // .setLensIntrinsics()
-        .build();
+        aprilTag = new AprilTagProcessor.Builder()
+                .setOutputUnits(DistanceUnit.CM, AngleUnit.RADIANS)
+               // .setLensIntrinsics()
+                .build();
+        visionProcessor = new BasicVisionProcessor();
+
         webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
         visionPortal = new VisionPortal.Builder()
                 //setup for using webcam, there is a different way to set up a phone camera
                 .setCamera(webcam1)
                 .addProcessors(visionProcessor, aprilTag)
+//                .addProcessor(visionProcessor)
                 .build();
         FtcDashboard.getInstance().startCameraStream(visionPortal, 0);
 

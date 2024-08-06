@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-public class sensors {
+public class SSensors {
 
     private static long currentTimeMillis;
     public static long loopTime;

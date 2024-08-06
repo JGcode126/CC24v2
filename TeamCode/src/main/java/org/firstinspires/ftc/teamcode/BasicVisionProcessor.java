@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Vision;
+package org.firstinspires.ftc.teamcode;
 
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8U;
@@ -15,6 +15,10 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
+import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -32,20 +36,21 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
+@Config
 public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource {
 
 
     //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
-    public static int max_H = 110;
-    public static int max_S = 200;
-    public static int max_V = 255;
+    public static boolean Red = true;
+    public static int max_H;
+    public static int max_S;
+    public static int max_V;
 
     public static Rect largestRect;
 
-    public static int min_H = 85;
-    public static int min_S = 130;
-    public static int min_V = 150;
+    public static int min_H;
+    public static int min_S;
+    public static int min_V;
 
     //sets up for erode/dilate to get rid of stray pixels
     public static int erodeConstant = 1;
@@ -86,7 +91,21 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
         input.copyTo(output);
-
+        if (!Red) {
+            max_H = 125;
+            min_H = 100;
+            min_S = 0;
+            max_S = 255;
+            max_V = 255;
+            min_V = 125;
+        } else {
+            max_H = 25;
+            min_H = 0;
+            min_S = 0;
+            max_S = 255;
+            max_V = 255;
+            min_V = 125;
+        }
 
         IMG_HEIGHT = input.rows();
         IMG_WIDTH = input.cols();
@@ -135,7 +154,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
         if (rects.size() != 0) {
 //if anything is detected, find the biggest and use that
-            this.largestRect = VisionUtils.sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, rects).get(0);
+            this.largestRect = org.firstinspires.ftc.teamcode.Vision.VisionUtils.sortRectsByMaxOption(1, org.firstinspires.ftc.teamcode.Vision.VisionUtils.RECT_OPTION.AREA, rects).get(0);
 //draws rectangle around biggest shape
             rectangle(output, largestRect, orange, 10); //, thickness);
 
@@ -163,12 +182,27 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     }
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-//this is not used, can be used to draw on image but not really that useful, easier to just do in the main area
-    }
-    @Override
-    public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
-        continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
-    }
+            Rect submatRect = new Rect(new Point(4, 135), new Point(IMG_WIDTH, IMG_HEIGHT));
+            Paint rectPaint = new Paint();
+            rectPaint.setColor(Color.CYAN);
+            rectPaint.setStyle(Paint.Style.STROKE);
+            rectPaint.setStrokeWidth(scaleCanvasDensity * 4);
+
+            canvas.drawRect(makeGraphicsRect(largestRect, scaleBmpPxToCanvasPx), rectPaint);
+            //rectangle showing camera view
+        }
+        @Override
+        public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+            continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
+        }
+        private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
+            int left = Math.round(rect.x * scaleBmpPxToCanvasPx);
+            int top = Math.round(rect.y * scaleBmpPxToCanvasPx);
+            int right = left + Math.round(rect.width * scaleBmpPxToCanvasPx);
+            int bottom = top + Math.round(rect.height * scaleBmpPxToCanvasPx);
+
+            return new android.graphics.Rect(left, top, right, bottom);
+        }
 
 }
 
