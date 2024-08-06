@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.KCP.Localization;
 
+import static org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode.hardware;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorSparkFunOTOS;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Utilities.DashConstants.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Hardware;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Gyro;
@@ -53,8 +56,21 @@ public class TwoWheelOdometry extends Location{
         verticalEncoder = new MotorEncoder(Hardware.verticalEncoder, Hardware.verticalEncoderTicksToCM);
         horizontalEncoder = new MotorEncoder(Hardware.horizontalEncoder, Hardware.horizontalEncoderTicksToCM);
 
-        gyro = new Gyro( "imuA");
-        otos = hardwareMap.get(SparkFunOTOS.class, "myOtos");
+        gyro = new Gyro("sensor_otos");
+
+        otos = hardware.get(SparkFunOTOS.class, "sensor_otos");
+        otos.setLinearUnit(DistanceUnit.INCH);
+        otos.setAngularUnit(AngleUnit.DEGREES);
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
+        otos.setOffset(offset);
+        otos.setLinearScalar(1.01951);
+        otos.setAngularScalar(1.0);
+        otos.calibrateImu();
+        otos.resetTracking();
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        otos.setPosition(currentPosition);
+        otos.getPosition().y = 0;
+        otos.getPosition().x = 0;
 
 
 

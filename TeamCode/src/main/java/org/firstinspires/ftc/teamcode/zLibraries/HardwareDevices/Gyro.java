@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices;
 
+import static org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode.hardware;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 
@@ -15,7 +20,7 @@ import java.util.ArrayList;
 
 public class Gyro {
 
-    public SparkFunOTOS otos;
+ SparkFunOTOS otos;
 
     public static ArrayList<Gyro> gyros = new ArrayList<>();
     private double wrappedHeading = 0;
@@ -33,10 +38,17 @@ public class Gyro {
 //        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
 //        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 //        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
-//        controlHubIMU.initialize(new IMU.Parameters(orientationOnRobot));
-
+        otos = hardware.get(SparkFunOTOS.class, name);
+        otos.setLinearUnit(DistanceUnit.INCH);
+        otos.setAngularUnit(AngleUnit.DEGREES);
+        SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
+        otos.setOffset(offset);
+        otos.setLinearScalar(1.01951);
+        otos.setAngularScalar(1.0);
         otos.calibrateImu();
+        otos.resetTracking();
+        otos.getPosition().y = 0;
+        otos.getPosition().x = 0;
 
 
         update();
@@ -105,7 +117,6 @@ public class Gyro {
     }
 
     private void update(){
-
         rawHeading = otos.getPosition().h;
 
         wrappedHeading = wrapAngle(rawHeading - offset);
