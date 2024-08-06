@@ -15,11 +15,12 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import static java.lang.Math.abs;
 
+import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
-public class IterativeTeleOp extends OpMode {
+public class IterativeTeleOp extends BaseOpMode {
 
     //Declare Subsystems
 
@@ -35,7 +36,7 @@ public class IterativeTeleOp extends OpMode {
 //    public static boolean superSlow;
 
     @Override
-    public void init() {
+    public void externalInit() {
 
         setOpMode(this);
         //Set timer to 0
@@ -57,7 +58,7 @@ public class IterativeTeleOp extends OpMode {
     }
 
     @Override
-    public void init_loop() {
+    public void externalInitLoop() {
         if (gamepad1.a) {
             blue = true;
         }
@@ -68,13 +69,13 @@ public class IterativeTeleOp extends OpMode {
     }
 
     @Override
-    public void start(){
+    public void externalStart(){
         //Code that runs when you hit start
 
     }
 
     @Override
-    public void loop() {
+    public void externalLoop() {
         //Code that *LOOPS* after you hit start
         if (gamepad1.left_bumper) {
             scoring.setScoreState(RCLOSE);
@@ -122,7 +123,7 @@ public class IterativeTeleOp extends OpMode {
     }
 
     @Override
-    public void stop(){
+    public void externalStop(){
         //Code that runs when you hit stop
 
         telemetry.addData("Runtime", timer);
