@@ -106,10 +106,7 @@ public class Gyro {
 
     private void update(){
 
-        //TODO revHub orientation might matter
-        Orientation angles = otos.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-
-        rawHeading = angles.firstAngle;
+        rawHeading = otos.getPosition().h;
 
         wrappedHeading = wrapAngle(rawHeading - offset);
 //        BaseOpMode.addData("offset", offset);
