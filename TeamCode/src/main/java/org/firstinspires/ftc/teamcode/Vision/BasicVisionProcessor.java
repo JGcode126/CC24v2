@@ -85,15 +85,26 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 //    public static int min_V = 140;
 
     //CODE FOR YELLOW PIXEL
-    public static int max_H = 100;
+//    public static int max_H = 100;
+//    public static int max_S = 255;
+//    public static int max_V = 240;
+//
+//    public static Rect largestRect;
+//
+//    public static int min_H = 0;
+//    public static int min_S = 205;
+//    public static int min_V = 180;
+
+    //CODE FOR RED CONE
+    public static int max_H = 1;
     public static int max_S = 255;
-    public static int max_V = 240;
+    public static int max_V = 255;
 
     public static Rect largestRect;
 
     public static int min_H = 0;
-    public static int min_S = 205;
-    public static int min_V = 180;
+    public static int min_S = 65;
+    public static int min_V = 0;
 
     //sets up for erode/dilate to get rid of stray pixels
     public static int erodeConstant = 1;
