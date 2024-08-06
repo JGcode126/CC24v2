@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Vision;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
+import static org.opencv.imgproc.Imgproc.COLOR_BGR2HSV;
 import static org.opencv.imgproc.Imgproc.COLOR_RGB2HSV;
 import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
 import static org.opencv.imgproc.Imgproc.RETR_TREE;
@@ -16,11 +17,14 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -31,22 +35,28 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
+@Config
 public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource {
 
-
-    //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
     public static int max_H = 110;
     public static int max_S = 200;
     public static int max_V = 255;
 
-    public static Rect largestRect;
-
     public static int min_H = 85;
     public static int min_S = 130;
     public static int min_V = 150;
+    //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
+    /*public static int max_H = 110;
+    public static int max_S = 255;
+    public static int max_V = 255;
+
+    public static int min_H = 85;
+    public static int min_S = 120;
+    public static int min_V = 150;*/
 
     //sets up for erode/dilate to get rid of stray pixels
+  double  RECT_HEIGHT;
+    double RECT_WIDTH;
     public static int erodeConstant = 1;
     public static int dilateConstant = 1;
 
@@ -57,6 +67,8 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
     private static int IMG_HEIGHT = 0;
     private static int IMG_WIDTH = 0;
+    //private static int RECT_HEIGHT = 0;
+    //private static int RECT_WIDTH = 0;
     //sets up variables to collect image details
 
     private Mat output = new Mat(),
@@ -64,6 +76,8 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     private ArrayList<MatOfPoint> contours = new ArrayList<>();
 
     private Mat hierarchy = new Mat();
+
+
     //stuff for variables
 
 
@@ -79,16 +93,17 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     private final AtomicReference<Bitmap> lastFrame =
             new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
     //this is for camera stream, don't fully understand yet
-
-
+    public double centerH = 0;
+    public double centerS = 0;
+    public double centerV = 0;
+    public static Rect largestRect;
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
-        input.copyTo(output);
-
 
         IMG_HEIGHT = input.rows();
         IMG_WIDTH = input.cols();
+
         //just saving info
 
         //Scalar MIN_THRESH_PROP = new Scalar(0, 35, 38);
@@ -100,7 +115,13 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
         // Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
-        Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
+        Imgproc.cvtColor(input, modified, COLOR_BGR2HSV);
+
+        double[] centerPixel = modified.get(IMG_WIDTH / 2, IMG_HEIGHT / 2);
+        centerH = centerPixel[0];
+        centerS = centerPixel[1];
+        centerV = centerPixel[2];
+
 
         //goes from RGB to HSV color space
         //replace blue w/ red so it can use both sides of red color
@@ -139,7 +160,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         if (rects.size() != 0) {
 //if anything is detected, find the biggest and use that
             this.largestRect = VisionUtils.sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, rects).get(0);
-//draws rectangle around biggest shape
+            //draws rectangle around biggest shape
             rectangle(output, largestRect, orange, 10); //, thickness);
 
             targetDetected = true;
@@ -148,25 +169,38 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         } else {
             targetDetected = false;
         }
+
+
         //draws contours around shapes
         drawContours(output, contours, -1, lightBlue);
 
 
-
-
+        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(modified, b);
+        lastFrame.set(b);
         return output;
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
+        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
         //just here to make the class happy, not actually being used
     }
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-//this is not used, can be used to draw on image but not really that useful, easier to just do in the main area
+
     }
     @Override
     public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
         continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
+    }
+    private double[] getCenterRect(){
+        double centerx = (largestRect.width/2);
+        double centery = largestRect.height/2;
+        double centerRect[] = {centerx,centery};
+        return  centerRect;
+    }
+    private double leftThird; {
+
     }
 
 }
