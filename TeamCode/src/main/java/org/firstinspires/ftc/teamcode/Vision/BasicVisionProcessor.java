@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -83,7 +84,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
     @Override
-    public Object processFrame(Mat input, long captureTimeNanos) {
+    public Mat processFrame(Mat input, long captureTimeNanos) {
         input.copyTo(output);
 
 
@@ -91,22 +92,20 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         IMG_WIDTH = input.cols();
         //just saving info
 
-        //Scalar MIN_THRESH_PROP = new Scalar(0, 35, 38);
-        //  Scalar MAX_THRESH_PROP = new Scalar(15, 100, 63);
 
         Scalar MIN_THRESH_PROP = new Scalar(min_H, min_S, min_V);
         Scalar MAX_THRESH_PROP = new Scalar(max_H, max_S, max_V);
         //setting up all the color thresholds
 
 
-        // Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
         Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
 
         //goes from RGB to HSV color space
-        //replace blue w/ red so it can use both sides of red color
+//        replace blue w/ red so it can use both sides of red color
 
 
         inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified);
+
 
 
         Rect submatRect = new Rect(new Point(4, 4), new Point(IMG_WIDTH, IMG_HEIGHT));
@@ -119,8 +118,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //erode constant currently = 1, change to erode more or less
         dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U));
         //dilate constant currently 1, should have erode/dilate be equal
-
-
 
 
         contours = new ArrayList<>();
@@ -149,12 +146,15 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
             targetDetected = false;
         }
         //draws contours around shapes
-        drawContours(output, contours, -1, lightBlue);
+        drawContours(modified, contours, -1, lightBlue);
+
+        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(modified, b);
+        lastFrame.set(b);
 
 
+        return modified;
 
-
-        return output;
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
