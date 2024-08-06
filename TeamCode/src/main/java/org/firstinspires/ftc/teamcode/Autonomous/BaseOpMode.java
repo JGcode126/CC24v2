@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.yHardware.Controller;
-import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Gyro;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm;
+import org.firstinspires.ftc.teamcode.Controller;
+import org.firstinspires.ftc.teamcode.Gyro;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Motor;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.MotorEncoder;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Servo;
@@ -46,7 +46,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         mySensor = hardware.get(ColorSensor.class, "revColorSensor");
         mySensor.
 
-                telemetree = opMode.telemetry;
+                telemetry = opMode.telemetry;
         telemetree.setMsTransmissionInterval(5);
         multTelemetry = new ThrowbackTelemetry(new MultipleTelemetry(telemetree, dashboardTelemetry));
 
