@@ -15,6 +15,8 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import com.acmerobotics.dashboard.config.Config;
 
@@ -100,64 +102,62 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //setting up all the color thresholds
 
 
-        // Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
         Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
 
         //goes from RGB to HSV color space
-        //replace blue w/ red so it can use both sides of red color
+//        replace blue w/ red so it can use both sides of red color
 
 
-//        inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified);
-        return modified;
+        inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified);
+    
 
 
-//        Rect submatRect = new Rect(new Point(4, 4), new Point(IMG_WIDTH, IMG_HEIGHT));
-//        modified = modified.submat(submatRect);
-//        //actual threshold thing to correct for top of screen being wierd and glitchy
-//
-//
-////erode and dilate get rid of stray pixels and clean up data, can be made bigger
-//        erode(modified, modified, new Mat(erodeConstant, erodeConstant, CV_8U));
-//        //erode constant currently = 1, change to erode more or less
-//        dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U));
-//        //dilate constant currently 1, should have erode/dilate be equal
-//
-//
-//        contours = new ArrayList<>();
-//
-//        findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-//        //figures out all the pixels on the edges of the blob, useful for finding center
-//
-//
-//        List<Rect> rects = new ArrayList<>();
-//        for (int i = 0; i < contours.size(); i++) {
-//            Rect rect = boundingRect(contours.get(i));
-//            rects.add(rect);
-//        }//creates a bounding rectangle
-//
-//
-//        if (rects.size() != 0) {
-////if anything is detected, find the biggest and use that
-//            this.largestRect = VisionUtils.sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, rects).get(0);
-////draws rectangle around biggest shape
-//            rectangle(output, largestRect, orange, 10); //, thickness);
-//
-//            targetDetected = true;
-//
-//
-//        } else {
-//            targetDetected = false;
-//        }
-//        //draws contours around shapes
-//        drawContours(modified, contours, -1, lightBlue);
-//
-//        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
-//        Utils.matToBitmap(modified, b);
-//        lastFrame.set(b);
-//
-//
-//
-//        return modified;
+        Rect submatRect = new Rect(new Point(4, 4), new Point(IMG_WIDTH, IMG_HEIGHT));
+        modified = modified.submat(submatRect);
+        //actual threshold thing to correct for top of screen being wierd and glitchy
+
+
+//erode and dilate get rid of stray pixels and clean up data, can be made bigger
+        erode(modified, modified, new Mat(erodeConstant, erodeConstant, CV_8U));
+        //erode constant currently = 1, change to erode more or less
+        dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U));
+        //dilate constant currently 1, should have erode/dilate be equal
+
+
+        contours = new ArrayList<>();
+
+        findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+        //figures out all the pixels on the edges of the blob, useful for finding center
+
+
+        List<Rect> rects = new ArrayList<>();
+        for (int i = 0; i < contours.size(); i++) {
+            Rect rect = boundingRect(contours.get(i));
+            rects.add(rect);
+        }//creates a bounding rectangle
+
+
+        if (rects.size() != 0) {
+//if anything is detected, find the biggest and use that
+            this.largestRect = VisionUtils.sortRectsByMaxOption(1, VisionUtils.RECT_OPTION.AREA, rects).get(0);
+//draws rectangle around biggest shape
+            rectangle(output, largestRect, orange, 10); //, thickness);
+
+            targetDetected = true;
+
+
+        } else {
+            targetDetected = false;
+        }
+        //draws contours around shapes
+        drawContours(modified, contours, -1, lightBlue);
+
+        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(modified, b);
+        lastFrame.set(b);
+
+
+    return modified;
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
@@ -167,6 +167,13 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
 //this is not used, can be used to draw on image but not really that useful, easier to just do in the main area
+        Rect submatRect = new Rect(new Point(4, 135), new Point(IMG_WIDTH, IMG_HEIGHT));
+        Paint rectPaint = new Paint();
+        rectPaint.setColor(Color.CYAN);
+        rectPaint.setStyle(Paint.Style.STROKE);
+        rectPaint.setStrokeWidth(scaleCanvasDensity * 4);
+
+        canvas.drawRect(makeGraphicsRect(largestRect, scaleBmpPxToCanvasPx), rectPaint);
     }
     @Override
     public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
