@@ -33,7 +33,7 @@ public class BasicVisionTeliOp extends OpMode {
                 .build();
 
 
-        FtcDashboard.getInstance().startCameraStream(visionProcessor, 0);
+        FtcDashboard.getInstance().startCameraStream(visionProcessor, 60);
 
     }
 @Override
