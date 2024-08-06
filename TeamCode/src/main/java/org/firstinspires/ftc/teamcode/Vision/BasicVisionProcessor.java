@@ -39,15 +39,61 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
     //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
-    public static int max_H = 175;
-    public static int max_S = 155;
-    public static int max_V = 245;
+
+    //CODE FOR BLUE CONE
+//    public static int max_H = 175;
+//    public static int max_S = 155;
+//    public static int max_V = 245;
+//
+//    public static Rect largestRect;
+//
+//    public static int min_H = 90;
+//    public static int min_S = 80;
+//    public static int min_V = 100;
+
+        //CODE FOR WHITE PIXEL
+//    public static int max_H = 140;
+//    public static int max_S = 9;
+//    public static int max_V = 255;
+//
+//    public static Rect largestRect;
+//
+//    public static int min_H = 0;
+//    public static int min_S = 0;
+//    public static int min_V = 212;
+
+    //CODE FOR GREEN PIXEL
+//    public static int max_H = 65;
+//    public static int max_S = 180;
+//    public static int max_V = 205;
+//
+//    public static Rect largestRect;
+//
+//    public static int min_H = 25;
+//    public static int min_S = 135;
+//    public static int min_V = 120;
+
+    //CODE FOR PURPLE
+//    public static int max_H = 160;
+//    public static int max_S = 160;
+//    public static int max_V = 180;
+//
+//    public static Rect largestRect;
+//
+//    public static int min_H = 120;
+//    public static int min_S = 50;
+//    public static int min_V = 140;
+
+    //CODE FOR YELLOW PIXEL
+    public static int max_H = 100;
+    public static int max_S = 255;
+    public static int max_V = 240;
 
     public static Rect largestRect;
 
-    public static int min_H = 100;
-    public static int min_S = 100;
-    public static int min_V = 100;
+    public static int min_H = 0;
+    public static int min_S = 205;
+    public static int min_V = 180;
 
     //sets up for erode/dilate to get rid of stray pixels
     public static int erodeConstant = 1;
