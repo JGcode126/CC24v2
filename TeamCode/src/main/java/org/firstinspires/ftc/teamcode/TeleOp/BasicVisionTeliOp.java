@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.telemetry;
+
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -8,11 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-
-import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
-
 
 
 @TeleOp(name="AAAA vision", group="Iterative Opmode")
@@ -20,7 +20,7 @@ public class BasicVisionTeliOp extends OpMode {
     private BasicVisionProcessor visionProcessor = new BasicVisionProcessor();
     private VisionPortal visionPortal;
     private WebcamName webcam1;
-    Size size = new Size(1280,800);
+    Size size = new Size(1280,720);
     @Override
     public void init() {
         telemetry.update();
