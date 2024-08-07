@@ -8,15 +8,10 @@ import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.teamcode.zLibraries.Utilities.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor;
+import org.firstinspires.ftc.teamcode.Vision.blueProcessor;
 import org.firstinspires.ftc.teamcode.Vision.redProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
@@ -25,7 +20,7 @@ public class RedAuto extends LinearOpMode {
 
     // Declare Subsystems
 
-    redProcessor redProcessor = new redProcessor();
+    blueProcessor blueProcessor = new blueProcessor();
     private VisionPortal visionPortal;
     private WebcamName webcam1;
     Size size = new Size(1280,720);
@@ -45,11 +40,11 @@ public class RedAuto extends LinearOpMode {
         visionPortal = new VisionPortal.Builder()
                 //setup for using webcam, there is a different way to set up a phone camera
                 .setCamera(webcam1)
-                .addProcessor(redProcessor)
+                .addProcessor(blueProcessor)
                 //.setLiveViewContainerId(portal2ViewId)
                 .setCameraResolution(size)
                 .build();
-        FtcDashboard.getInstance().startCameraStream(redProcessor, 0);
+        FtcDashboard.getInstance().startCameraStream(blueProcessor, 0);
 
         visionPortal.resumeStreaming();
         visionPortal.resumeLiveView();
@@ -74,7 +69,6 @@ public class RedAuto extends LinearOpMode {
         if(opModeIsActive()){
             //Run Auto
 
-<<<<<<< Updated upstream
             multTelemetry.addData("current state", currentVisionState);
             switch (currentVisionState) {
                 case LEFT:
@@ -95,63 +89,6 @@ public class RedAuto extends LinearOpMode {
             }
 
 
-=======
-
-
-            public class MotorPositionController {
-
-                private DcMotor motor;
-
-                private PIDController pidController;
-
-                private ElapsedTime timer;
-
-                private Position targetPosition;
-
-                public MotorPositionController(DcMotor motor, double kp, double ki, double kd) {
-
-                    this.motor = motor;
-
-                    this.pidController = new PIDController(kp, ki, kd);
-
-                    this.timer = new ElapsedTime();
-
-                    this.targetPosition = new Position(DistanceUnit.INCH, 0, 0, 0, 0);
-
-                    this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                }
-
-                public void setTargetPosition(double x, double y, double z) {
-
-                    this.targetPosition = new Position(DistanceUnit.INCH, x, y, z, 0);
-
-                }
-
-                public void holdPosition() {
-
-                    double error = calculateError();
-
-                    double power = pidController.calculate(error, timer.seconds());
-
-                    motor.setPower(power);
-
-                    timer.reset();
-
-                }
-
-                private double calculateError() {
-
-                    Position currentPosition = motor.getCurrentPosition(CurrentUnit.INCH);
-
-                    double error = targetPosition.x - currentPosition.x;
-
-                    return error;
-
-                }
-
-            }
->>>>>>> Stashed changes
 
         }
     }

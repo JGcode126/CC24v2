@@ -109,4 +109,9 @@ public class PIDController {
     public void setDerivativeLength(int length){
         derivative.resetLength(length);
     }
+
+    public double calculate(double error, double seconds) {
+
+        return error;
+    }
 }
