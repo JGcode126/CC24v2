@@ -23,10 +23,7 @@ public class BlueAuto extends LinearOpMode {
         if(opModeIsActive()){
             //Run Auto
 
-            while(opModeIsActive()){
 
-
-            }
 
         }
     }

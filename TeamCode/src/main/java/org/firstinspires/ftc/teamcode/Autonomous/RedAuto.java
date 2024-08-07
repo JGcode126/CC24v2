@@ -23,10 +23,7 @@ public class RedAuto extends LinearOpMode {
         if(opModeIsActive()){
             //Run Auto
 
-            while(opModeIsActive()){
-
-
-            }
+            
 
         }
     }
