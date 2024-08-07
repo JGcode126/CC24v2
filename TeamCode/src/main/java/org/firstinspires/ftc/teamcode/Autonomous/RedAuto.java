@@ -20,7 +20,7 @@ public class RedAuto extends LinearOpMode {
 
     // Declare Subsystems
 
-    blueProcessor blueProcessor = new blueProcessor();
+    redProcessor redProcessor = new redProcessor();
     private VisionPortal visionPortal;
     private WebcamName webcam1;
     Size size = new Size(1280,720);
@@ -40,11 +40,11 @@ public class RedAuto extends LinearOpMode {
         visionPortal = new VisionPortal.Builder()
                 //setup for using webcam, there is a different way to set up a phone camera
                 .setCamera(webcam1)
-                .addProcessor(blueProcessor)
+                .addProcessor(redProcessor)
                 //.setLiveViewContainerId(portal2ViewId)
                 .setCameraResolution(size)
                 .build();
-        FtcDashboard.getInstance().startCameraStream(blueProcessor, 0);
+        FtcDashboard.getInstance().startCameraStream(redProcessor, 0);
 
         visionPortal.resumeStreaming();
         visionPortal.resumeLiveView();
