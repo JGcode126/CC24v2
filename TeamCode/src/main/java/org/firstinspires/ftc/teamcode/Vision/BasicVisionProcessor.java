@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Vision;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
+import static org.opencv.imgproc.Imgproc.COLOR_BGR2HSV;
 import static org.opencv.imgproc.Imgproc.COLOR_RGB2HSV;
 import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_COMPLEX;
 import static org.opencv.imgproc.Imgproc.RETR_TREE;
@@ -15,6 +16,8 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+
+import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -32,20 +35,29 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
+@Config
 public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource {
 
-
-    //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
-    public static int max_H = 110;
-    public static int max_S = 200;
-    public static int max_V = 255;
+    public static int max_H = 160;
+    public static int max_S = 230;
+    public static int max_V = 230;
 
     public static Rect largestRect;
 
-    public static int min_H = 85;
-    public static int min_S = 130;
-    public static int min_V = 150;
+    public static int min_H = 80;
+    public static int min_S = 100;
+    public static int min_V = 130;
+
+    //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
+   /* public static int max_H = 200;
+    public static int max_S = 255;
+    public static int max_V = 255;
+
+    public static Rect largestRect;
+//blue
+    public static int min_H = 80;
+    public static int min_S = 70;
+    public static int min_V = 100;*/
 
     //sets up for erode/dilate to get rid of stray pixels
     public static int erodeConstant = 1;
@@ -101,7 +113,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
         // Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
-        Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
+        Imgproc.cvtColor(input, modified, COLOR_BGR2HSV);
 
         //goes from RGB to HSV color space
         //replace blue w/ red so it can use both sides of red color
@@ -152,8 +164,8 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //draws contours around shapes
         drawContours(output, contours, -1, lightBlue);
 
-        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
-        Utils.matToBitmap(output, b);
+        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(modified, b);
         lastFrame.set(b);
 
 
