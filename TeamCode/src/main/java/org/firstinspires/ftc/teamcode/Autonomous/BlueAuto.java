@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor.largestRect;
 
@@ -10,6 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor;
+import org.firstinspires.ftc.teamcode.Vision.blueProcessor;
+import org.firstinspires.ftc.teamcode.Vision.redProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 
@@ -17,7 +20,7 @@ public class BlueAuto extends LinearOpMode {
 
     // Declare Subsystems
 
-    private BasicVisionProcessor blueProcessor = new BasicVisionProcessor();
+    blueProcessor blueProcessor = new blueProcessor();
     private VisionPortal visionPortal;
     private WebcamName webcam1;
     Size size = new Size(1280,720);
@@ -46,8 +49,14 @@ public class BlueAuto extends LinearOpMode {
         visionPortal.resumeStreaming();
         visionPortal.resumeLiveView();
 
-        if (){
-
+        if (redProcessor.returnPos() == 1){
+            currentVisionState = VisionState.LEFT;
+        } else if (redProcessor.returnPos() == 2) {
+            currentVisionState = VisionState.MIDDLE;
+        } else if (redProcessor.returnPos() == 3) {
+            currentVisionState = VisionState.RIGHT;
+        } else {
+            currentVisionState = VisionState.NODETECT;
         }
     }
 
@@ -59,6 +68,25 @@ public class BlueAuto extends LinearOpMode {
         waitForStart();
         if(opModeIsActive()){
             //Run Auto
+
+            multTelemetry.addData("current state", currentVisionState);
+            switch (currentVisionState) {
+                case LEFT:
+                    //robot should park in the leftmost square
+                    break;
+
+                case MIDDLE:
+                    //robot should park in the middle
+                    break;
+
+                case RIGHT:
+                    //robot should park to the left
+                    break;
+
+                case NODETECT:
+                    //robot should park in the middle so we have some chance of scoring
+                    break;
+            }
 
 
 
