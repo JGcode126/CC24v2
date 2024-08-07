@@ -51,7 +51,7 @@ public class TwoWheelOdometry extends Location{
         verticalEncoder = new MotorEncoder(Hardware.verticalEncoder, Hardware.verticalEncoderTicksToCM);
         horizontalEncoder = new MotorEncoder(Hardware.horizontalEncoder, Hardware.horizontalEncoderTicksToCM);
 
-        gyro = new Gyro("imu");
+        gyro = new Gyro();
 
 
 

@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.R;
 
 import java.util.ArrayList;
 
-public class Gyro {
+public class Gyro{
 
     private final IMU imu;
     Quaternion quaternion;
@@ -35,18 +35,17 @@ public class Gyro {
     //When Gyro reads -3.14 or 3.14 and goes over, it
     // goes to negative version of that which causes it to spin in a circle to reach what it was at before
 
-    public Gyro(String name){
+    public Gyro(){
         gyros.add(this);
-        orientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
+        orientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.LEFT);
 //        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
 //        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 //        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
-
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
-        imu = BaseOpMode.hardware.get(IMU.class, name);
+        imu = BaseOpMode.hardware.get(IMU.class, "imuA");
         imu.initialize(parameters);
 
         // Start the logging of measured acceleration
@@ -113,9 +112,8 @@ public class Gyro {
     private void update(){
 
         //TODO revHub orientation might matter
-        Orientation angles = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
 
-        rawHeading = angles.firstAngle;
+        rawHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         wrappedHeading = wrapAngle(rawHeading - offset);
 //        BaseOpMode.addData("offset", offset);
