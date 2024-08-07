@@ -41,15 +41,15 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
 
     //CODE FOR BLUE CONE
-//    public static int max_H = 175;
-//    public static int max_S = 155;
-//    public static int max_V = 245;
-//
-//    public static Rect largestRect;
-//
-//    public static int min_H = 90;
-//    public static int min_S = 80;
-//    public static int min_V = 100;
+    public static int max_H = 175;
+    public static int max_S = 155;
+    public static int max_V = 245;
+
+    public static Rect largestRect;
+
+    public static int min_H = 90;
+    public static int min_S = 80;
+    public static int min_V = 100;
 
         //CODE FOR WHITE PIXEL
 //    public static int max_H = 140;
@@ -96,15 +96,15 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 //    public static int min_V = 180;
 
     //CODE FOR RED CONE
-    public static int max_H = 1;
-    public static int max_S = 255;
-    public static int max_V = 255;
-
-    public static Rect largestRect;
-
-    public static int min_H = 0;
-    public static int min_S = 65;
-    public static int min_V = 0;
+//    public static int max_H = 1;
+//    public static int max_S = 255;
+//    public static int max_V = 255;
+//
+//    public static Rect largestRect;
+//
+//    public static int min_H = 0;
+//    public static int min_S = 65;
+//    public static int min_V = 0;
 
     //sets up for erode/dilate to get rid of stray pixels
     public static int erodeConstant = 1;
