@@ -8,6 +8,7 @@ public class AAA_Paths {
 
         Forth(new double[][]{{0,0}, {0,100}}),
         Back(new double [][]{{0,100}, {0,0}}),
+        BlueAutoForward(new double [][]{{0,25}}),
         Stop;
 
 
