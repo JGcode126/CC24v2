@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-public class LinearAuto extends LinearOpMode {
+public class BlueAuto extends LinearOpMode {
 
     // Declare Subsystems
 
