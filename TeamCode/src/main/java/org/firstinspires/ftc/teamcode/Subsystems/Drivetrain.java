@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import android.widget.Switch;
 
-;import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,6 +25,12 @@ public class Drivetrain {
     CRServo duckSpinner;
 
     Servo claw;
+
+
+
+
+    //    motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            motor.setEncoderMode(DcMotor.EncoderMode.AUTOMATIC);
 
 
     public double target;
