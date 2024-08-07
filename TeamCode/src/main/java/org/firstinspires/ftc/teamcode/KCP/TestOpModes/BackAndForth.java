@@ -51,6 +51,8 @@ public class BackAndForth extends BaseOpMode {
             case Back:
                 back();
                 break;
+            case Stop:;
+                stop();
         }
     }
 
@@ -58,7 +60,7 @@ public class BackAndForth extends BaseOpMode {
     public void forth(){
         BaseOpMode.addData("%Done", Forth.t);
         BaseOpMode.addData("STATE","FORTH");
-        if(!drive.followPath(Forth,1,heading, .7,true)){
+        if(!drive.followPath(Forth,.3,0, 1,false)){
             setState(Back);
         }
     }
@@ -66,11 +68,10 @@ public class BackAndForth extends BaseOpMode {
     public void back(){
         BaseOpMode.addData("%Done", Back.t);
         BaseOpMode.addData("STATE","BACK");
-        if(!drive.followPath(Back,1,heading, .7,true)){
-            setState(Forth);
+        if(!drive.followPath(Back,.3,0, 0.7,true)){
+            setState(Stop);
         }
     }
-
 
     public void setState(AAA_Paths.Path state){
         this.state = state;
