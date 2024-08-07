@@ -4,16 +4,25 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor.largestRect;
 
+import android.graphics.Canvas;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor;
 import org.firstinspires.ftc.teamcode.Vision.blueProcessor;
 import org.firstinspires.ftc.teamcode.Vision.redProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.core.Mat;
+
+import java.util.ArrayList;
 
 
 public class BlueAuto extends LinearOpMode {
@@ -22,6 +31,7 @@ public class BlueAuto extends LinearOpMode {
 
     blueProcessor blueProcessor = new blueProcessor();
     private VisionPortal visionPortal;
+    AprilTagProcessor aprilTagProcessor;
     private WebcamName webcam1;
     Size size = new Size(1280,720);
 
@@ -36,6 +46,10 @@ public class BlueAuto extends LinearOpMode {
         // Initialize Subsystems
         setOpMode(this);
         telemetry.update();
+        aprilTagProcessor = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(601.169,601.169,278.814,259.214)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                .build();
         webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
         visionPortal = new VisionPortal.Builder()
                 //setup for using webcam, there is a different way to set up a phone camera
