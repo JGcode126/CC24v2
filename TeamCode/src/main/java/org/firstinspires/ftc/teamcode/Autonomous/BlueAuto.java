@@ -9,6 +9,11 @@ public class BlueAuto extends LinearOpMode {
 
     // Declare Subsystems
 
+    public enum VisionState {
+        RIGHT, MIDDLE, LEFT, NODETECT
+    }
+    VisionState currentVisionState = VisionState.NODETECT;
+
     public void initialize(){
         // Initialize Subsystems
         setOpMode(this);
