@@ -23,10 +23,10 @@ public class LinearAuto extends LinearOpMode {
         if(opModeIsActive()){
             //Run Auto
 
-          while(opModeIsActive()){
+            while(opModeIsActive()){
 
 
-          }
+            }
 
         }
     }
