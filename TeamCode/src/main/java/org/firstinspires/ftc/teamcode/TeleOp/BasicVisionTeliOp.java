@@ -43,7 +43,6 @@ multTelemetry.addData("object detected", targetDetected);
         multTelemetry.addData("H", visionProcessor.centerH);
         multTelemetry.addData("S", visionProcessor.centerS);
         multTelemetry.addData("V", visionProcessor.centerV);
-        //multTelemetry.addData("largestRect", visionProcessor.centerLargestRect);
 
     }
 

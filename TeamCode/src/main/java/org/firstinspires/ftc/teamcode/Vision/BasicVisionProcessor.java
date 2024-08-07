@@ -72,7 +72,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     //sets up variables to collect image details
 
     private Mat output = new Mat(),
-            modified = new Mat();
+            modified = new Mat(); //modified
     private ArrayList<MatOfPoint> contours = new ArrayList<>();
 
     private Mat hierarchy = new Mat();
@@ -100,6 +100,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
+        input.copyTo(output);
 
         IMG_HEIGHT = input.rows();
         IMG_WIDTH = input.cols();
@@ -115,9 +116,9 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
         // Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
-        Imgproc.cvtColor(input, modified, COLOR_BGR2HSV);
+        Imgproc.cvtColor(input, modified, COLOR_BGR2HSV); //modified
 
-        double[] centerPixel = modified.get(IMG_WIDTH / 2, IMG_HEIGHT / 2);
+        double[] centerPixel = modified.get(IMG_WIDTH / 2, IMG_HEIGHT / 2); //modified
         centerH = centerPixel[0];
         centerS = centerPixel[1];
         centerV = centerPixel[2];
@@ -127,18 +128,18 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //replace blue w/ red so it can use both sides of red color
 
 
-        inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified);
+        inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified); //modified
 
 
-        Rect submatRect = new Rect(new Point(4, 4), new Point(IMG_WIDTH, IMG_HEIGHT));
-        modified = modified.submat(submatRect);
+        Rect submatRect = new Rect(new Point(4, 100), new Point(IMG_WIDTH, IMG_HEIGHT));
+        output = output.submat(submatRect); //modified
         //actual threshold thing to correct for top of screen being wierd and glitchy
 
 
 //erode and dilate get rid of stray pixels and clean up data, can be made bigger
-        erode(modified, modified, new Mat(erodeConstant, erodeConstant, CV_8U));
+        erode(modified, modified, new Mat(erodeConstant, erodeConstant, CV_8U)); //modified
         //erode constant currently = 1, change to erode more or less
-        dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U));
+        dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U)); //modified
         //dilate constant currently 1, should have erode/dilate be equal
 
 
@@ -146,7 +147,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
         contours = new ArrayList<>();
 
-        findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+        findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //modified
         //figures out all the pixels on the edges of the blob, useful for finding center
 
 
@@ -175,8 +176,8 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         drawContours(output, contours, -1, lightBlue);
 
 
-        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
-        Utils.matToBitmap(modified, b);
+        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(output, b); //modified
         lastFrame.set(b);
         return output;
     }
@@ -194,14 +195,17 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
     private double[] getCenterRect(){
-        double centerx = (largestRect.width/2);
+        double centerx = largestRect.x - (largestRect.width/2);
         double centery = largestRect.height/2;
         double centerRect[] = {centerx,centery};
         return  centerRect;
     }
-    private double leftThird; {
+    private double[] getLeftThird(){
+        double leftThirdx = (IMG_WIDTH/3)*2;
+        double leftThirdy = IMG_HEIGHT*0;
+        double leftThird[] = {leftThirdx, leftThirdy};
+        return leftThird;
+        }
 
-    }
-
-}
+     }
 
