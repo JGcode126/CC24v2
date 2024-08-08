@@ -76,7 +76,7 @@ public class BlueAuto extends CuddleOpMode {
         } else if (redProcessor.returnPos() == 3) {
             currentVisionState = VisionState.RIGHT;
         } else {
-            currentVisionState = VisionState.NODETECT;
+            currentVisionState = VisionState.MIDDLE;
         }
     }
 
