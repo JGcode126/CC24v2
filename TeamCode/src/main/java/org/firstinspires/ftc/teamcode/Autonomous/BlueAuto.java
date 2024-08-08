@@ -25,6 +25,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Mat;
+import org.firstinspires.ftc.teamcode.Vision.blueProcessor;
 
 import java.util.ArrayList;
 @Autonomous(name = "BlueA")
@@ -69,11 +70,11 @@ public class BlueAuto extends CuddleOpMode {
         visionPortal.resumeStreaming();
         visionPortal.resumeLiveView();
 
-        if (redProcessor.returnPos() == 1){
+        if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 1){
             currentVisionState = VisionState.LEFT;
-        } else if (redProcessor.returnPos() == 2) {
+        } else if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 2) {
             currentVisionState = VisionState.MIDDLE;
-        } else if (redProcessor.returnPos() == 3) {
+        } else if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 3) {
             currentVisionState = VisionState.RIGHT;
         } else {
             currentVisionState = VisionState.MIDDLE;
@@ -92,7 +93,7 @@ public class BlueAuto extends CuddleOpMode {
 
                 if(tasksQueued == false){
                     queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
-                    queue.addTask(new PointTask(new Waypoint(new Pose(606.6,0.0,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(2006.6,0.0,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -103,7 +104,7 @@ public class BlueAuto extends CuddleOpMode {
             case MIDDLE:
 
                 if(tasksQueued == false){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1009.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -124,7 +125,7 @@ public class BlueAuto extends CuddleOpMode {
             case NODETECT:
 
                 if(tasksQueued == false){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,809.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1009.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
