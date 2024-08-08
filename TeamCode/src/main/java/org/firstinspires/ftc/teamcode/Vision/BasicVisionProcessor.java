@@ -72,7 +72,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     //sets up variables to collect image details
 
     private Mat output = new Mat(),
-            modified = new Mat(); //modified
+            modified = new Mat();
     private ArrayList<MatOfPoint> contours = new ArrayList<>();
 
     private Mat hierarchy = new Mat();
@@ -97,6 +97,9 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     public double centerS = 0;
     public double centerV = 0;
     public static Rect largestRect;
+    public double inLeftThird;
+    public double inMiddleThird;
+    public double inRightThird;
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
@@ -116,9 +119,10 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
         // Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
-        Imgproc.cvtColor(input, modified, COLOR_BGR2HSV); //modified
+        Imgproc.cvtColor(input, modified, COLOR_RGB2HSV);
 
-        double[] centerPixel = modified.get(IMG_WIDTH / 2, IMG_HEIGHT / 2); //modified
+
+        double[] centerPixel = modified.get(IMG_WIDTH / 2, IMG_HEIGHT / 2);
         centerH = centerPixel[0];
         centerS = centerPixel[1];
         centerV = centerPixel[2];
@@ -128,7 +132,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //replace blue w/ red so it can use both sides of red color
 
 
-        inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified); //modified
+        inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified);
 
 
         Rect submatRect = new Rect(new Point(4, 100), new Point(IMG_WIDTH, IMG_HEIGHT));
@@ -137,9 +141,9 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
 //erode and dilate get rid of stray pixels and clean up data, can be made bigger
-        erode(modified, modified, new Mat(erodeConstant, erodeConstant, CV_8U)); //modified
+        erode(modified, modified, new Mat(erodeConstant, erodeConstant, CV_8U));
         //erode constant currently = 1, change to erode more or less
-        dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U)); //modified
+        dilate(modified, modified, new Mat(dilateConstant, dilateConstant, CV_8U));
         //dilate constant currently 1, should have erode/dilate be equal
 
 
@@ -147,7 +151,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
         contours = new ArrayList<>();
 
-        findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //modified
+        findContours(modified, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
         //figures out all the pixels on the edges of the blob, useful for finding center
 
 
@@ -200,12 +204,34 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         double centerRect[] = {centerx,centery};
         return  centerRect;
     }
-    private double[] getLeftThird(){
-        double leftThirdx = (IMG_WIDTH/3)*2;
-        double leftThirdy = IMG_HEIGHT*0;
+    public int situationOne(){
+
+        return situationOne();
+    }
+    public int whichThird() {
+        if(getCenterRect()[0] < IMG_WIDTH/3) {
+            int situationOne;
+        }
+        else if (getCenterRect()[0] < IMG_WIDTH/3*2) {
+            int situationTwo;
+        }
+        else {
+            int situationThree;
+        }
+        return whichThird();
+    }
+
+   /* private double[] getLeftThird() {
+        double leftThirdx = (IMG_WIDTH / 3);
+        double leftThirdy = IMG_HEIGHT * 0;
         double leftThird[] = {leftThirdx, leftThirdy};
         return leftThird;
-        }
-
-     }
+    }
+        private double[] getRightThird() {
+            double rightThirdx = (IMG_WIDTH / 3) * 2;
+            double rightThirdy = IMG_HEIGHT * 0;
+            double rightThird[] = {rightThirdx, rightThirdy};
+            return rightThird;
+    }*/
+}
 
