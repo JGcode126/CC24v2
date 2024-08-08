@@ -164,8 +164,8 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //draws contours around shapes
         drawContours(output, contours, -1, lightBlue);
 
-        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
-        Utils.matToBitmap(modified, b);
+        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(output, b);
         lastFrame.set(b);
 
 
@@ -183,6 +183,24 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
         continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
+    public double[] getCenterRect(){
 
+          double centerx = largestRect.x + (largestRect.width/2);
+          double centery = largestRect.y + (largestRect.height/2);
+
+          return new double[]{centerx, centery};
+    }
+    public int getPos(){
+        if(getCenterRect()[0]<IMG_WIDTH/3){
+            return 1;
+        } else if (getCenterRect()[0]<((IMG_WIDTH/3)*2)){
+            return 2;
+        } else {
+            return 3;
+            }
+        }
+
+
+    }
 }
 
