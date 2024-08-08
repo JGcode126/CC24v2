@@ -58,7 +58,7 @@ public class Scoring {
         scoringDash = new ScoringDash();
         multTelemetry = new MultipleTelemetry();
         clawBreakBeam = hardwareMap.get(TouchSensor.class, "clawBreakBeam");
-
+        timer = new ElapsedTime();
     }
     public void open(){
         servoR.setPosition(servoROpen);
@@ -207,7 +207,7 @@ public void autoOpenYellow(){
        timer.reset();
        spinDuck = state;
    }
-   public  void  setArmState(ArmSwitchStatement state){
+   public void  setArmState(ArmSwitchStatement state){
         timer.reset();
         firstRun = true;
         armSwitch = state;
