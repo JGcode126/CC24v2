@@ -34,9 +34,6 @@ public abstract class StaticDriveTrain extends DriveTrain {
         }
         largestPowerVector = sins;
     }
-    public void superDirectDrive(double fl, double fr, double bl, double br){
-        veryDirectDrive(fl, fr, bl, br);
-    }
 
     public void directDrive(double targetAngle, double power, double headingCorrection, double pathCorrection){
         if (power != 0) {
@@ -169,9 +166,6 @@ public abstract class StaticDriveTrain extends DriveTrain {
         for(int i = 0; i < driveWheels.length; i++){
             driveWheels[i].setPower(wheelPowers[i]*power/highestPower + driveWheels[i].getRotationalConstant() * headingPower);
         }
-    }
-    public void setWheelPowersDirect(double fl, double fr, double bl, double br){
-
     }
 
     int xCounter = 0;
