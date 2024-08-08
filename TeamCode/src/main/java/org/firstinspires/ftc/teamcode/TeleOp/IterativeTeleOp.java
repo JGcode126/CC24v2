@@ -16,6 +16,7 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 import static java.lang.Math.abs;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
+import org.firstinspires.ftc.teamcode.KCP.Movement;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
@@ -118,15 +119,14 @@ public class IterativeTeleOp extends BaseOpMode {
 
         dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
 
-        multTelemetry.update();
 
         scoring.scoring();
 
-        multTelemetry.addData("Ring", scoring.ring());
-        multTelemetry.addData("Pixel", scoring.pixel());
-        multTelemetry.addData("H", scoring.getH());
-        multTelemetry.addData("V", scoring.getV());
-        multTelemetry.addData("S", scoring.getS());
+        BaseOpMode.addData("Ring", scoring.ring());
+        BaseOpMode.addData("Pixel", scoring.pixel());
+        BaseOpMode.addData("H", scoring.getH());
+        BaseOpMode.addData("V", scoring.getV());
+        BaseOpMode.addData("S", scoring.getS());
 
         scoring.resetHSV();
 
@@ -136,8 +136,7 @@ public class IterativeTeleOp extends BaseOpMode {
     public void externalStop(){
         //Code that runs when you hit stop
 
-        telemetry.addData("Runtime", timer);
-        telemetry.update();
+        BaseOpMode.addData("Runtime", timer);
 
     }
 }

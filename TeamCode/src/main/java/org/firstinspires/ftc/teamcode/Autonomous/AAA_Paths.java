@@ -8,6 +8,11 @@ public class AAA_Paths {
         //BACK AND FORTH
         ExamplePath(new double[][]{{0,0}, {0,80}}),
 
+        Score,
+        Collect,
+        Park,
+        MoveToScore,
+        MoveToCollect,
         Stop;
 
 

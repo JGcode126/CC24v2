@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
+import org.firstinspires.ftc.teamcode.KCP.Localization.Location;
 
 import java.util.ArrayList;
 
@@ -33,14 +34,14 @@ public class Gyro {
     //When Gyro reads -3.14 or 3.14 and goes over, it
     // goes to negative version of that which causes it to spin in a circle to reach what it was at before
 
-    public Gyro(){
+    public Gyro(double startHeading){
         gyros.add(this);
 //        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
 //        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
 //        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         otos = hardware.get(SparkFunOTOS.class, "sensor_otos");
         otos.setLinearUnit(DistanceUnit.INCH);
-        otos.setAngularUnit(AngleUnit.DEGREES);
+        otos.setAngularUnit(AngleUnit.RADIANS);
         SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
         otos.setOffset(offset);
         otos.setLinearScalar(1.01951);
@@ -49,11 +50,10 @@ public class Gyro {
         otos.resetTracking();
         otos.getPosition().y = 0;
         otos.getPosition().x = 0;
-
+        SparkFunOTOS.Pose2D startPos = new SparkFunOTOS.Pose2D(0,0,startHeading);
+        otos.setPosition(startPos);
 
         update();
-
-        setCurrentHeading(0);
 
 
     }
@@ -82,8 +82,8 @@ public class Gyro {
 
     //In radians
     public void setCurrentHeading(double heading){
-        resetHeading();
-        offset -= heading;
+        SparkFunOTOS.Pose2D startPos = new SparkFunOTOS.Pose2D(Location.x(), Location.y(),heading);
+        otos.setPosition(startPos);
     }
 
     public static void updateAngles(){
@@ -127,12 +127,12 @@ public class Gyro {
     private double wrapAngle(double angle){
 //        angle += 2 * Math.PI;
 
-        while (angle > 2 * Math.PI){
-            angle -= 2 * Math.PI;
+        while (angle > Math.PI){
+            angle -= Math.PI;
         }
 
-        while (angle < 0){
-            angle += 2 * Math.PI;
+        while (angle < -Math.PI){
+            angle += Math.PI;
         }
 
 

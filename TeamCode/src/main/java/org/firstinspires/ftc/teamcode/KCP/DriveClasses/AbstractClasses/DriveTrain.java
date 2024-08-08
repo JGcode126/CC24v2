@@ -22,7 +22,7 @@ public abstract class DriveTrain {
     }
 
     public void veryDirectDrive(double fl, double fr, double bl, double br){
-        superDirectDrive(fl,fr,bl,br);
+        superDirectDrive(fr,fl,br,bl);
     }
 
     public abstract void followArc(double targetAngle, double power, double headingCorrection, double pathCorrection, double r, double[] velocity);

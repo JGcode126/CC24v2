@@ -4,12 +4,12 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Sensors.SparkFunOTOS;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
@@ -35,11 +35,11 @@ public class LocalizationTest extends OpMode {
         myOtos.setAngularScalar(1.00763666667);
         myOtos.calibrateImu();
         myOtos.resetTracking();
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, Math.PI / 2);
         myOtos.setPosition(currentPosition);
-        myOtos.getPosition().y = 0;
-        myOtos.getPosition().x = 0;
-        myOtos.getPosition().h = 0;
+//        myOtos.getPosition().y = 0;
+//        myOtos.getPosition().x = 0;
+//        myOtos.getPosition().h = 0;
 
 
     }

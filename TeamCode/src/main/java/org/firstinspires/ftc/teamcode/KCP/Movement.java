@@ -261,13 +261,14 @@ public class Movement extends Subsystem {
 
     /**
      * Robot should always be trying to hold a position in autonomous
-     * @param x - x position to hold
-     * @param y - y position to hold
-     * @param h - heading to hold
-     * @param hF - heading factor for determining when stopped
-     * @param mF - movement factor for determining when stopped
-     * @return - if robot is settled
+     //* @param x - x position to hold
+//     * @param y - y position to hold
+//     * @param h - heading to hold
+//     * @param hF - heading factor for determining when stopped
+//     * @param mF - movement factor for determining when stopped
+//     * @return - if robot is settled
      */
+    /*
     public boolean holdPosition(double x, double y, double h, double hF, double mF){
         double[] target = new double[]{x - Location.x(), y - Location.y()};
         BaseOpMode.addData("y target", target[1]);
@@ -283,6 +284,8 @@ public class Movement extends Subsystem {
         return (Math.abs(headingVelocity) <= MovementDash.headingVelocityThreshold * hF && velocityMagnitude <= MovementDash.movementVelocityThreshold * mF);
         
     }
+    *\
+     */
 //    public void holdPosition(double targetX, double targetY, double targetHeading, boolean trust) {
 //        Vector2d driveVector = new Vector2d(targetX - Location.x(), targetY - Location.y());
 //        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(Location.heading()));
@@ -311,12 +314,13 @@ public class Movement extends Subsystem {
         } else if (error < -180) {
             error += 360;
         }
+        BaseOpMode.addData("error", error);
         double correction = (error * kp) + (integral * ki) + (derivative * kd);
         lastErrorHeading = error;
 //        multTelemetry.addData("target", target);
 //        multTelemetry.addData("current", current);
 //        multTelemetry.addData("error", error);
-        return -correction;
+        return correction;
     }
 
     public double pfdDrive(double kp, double kd, double kf, double error) {
@@ -344,32 +348,38 @@ public class Movement extends Subsystem {
 
         Vector2d driveVector = new Vector2d(targetX - currentX, targetY - currentY);
         Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(currentHeading));
+        BaseOpMode.addData("heading", currentHeading);
+        BaseOpMode.addData("targHeading", targetHeading);
 
-        inputTurn = pidHeading(targetHeading, Kph, Kih, Kdh, currentHeading);
+        inputTurn = -pidHeading(targetHeading, Kph, Kih, Kdh, currentHeading);
 
-        double driveCorrection = pfdDrive(Kpd, Kdd, Kfd, rotatedVector.y);
-        double strafeCorrection = pfdStrafe(Kps, Kds, Kfs, rotatedVector.x);
+        BaseOpMode.addData("correction", inputTurn);
+        double driveCorrection = -pfdDrive(Kpd, Kdd, Kfd, rotatedVector.y);
+        double strafeCorrection = -pfdStrafe(Kps, Kds, Kfs, rotatedVector.x);
         fr = ((driveCorrection - strafeCorrection - inputTurn) * 1);
         fl = ((driveCorrection + strafeCorrection + inputTurn) * 1);
         br = ((driveCorrection + strafeCorrection - inputTurn) * 1);
         bl = ((driveCorrection - strafeCorrection + inputTurn) * 1);
-        drive.veryDirectDrive(fl,fr,bl,br);
+        drive.veryDirectDrive(fr,fl,br,bl);
     }
-    public void hold(double xCoordinate, double yCoordinate, double heading) {
+    public boolean hold(double xCoordinate, double yCoordinate, double heading) {
         if (Location.x() != xCoordinate || Location.y() != yCoordinate || Location.heading() != heading) {
             if (holdNum < 1) {
                 holdX = Location.x();
                 holdY = Location.y();
                 holdH = Location.heading();
+                holdNum ++;
             }
-            goToPos(xCoordinate, yCoordinate, heading, holdX = Location.x(), Location.y(), Location.heading());
-            holdNum ++;
+            goToPos(xCoordinate, yCoordinate, Math.toDegrees(heading), Location.x(), Location.y(), Math.toDegrees(Location.heading()));
+            return true;
+        } else {
+            return false;
         }
     }
 
 
     public boolean holdPosition(double x, double y, double h) {
-        return holdPosition(x,y,h,1, 2);
+        return hold(x,y,h);
     }
 
     public boolean followPath(AAA_Paths.Path path, double power, double heading, double tThreshold, boolean stopAtEnd) {

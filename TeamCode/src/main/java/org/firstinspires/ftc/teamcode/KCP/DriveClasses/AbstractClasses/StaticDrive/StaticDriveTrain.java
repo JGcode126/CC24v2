@@ -34,8 +34,8 @@ public abstract class StaticDriveTrain extends DriveTrain {
         }
         largestPowerVector = sins;
     }
-    public void superDirectDrive(){
-
+    public void superDirectDrive(double fl, double fr, double bl, double br){
+        veryDirectDrive(fl, fr, bl, br);
     }
 
     public void directDrive(double targetAngle, double power, double headingCorrection, double pathCorrection){

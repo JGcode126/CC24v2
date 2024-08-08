@@ -16,13 +16,14 @@ import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
+import org.firstinspires.ftc.teamcode.Sensors.SparkFunOTOS;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 
 public class Drivetrain {
@@ -99,9 +100,9 @@ public class Drivetrain {
             releaseAngle = heading;
         } else {
             targetAngle = releaseAngle;// + 0.5;
-            inputTurn = pidHeading(targetAngle, -0.02, 0, 0, heading);
+            inputTurn = pidHeading(targetAngle, Kph, Kih, Kdh, heading);
         }
-        multTelemetry.addData("gyro", heading);
+        BaseOpMode.addData("gyro", heading);
 
         if (abs(drive) < .0001 && abs(strafe) < .0001 && abs(turn) < .0001) {
             holdNum = 0;
@@ -174,6 +175,7 @@ public class Drivetrain {
         Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(currentHeading));
 
         inputTurn = pidHeading(targetHeading, Kph, Kih, Kdh, currentHeading);
+        BaseOpMode.addData("correction", inputTurn);
 
         double driveCorrection = pfdDrive(Kpd, Kdd, Kfd, rotatedVector.y);
         double strafeCorrection = pfdStrafe(Kps, Kds, Kfs, rotatedVector.x);
@@ -189,7 +191,7 @@ public class Drivetrain {
                 holdY = myOtos.getPosition().y;
                 holdH = myOtos.getPosition().h;
             }
-            goToPos(xCoordinate, yCoordinate, heading, myOtos.getPosition().x, myOtos.getPosition().y, myOtos.getPosition().h);
+            goToPos(holdX, holdY, holdH, myOtos.getPosition().x, myOtos.getPosition().y, myOtos.getPosition().h);
             holdNum ++;
         }
         if (abs(x) > .0001 || abs(y) > .0001 || abs(h) > .0001) {

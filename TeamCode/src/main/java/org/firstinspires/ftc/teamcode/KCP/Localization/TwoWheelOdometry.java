@@ -4,14 +4,13 @@ import static org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode.hardware;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.hardwareMap;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorSparkFunOTOS;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
+import org.firstinspires.ftc.teamcode.Sensors.SparkFunOTOS;
 import org.firstinspires.ftc.teamcode.Utilities.DashConstants.Constants;
 import org.firstinspires.ftc.teamcode.Subsystems.Hardware;
-import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.Gyro;
 import org.firstinspires.ftc.teamcode.zLibraries.HardwareDevices.MotorEncoder;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
@@ -22,7 +21,6 @@ public class TwoWheelOdometry extends Location{
     private int imuNumber = 0;
 
     //location variables to be read by other classes
-    double h = 0;
 
     //what the imu reading should be rounded to for maximum accuracy
     double IMUMaximumPrecision = 0.01;
@@ -44,7 +42,6 @@ public class TwoWheelOdometry extends Location{
     double dVertical, dHorizontal, dHeading, dX, dY;
     public final MotorEncoder verticalEncoder;
     public final MotorEncoder horizontalEncoder;
-    public final Gyro gyro;
     public SparkFunOTOS otos;
     //public final BadBNO055 gyro;
 
@@ -56,22 +53,17 @@ public class TwoWheelOdometry extends Location{
         verticalEncoder = new MotorEncoder(Hardware.verticalEncoder, Hardware.verticalEncoderTicksToCM);
         horizontalEncoder = new MotorEncoder(Hardware.horizontalEncoder, Hardware.horizontalEncoderTicksToCM);
 
-        gyro = new Gyro();
-
         otos = hardware.get(SparkFunOTOS.class, "sensor_otos");
         otos.setLinearUnit(DistanceUnit.INCH);
-        otos.setAngularUnit(AngleUnit.DEGREES);
+        otos.setAngularUnit(AngleUnit.RADIANS);
         SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(-3.5, 5, 0);
         otos.setOffset(offset);
         otos.setLinearScalar(1.01951);
         otos.setAngularScalar(1.0);
         otos.calibrateImu();
         otos.resetTracking();
-        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(0, 0, 0);
+        SparkFunOTOS.Pose2D currentPosition = new SparkFunOTOS.Pose2D(startX, startY, startHeading);
         otos.setPosition(currentPosition);
-        otos.getPosition().y = 0;
-        otos.getPosition().x = 0;
-
 
 
         //get new reads on sensors (heading, Vertical encoder, and horizontal encoder)
@@ -80,18 +72,16 @@ public class TwoWheelOdometry extends Location{
         vPrevDist = verticalEncoder.getPosition();
         hPrevDist = horizontalEncoder.getPosition();
 
-        gyro.setCurrentHeading(startHeading);
+        Location.heading = startHeading;
 
         //     gyro.setOffsetAngle(Math.toDegrees(startHeading));
-        h = startHeading;
-
-
 
     }
 
     @Override
     public void setCurrentHeading(double heading) {
-        gyro.setCurrentHeading(heading);
+        SparkFunOTOS.Pose2D newPosition = new SparkFunOTOS.Pose2D(x(), y(), heading);
+        Location.heading = heading;
     }
 
     //Uses Odo Pods
@@ -101,7 +91,16 @@ public class TwoWheelOdometry extends Location{
 //        newVertical = verticalEncoder.getPosition();
 //        newHorizontal = horizontalEncoder.getPosition();
 ////        newHeading = gyro.getHeading();
-        newHeading = gyro.getHeading();
+        newHeading = otos.getPosition().h;
+
+        while (newHeading > Math.PI){
+            newHeading -= Math.PI;
+        }
+
+        while (newHeading < -Math.PI){
+            newHeading += Math.PI;
+        }
+
 //
 //        //get change in heading, Vertical encoder, and horizontal encoder
 //        dVertical = newVertical - vPrevDist;
@@ -153,11 +152,11 @@ public class TwoWheelOdometry extends Location{
 //        location[0] += Math.cos(h) * dX - Math.sin(h) * dY;
 //        location[1] += Math.sin(h) * dX + Math.cos(h) * dY;
         Location.heading = newHeading;
+        BaseOpMode.addData("newHeading", newHeading);
 //
 //        //update reference values to current position
 //        vPrevDist = newVertical;
 //        hPrevDist = newHorizontal;
-        h = newHeading;
         location[0] = otos.getPosition().x;
         location[1] = otos.getPosition().y;
     }

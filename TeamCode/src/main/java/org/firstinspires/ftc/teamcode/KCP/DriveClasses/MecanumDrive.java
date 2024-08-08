@@ -117,6 +117,12 @@ public class MecanumDrive extends StaticDriveTrain {
         driveWheels[1].setPower(drivePowers[1]);
         driveWheels[2].setPower(drivePowers[2]);
     }
+    public void veryDirectDrive(double fr, double fl, double br, double bl){
+        driveWheels[0].setPower(-fr);
+        driveWheels[1].setPower(-br);
+        driveWheels[2].setPower(-fl);
+        driveWheels[3].setPower(-bl);
+    }
 
     /**
      * Scalar to convert given power to be equivalent in all drive directions based on favored

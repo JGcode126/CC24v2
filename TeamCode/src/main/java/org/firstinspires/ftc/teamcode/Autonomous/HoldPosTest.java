@@ -10,10 +10,10 @@ public class HoldPosTest extends BaseOpMode{
 
     @Override
     public void externalInit() {
-        drive = new Movement(0,0,0);
+        drive = new Movement(0,0,Math.PI/2);
     }
     public void externalLoop(){
         drive.update();
-        drive.hold(0,0,0);
+        drive.holdPosition(10,10,Math.PI/2);
     }
 }
