@@ -209,14 +209,15 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
             targetDetected = false;
         }
         //draws contours around shapes
-        drawContours(output, contours, -1, lightBlue);
+        drawContours(output, contours, -1, orange);
 
+        Mat liveviewMat = modified;
 
-        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
-        Utils.matToBitmap(output, b);
+        Bitmap b = Bitmap.createBitmap(liveviewMat.width(), liveviewMat.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(liveviewMat, b);
         lastFrame.set(b);
 
-        return output;
+        return liveviewMat;
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {

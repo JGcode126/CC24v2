@@ -41,14 +41,14 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
     //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
 
     //CODE FOR BLUE CONE
-    public static int max_H = 175;
-    public static int max_S = 155;
-    public static int max_V = 245;
+    public static int max_H = 150;
+    public static int max_S = 255;
+    public static int max_V = 230;
 
     public static Rect largestRect;
 
     public static int min_H = 90;
-    public static int min_S = 80;
+    public static int min_S = 60;
     public static int min_V = 100;
     List<Rect> rects = new ArrayList<>();
     //CODE FOR WHITE PIXEL
@@ -222,14 +222,14 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
             targetDetected = false;
         }
         //draws contours around shapes
-        drawContours(output, contours, -1, lightBlue);
+        drawContours(output, contours, -1, orange);
 
 
         Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
         Utils.matToBitmap(output, b);
         lastFrame.set(b);
 
-        return output;
+        return modified;
     }
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
