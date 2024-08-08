@@ -22,6 +22,7 @@ public class CuddleOpMode extends CuddleInitIDK {
     public void mainLoop()
     {
         super.mainLoop();
+        queue.addTask(new PointTask(new Waypoint(new Pose(0.0,0.0,0.0),-0.6), ptpController));
 
         encoderLocalizer.update();
         System.out.println(encoderLocalizer.getPos());

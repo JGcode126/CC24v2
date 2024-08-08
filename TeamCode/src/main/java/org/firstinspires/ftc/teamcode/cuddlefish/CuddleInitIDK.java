@@ -7,6 +7,7 @@ import com.roboctopi.cuttlefish.controller.PTPController;
 import com.roboctopi.cuttlefish.localizer.ThreeEncoderLocalizer;
 import com.roboctopi.cuttlefish.queue.TaskQueue;
 import com.roboctopi.cuttlefish.utils.Direction;
+import com.roboctopi.cuttlefish.utils.PID;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleEncoder;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleMotor;
 import com.roboctopi.cuttlefishftcbridge.devices.CuttleRevHub;
@@ -47,7 +48,7 @@ import com.roboctopi.cuttlefishftcbridge.opmodeTypes.GamepadOpMode;
         You can find the name of the hubs in the config file
         */
             ctrlHub = new CuttleRevHub(hardwareMap,CuttleRevHub.HubTypes.CONTROL_HUB);
-            expHub = new CuttleRevHub(hardwareMap,"Expansion Hub 1");
+            expHub = new CuttleRevHub(hardwareMap,"Expansion Hub 2");
 
         /*
         Get the chassis motors
@@ -67,9 +68,9 @@ import com.roboctopi.cuttlefishftcbridge.opmodeTypes.GamepadOpMode;
             leftFrontMotor.setDirection(Direction.REVERSE);
 
             //Initialize and set the direction of the encoders
-            CuttleEncoder leftEncoder  = expHub .getEncoder(1,720*4);
-            CuttleEncoder sideEncoder  = expHub .getEncoder(2,720*4);
-            CuttleEncoder rightEncoder = expHub.getEncoder(3,720*4);
+            CuttleEncoder leftEncoder  = expHub .getEncoder(2,2000);
+            CuttleEncoder sideEncoder  = expHub .getEncoder(3,2000);
+            CuttleEncoder rightEncoder = expHub.getEncoder(1,8192);
             leftEncoder.setDirection(Direction.REVERSE);
             sideEncoder.setDirection(Direction.REVERSE);
 
@@ -88,6 +89,21 @@ import com.roboctopi.cuttlefishftcbridge.opmodeTypes.GamepadOpMode;
 
             // Initialize the PTP Controller
             ptpController = new PTPController(chassis, encoderLocalizer);
+
+            ptpController.setTranslational_PD_ctrlr(new PID(
+                    0.00000001,  // Proportional
+                    0.0,   // Integral
+                    0.00, // Derivative
+                    0.0,   // Initial value (should be zero)
+                    1.0    // Maximum integral power (to prevent integral windup)
+            ));
+            ptpController.setRotational_PID_ctrlr(new PID(
+                    0.000001,  // Proportional
+                    0.0,   // Integral
+                    0., // Derivative
+                    0.0,   // Initial value (should be zero)
+                    1.0    // Maximum integral power (to prevent integral windup)
+            ));
 
             // Initialize the queue
             queue = new TaskQueue();
