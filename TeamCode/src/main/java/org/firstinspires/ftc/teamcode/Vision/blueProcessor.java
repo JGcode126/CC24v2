@@ -50,7 +50,7 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
     public static int min_H = 90;
     public static int min_S = 80;
     public static int min_V = 100;
-
+    List<Rect> rects = new ArrayList<>();
     //CODE FOR WHITE PIXEL
 //    public static int max_H = 140;
 //    public static int max_S = 9;
@@ -143,6 +143,7 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
 
     public static int returnPos() {
         int position = 0;
+        if (largestRect!= null){
 
         if ((largestRect.x - (largestRect.width / 2) / 3) <= (IMG_HEIGHT * IMG_WIDTH) / 3 ) {
             position = 1;
@@ -150,7 +151,7 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
             position = 3;
         } else {
             position = 2;
-        }
+        }}
         return position;
     }
 
@@ -201,7 +202,7 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
         //figures out all the pixels on the edges of the blob, useful for finding center
 
 
-        List<Rect> rects = new ArrayList<>();
+
         for (int i = 0; i < contours.size(); i++) {
             Rect rect = boundingRect(contours.get(i));
             rects.add(rect);

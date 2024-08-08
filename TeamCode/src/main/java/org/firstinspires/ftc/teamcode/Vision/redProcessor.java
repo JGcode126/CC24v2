@@ -143,14 +143,14 @@ public class redProcessor implements VisionProcessor, CameraStreamSource {
 
     public static int returnPos() {
         int position = 0;
-
+if (largestRect!=null){
         if ((largestRect.x - (largestRect.width / 2) / 3) <= (IMG_HEIGHT * IMG_WIDTH) / 3 ) {
             position = 1;
         } else if ((largestRect.x - (largestRect.width / 2)) <= ((IMG_HEIGHT * IMG_WIDTH) / 3) * 2) {
             position = 3;
         } else {
             position = 2;
-        }
+        }}
         return position;
     }
 
