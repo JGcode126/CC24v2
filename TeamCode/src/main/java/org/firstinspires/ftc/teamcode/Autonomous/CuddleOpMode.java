@@ -11,18 +11,21 @@ import org.firstinspires.ftc.teamcode.cuddlefish.CuddleInitIDK;
 
 @TeleOp(name="Example Field-Centric Driver Encoders", group="Example ")
 public class CuddleOpMode extends CuddleInitIDK {
+    boolean tasksQueued = false;
+
     public void onInit() {
         super.onInit();
     }
     public void main() {
         super.main();
+        if(tasksQueued == true){
 
+        }
     }
 
     public void mainLoop()
     {
         super.mainLoop();
-        queue.addTask(new PointTask(new Waypoint(new Pose(0.0,0.0,0.0),0.5), ptpController));
 
         encoderLocalizer.update();
         System.out.println(encoderLocalizer.getPos());

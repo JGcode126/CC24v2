@@ -9,6 +9,9 @@ import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.roboctopi.cuttlefish.controller.Waypoint;
+import com.roboctopi.cuttlefish.queue.PointTask;
+import com.roboctopi.cuttlefish.utils.Pose;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -25,9 +28,10 @@ import org.opencv.core.Mat;
 import java.util.ArrayList;
 
 
-public class BlueAuto extends LinearOpMode {
+public class BlueAuto extends CuddleOpMode {
 
     // Declare Subsystems
+
 
     blueProcessor blueProcessor = new blueProcessor();
     private VisionPortal visionPortal;
@@ -42,7 +46,8 @@ public class BlueAuto extends LinearOpMode {
     }
     VisionState currentVisionState = VisionState.NODETECT;
 
-    public void initialize(){
+    public void onInit(){
+        super.onInit();
         // Initialize Subsystems
         setOpMode(this);
         telemetry.update();
@@ -75,35 +80,59 @@ public class BlueAuto extends LinearOpMode {
     }
 
 
-    @Override
-    public void runOpMode() {
-        initialize();
+    public void mainLoop() {
+        super.mainLoop();
 
-        waitForStart();
-        if(opModeIsActive()){
             //Run Auto
 
-            multTelemetry.addData("current state", currentVisionState);
-            switch (currentVisionState) {
-                case LEFT:
-                    //robot should park in the leftmost square
-                    break;
+        multTelemetry.addData("current state", currentVisionState);
+        switch (currentVisionState) {
+            case LEFT:
 
-                case MIDDLE:
-                    //robot should park in the middle
-                    break;
-
-                case RIGHT:
-                    //robot should park to the left
-                    break;
-
-                case NODETECT:
-                    //robot should park in the middle so we have some chance of scoring
-                    break;
-            }
+                if(tasksQueued == false){
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(606.6,0.0,0.0),0.5), ptpController));
+                }
+                tasksQueued = true;
 
 
+                //robot should park in the leftmost square
+                break;
 
+            case MIDDLE:
+
+                if(tasksQueued == false){
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
+                }
+                tasksQueued = true;
+
+                //robot should park in the middle
+                break;
+
+            case RIGHT:
+
+                if(tasksQueued == false){
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(-606.6,0.0,0.0),0.5), ptpController));
+                }
+                tasksQueued = true;
+
+                //robot should park to the left
+                break;
+
+            case NODETECT:
+
+                if(tasksQueued == false){
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
+                }
+                tasksQueued = true;
+
+                //robot should park in the middle so we have some chance of scoring
+                break;
         }
+
+
+
+        
     }
 }
