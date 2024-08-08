@@ -91,7 +91,7 @@ import com.roboctopi.cuttlefishftcbridge.opmodeTypes.GamepadOpMode;
             ptpController = new PTPController(chassis, encoderLocalizer);
 
             ptpController.setTranslational_PD_ctrlr(new PID(
-                    -0.002,  // Proportional
+                    -0.006,  // Proportional
                     0.0,   // Integral
                     0.0, // Derivative
                     0.0,   // Initial value (should be zero)
