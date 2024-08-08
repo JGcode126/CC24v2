@@ -15,6 +15,7 @@ public class OdometryTest extends BaseOpMode {
     public long lastLoop;
 
     TwoWheelOdometry odo;
+    double headinglol;
 
     @Override
     public void externalInit() {
