@@ -18,20 +18,21 @@ public class CuddleOpMode extends CuddleInitIDK {
     }
     public void main() {
         super.main();
-        if(tasksQueued == true){
-
-        }
     }
 
     public void mainLoop()
     {
         super.mainLoop();
 
-        encoderLocalizer.update();
-        System.out.println(encoderLocalizer.getPos());
-        telemetry.addData("Localizer X:",encoderLocalizer.getPos().getX());
-        telemetry.addData("Localizer Y:",encoderLocalizer.getPos().getY());
-        telemetry.addData("Localizer R:",encoderLocalizer.getPos().getR());
-        telemetry.update();
+        if(tasksQueued == true) {
+
+
+            encoderLocalizer.update();
+            System.out.println(encoderLocalizer.getPos());
+            telemetry.addData("Localizer X:", encoderLocalizer.getPos().getX());
+            telemetry.addData("Localizer Y:", encoderLocalizer.getPos().getY());
+            telemetry.addData("Localizer R:", encoderLocalizer.getPos().getR());
+            telemetry.update();
+        }
     }
 }

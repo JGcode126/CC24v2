@@ -8,6 +8,9 @@ import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.roboctopi.cuttlefish.controller.Waypoint;
+import com.roboctopi.cuttlefish.queue.PointTask;
+import com.roboctopi.cuttlefish.utils.Pose;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor;
@@ -16,23 +19,23 @@ import org.firstinspires.ftc.teamcode.Vision.redProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 
-public class RedAuto extends LinearOpMode {
+public class RedAuto extends CuddleOpMode {
 
     // Declare Subsystems
 
     redProcessor redProcessor = new redProcessor();
     private VisionPortal visionPortal;
     private WebcamName webcam1;
-    Size size = new Size(1280,720);
-
+    Size size = new Size(1280, 720);
 
 
     public enum VisionState {
         RIGHT, MIDDLE, LEFT, NODETECT
     }
+
     VisionState currentVisionState = VisionState.NODETECT;
 
-    public void initialize(){
+    public void initialize() {
         // Initialize Subsystems
         setOpMode(this);
         telemetry.update();
@@ -49,7 +52,7 @@ public class RedAuto extends LinearOpMode {
         visionPortal.resumeStreaming();
         visionPortal.resumeLiveView();
 
-        if (redProcessor.returnPos() == 1){
+        if (redProcessor.returnPos() == 1) {
             currentVisionState = VisionState.LEFT;
         } else if (redProcessor.returnPos() == 2) {
             currentVisionState = VisionState.MIDDLE;
@@ -66,28 +69,54 @@ public class RedAuto extends LinearOpMode {
         initialize();
 
         waitForStart();
-        if(opModeIsActive()){
+        if (opModeIsActive()) {
             //Run Auto
 
             multTelemetry.addData("current state", currentVisionState);
             switch (currentVisionState) {
                 case LEFT:
+
+                    if (tasksQueued == false) {
+                        queue.addTask(new PointTask(new Waypoint(new Pose(0.0, 609.6, 0.0), 0.5), ptpController));
+                        queue.addTask(new PointTask(new Waypoint(new Pose(606.6, 0.0, 0.0), 0.5), ptpController));
+                    }
+                    tasksQueued = true;
+
+
                     //robot should park in the leftmost square
                     break;
 
                 case MIDDLE:
+
+                    if (tasksQueued == false) {
+                        queue.addTask(new PointTask(new Waypoint(new Pose(0.0, 609.6, 0.0), 0.5), ptpController));
+                    }
+                    tasksQueued = true;
+
                     //robot should park in the middle
                     break;
 
                 case RIGHT:
+
+                    if (tasksQueued == false) {
+                        queue.addTask(new PointTask(new Waypoint(new Pose(0.0, 609.6, 0.0), 0.5), ptpController));
+                        queue.addTask(new PointTask(new Waypoint(new Pose(-606.6, 0.0, 0.0), 0.5), ptpController));
+                    }
+                    tasksQueued = true;
+
                     //robot should park to the left
                     break;
 
                 case NODETECT:
+
+                    if (tasksQueued == false) {
+                        queue.addTask(new PointTask(new Waypoint(new Pose(0.0, 609.6, 0.0), 0.5), ptpController));
+                    }
+                    tasksQueued = true;
+
                     //robot should park in the middle so we have some chance of scoring
                     break;
             }
-
 
 
         }
