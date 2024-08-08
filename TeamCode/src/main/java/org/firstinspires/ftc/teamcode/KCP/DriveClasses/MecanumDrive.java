@@ -65,8 +65,6 @@ public class MecanumDrive extends StaticDriveTrain {
         lockDrive();
     }
 
-
-
     protected void setWheelPowers(double targetAngle, double power, double headingPower){
         double rightHandWheelAngle = driveWheels[0].getAngle() + (-targetAngle);
         double leftHandWheelAngle = driveWheels[2].getAngle() + (-targetAngle);
@@ -116,12 +114,6 @@ public class MecanumDrive extends StaticDriveTrain {
         driveWheels[3].setPower(drivePowers[3]);
         driveWheels[1].setPower(drivePowers[1]);
         driveWheels[2].setPower(drivePowers[2]);
-    }
-    public void veryDirectDrive(double fr, double fl, double br, double bl){
-        driveWheels[0].setPower(-fr);
-        driveWheels[1].setPower(-br);
-        driveWheels[2].setPower(-fl);
-        driveWheels[3].setPower(-bl);
     }
 
     /**

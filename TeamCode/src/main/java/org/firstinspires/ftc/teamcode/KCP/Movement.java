@@ -1,25 +1,9 @@
 package org.firstinspires.ftc.teamcode.KCP;
 
 
-import static org.firstinspires.ftc.teamcode.Subsystems.Drivetrain.DriveState.DRIVE;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.DeadZone;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdd;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kdh;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kds;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kfd;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kfs;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kih;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kpd;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kph;
-import static org.firstinspires.ftc.teamcode.Utilities.DashConstants.PIDdash.Kps;
-
-import static java.lang.Math.abs;
-import static java.lang.Math.signum;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.checkerframework.checker.signature.qual.IdentifierOrArray;
 import org.firstinspires.ftc.teamcode.Autonomous.AAA_Paths;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.KCP.DriveClasses.AbstractClasses.DriveTrain;
@@ -27,10 +11,7 @@ import org.firstinspires.ftc.teamcode.KCP.DriveClasses.MecanumDrive;
 import org.firstinspires.ftc.teamcode.KCP.Localization.Location;
 import org.firstinspires.ftc.teamcode.KCP.Localization.TwoWheelOdometry;
 import org.firstinspires.ftc.teamcode.Subsystems.Subsystem;
-import org.firstinspires.ftc.teamcode.Utilities.PID;
-import org.firstinspires.ftc.teamcode.zLibraries.Utilities.PIDController;
 import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Rotation2d;
-import org.firstinspires.ftc.teamcode.zLibraries.Utilities.Vector2d;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 public class Movement extends Subsystem {
@@ -38,30 +19,6 @@ public class Movement extends Subsystem {
      * In this case odometry, but any extension of the localization class can be passed in
      */
     private final Location odo;
-    PID pidHeading;
-    PIDController pfdDrive;
-    PIDController pfdStrafe;
-
-    double error;
-    double fr;
-    double fl;
-    double bl;
-    double br;
-
-    double lastErrorHeading;
-    double releaseAngle;
-    double targetAngle;
-    double lastErrorDrive;
-    double lastErrorStrafe;
-    double inputTurn;
-
-    double holdX;
-    double holdY;
-    double holdH;
-    int holdNum;
-
-    double integral;
-
     /**
      * Any type of drivebase that extends the drivetrain class
      */
@@ -89,14 +46,10 @@ public class Movement extends Subsystem {
         odo = new TwoWheelOdometry(startX, startY, heading);
 
 
+
+
         runtime = new ElapsedTime();
         runtime.reset();
-        pidHeading = new PID(Kph,Kih,Kdh);
-        pfdDrive = new PIDController(Kpd,0,Kdd,0);
-        pfdDrive.setFComponent(Kfd);
-        pfdStrafe = new PIDController(Kps,0,Kpd,0);
-        pfdStrafe.setFComponent(Kfs);
-
     }
 
 
@@ -261,14 +214,13 @@ public class Movement extends Subsystem {
 
     /**
      * Robot should always be trying to hold a position in autonomous
-     //* @param x - x position to hold
-//     * @param y - y position to hold
-//     * @param h - heading to hold
-//     * @param hF - heading factor for determining when stopped
-//     * @param mF - movement factor for determining when stopped
-//     * @return - if robot is settled
+     * @param x - x position to hold
+     * @param y - y position to hold
+     * @param h - heading to hold
+     * @param hF - heading factor for determining when stopped
+     * @param mF - movement factor for determining when stopped
+     * @return - if robot is settled
      */
-    /*
     public boolean holdPosition(double x, double y, double h, double hF, double mF){
         double[] target = new double[]{x - Location.x(), y - Location.y()};
         BaseOpMode.addData("y target", target[1]);
@@ -293,102 +245,10 @@ public class Movement extends Subsystem {
         return (Math.abs(headingVelocity) <= MovementDash.headingVelocityThreshold * hF && velocityMagnitude <= MovementDash.movementVelocityThreshold * mF);
         
     }
-    *\
-     */
-//    public void holdPosition(double targetX, double targetY, double targetHeading, boolean trust) {
-//        Vector2d driveVector = new Vector2d(targetX - Location.x(), targetY - Location.y());
-//        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(Location.heading()));
-//
-//        error = targetHeading - Location.heading();
-//
-//
-//        inputTurn = pidHeading.update(error, false);
-//
-//        double driveCorrection = pfdDrive.update(rotatedVector.y);
-//        double strafeCorrection = pfdStrafe.update(rotatedVector.x);
-//        fr = (driveCorrection - strafeCorrection - inputTurn) * 1;
-//        fl = (driveCorrection + strafeCorrection + inputTurn) * 1;
-//        br = (driveCorrection + strafeCorrection - inputTurn) * 1;
-//        bl = (driveCorrection - strafeCorrection + inputTurn) * 1;
-//        directDrive.setWheelPowersDirect(fl, fr, bl, br);
-//    }
-
-    public double pidHeading(double target, double kp, double ki, double kd, double current) {
-        double error = target - current;
-        integral += error;
-        double derivative = error - lastErrorHeading;
-
-        if (error > 180) {
-            error -= 360;
-        } else if (error < -180) {
-            error += 360;
-        }
-        BaseOpMode.addData("error", error);
-        double correction = (error * kp) + (integral * ki) + (derivative * kd);
-        lastErrorHeading = error;
-//        multTelemetry.addData("target", target);
-//        multTelemetry.addData("current", current);
-//        multTelemetry.addData("error", error);
-        return correction;
-    }
-
-    public double pfdDrive(double kp, double kd, double kf, double error) {
-        double derivative = error - lastErrorDrive;
-        double correction = (error * kp) + (derivative * kd);
-        //multTelemetry.addData("driveError", error);
-        if (abs(error) > DeadZone) {
-            correction += signum(error) * kf;
-        }
-        return correction;
-    }
-    public double pfdStrafe(double kp, double kd, double kf, double error) {
-        double derivative = error - lastErrorStrafe;
-        double correction = (error * kp) + (derivative * kd);
-        //multTelemetry.addData("strafeError", error);
-        if (abs(error) > DeadZone) {
-            correction += signum(error) * kf;
-        }
-        return correction;
-    }
-
-
-    public void goToPos(double targetX, double targetY, double targetHeading, double currentX, double currentY, double currentHeading) {
-
-
-        Vector2d driveVector = new Vector2d(targetX - currentX, targetY - currentY);
-        Vector2d rotatedVector = driveVector.rotate(-Math.toRadians(currentHeading));
-        BaseOpMode.addData("heading", currentHeading);
-        BaseOpMode.addData("targHeading", targetHeading);
-
-        inputTurn = -pidHeading(targetHeading, Kph, Kih, Kdh, currentHeading);
-
-        BaseOpMode.addData("correction", inputTurn);
-        double driveCorrection = -pfdDrive(Kpd, Kdd, Kfd, rotatedVector.y);
-        double strafeCorrection = -pfdStrafe(Kps, Kds, Kfs, rotatedVector.x);
-        fr = ((driveCorrection - strafeCorrection - inputTurn) * 1);
-        fl = ((driveCorrection + strafeCorrection + inputTurn) * 1);
-        br = ((driveCorrection + strafeCorrection - inputTurn) * 1);
-        bl = ((driveCorrection - strafeCorrection + inputTurn) * 1);
-        drive.veryDirectDrive(fr,fl,br,bl);
-    }
-    public boolean hold(double xCoordinate, double yCoordinate, double heading) {
-        if (Location.x() != xCoordinate || Location.y() != yCoordinate || Location.heading() != heading) {
-            if (holdNum < 1) {
-                holdX = Location.x();
-                holdY = Location.y();
-                holdH = Location.heading();
-                holdNum ++;
-            }
-            goToPos(xCoordinate, yCoordinate, Math.toDegrees(heading), Location.x(), Location.y(), Math.toDegrees(Location.heading()));
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 
     public boolean holdPosition(double x, double y, double h) {
-        return hold(x,y,h);
+        return holdPosition(x,y,h,1, 2);
     }
 
     public boolean followPath(AAA_Paths.Path path, double power, double heading, double tThreshold, boolean stopAtEnd) {
