@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
 import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -12,9 +13,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.robotcontroller.external.samples.UtilityOctoQuadConfigMenu;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
+import org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
 
 
 @TeleOp(name="Iterative TeleOp", group="Iterative Opmode")
@@ -31,6 +35,9 @@ ElapsedTime runtime = new ElapsedTime();
     ElapsedTime clawTimer = new ElapsedTime();
 
 
+WebcamName webcam1;
+VisionPortal visionPortal;
+BasicVisionProcessor visionProcessor = new BasicVisionProcessor();
 
 
 
@@ -50,6 +57,17 @@ ElapsedTime runtime = new ElapsedTime();
         gyro.initialize(parameters);
 
         //Code that runs when you hit init
+
+
+        telemetry.update();
+        webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
+        visionPortal = new VisionPortal.Builder()
+                //setup for using webcam, there is a different way to set up a phone camera
+                .setCamera(webcam1)
+                .addProcessor(visionProcessor)
+                .build();
+        FtcDashboard.getInstance().startCameraStream(visionProcessor, 0);
+
 
     }
 
