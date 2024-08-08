@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Vision.blueProcessor;
 import org.firstinspires.ftc.teamcode.Vision.redProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name = "RedAuto")
+@Autonomous(name = "RedA")
 public class RedAuto extends CuddleOpMode {
 
     // Declare Subsystems

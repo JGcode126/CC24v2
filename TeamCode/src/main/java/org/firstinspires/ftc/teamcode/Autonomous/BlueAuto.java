@@ -27,7 +27,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Mat;
 
 import java.util.ArrayList;
-@Autonomous(name = "RedAuto")
+@Autonomous(name = "BlueA")
 
 public class BlueAuto extends CuddleOpMode {
 
