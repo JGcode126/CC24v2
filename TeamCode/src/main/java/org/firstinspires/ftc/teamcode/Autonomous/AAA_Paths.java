@@ -8,8 +8,8 @@ public class AAA_Paths {
 
         Forth(new double[][]{{0,0}, {0,100}}),
         Back(new double [][]{{0,100}, {0,0}}),
-        BlueAutoFrontForward(new double [][]{{-6.3,109}, {-75,85}}),
-        BlueAutoFrontGetRings(new double [][]{{0,25}, {40,25}}),
+        RedAutoFrontForward(new double [][]{{-6.3,109}, {-63,88}}),
+        RedAutoFrontGetRings(new double [][]{{-70,82}, {-36,132}}),
         Stop;
 
 
