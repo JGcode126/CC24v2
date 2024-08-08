@@ -41,14 +41,14 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
     //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
 
     //CODE FOR BLUE CONE
-    public static int max_H = 150;
+    public static int max_H = 140;
     public static int max_S = 255;
     public static int max_V = 230;
 
     public static Rect largestRect;
 
     public static int min_H = 90;
-    public static int min_S = 60;
+    public static int min_S = 85;
     public static int min_V = 100;
     List<Rect> rects = new ArrayList<>();
     //CODE FOR WHITE PIXEL
