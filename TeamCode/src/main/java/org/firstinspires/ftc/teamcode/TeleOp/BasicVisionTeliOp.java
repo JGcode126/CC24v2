@@ -38,7 +38,7 @@ public class BasicVisionTeliOp extends OpMode {
     }
 @Override
    public void start() {
-        System.out.println("im slowly losing sanity");
+        System.out.println("never gonna see this");
     }
 
     @Override
