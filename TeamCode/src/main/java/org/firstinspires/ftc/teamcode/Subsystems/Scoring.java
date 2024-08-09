@@ -4,7 +4,6 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -103,6 +102,9 @@ public class Scoring {
         arm.setPosition(0.395);
         boolean bLedOn = false;
     }
+    public void look() {
+        arm.setPosition(0.3);
+    }
 
 
     public void spin(boolean team) {
@@ -117,7 +119,7 @@ public class Scoring {
     }
 
     public enum ScoreState  {
-        PCLOSE, RCLOSE, TRANSFERUP, DOWN
+        PCLOSE, RCLOSE, TRANSFERUP, DOWN, LOOK,
     }
     public void scoring() {
         switch (scoreState) {
@@ -132,6 +134,9 @@ public class Scoring {
                 break;
             case PCLOSE:
                 pixelGrab();
+                break;
+            case LOOK:
+                look();
                 break;
         }
     }

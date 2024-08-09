@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,13 +9,10 @@ import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.DOWN;
 import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.PCLOSE;
 import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.RCLOSE;
 import static org.firstinspires.ftc.teamcode.Subsystems.Scoring.ScoreState.TRANSFERUP;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.multTelemetry;
-import static org.firstinspires.ftc.teamcode.Utilities.OpModeUtils.setOpMode;
 
 import static java.lang.Math.abs;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
-import org.firstinspires.ftc.teamcode.KCP.Movement;
 import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
 
@@ -87,16 +83,13 @@ public class IterativeTeleOp extends BaseOpMode {
             scoring.setScoreState(PCLOSE);
         }
         if (gamepad1.dpad_down) {
-            if (timerArm.seconds() > .6) {
-                scoring.setScoreState(DOWN);
-                timerArm.reset();
-            } else {
-                timerArm.reset();
-            }
-
+            scoring.setScoreState(DOWN);
         }
         if (gamepad1.dpad_up) {
-            scoring.setScoreState(TRANSFERUP);
+            if (timerArm.seconds() > .7) {
+                scoring.setScoreState(TRANSFERUP);
+                timerArm.reset();
+            }
         }
         if (gamepad1.left_trigger > .05) {
             scoring.spin(blue);
@@ -104,20 +97,21 @@ public class IterativeTeleOp extends BaseOpMode {
             scoring.stopSpin();
         }
         if (scoring.ring()) {
-            if (timer.seconds() > 5) {
+            if (timer.seconds() > 2) {
                 scoring.setScoreState(RCLOSE);
                 timer.reset();
             } else if (scoring.pixel()) {
-                if (timer.seconds() > 5) {
+                if (timer.seconds() > 2) {
                     scoring.setScoreState(PCLOSE);
                     timer.reset();
                 }
-            } else {
-                timer.reset();
             }
+        } else {
+            timer.reset();
         }
 
-        dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
+
+            dt.driving(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.right_trigger);
 
 
         scoring.scoring();
