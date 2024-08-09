@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Vision;
 
+import static org.firstinspires.ftc.teamcode.Vision.BlueCone.offset;
 import static org.opencv.core.Core.inRange;
 import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
@@ -16,10 +17,13 @@ import static org.opencv.imgproc.Imgproc.rectangle;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.teamcode.Subsystems.Drivetrain;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
@@ -33,28 +37,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource {
+public class BlueGoal implements VisionProcessor, CameraStreamSource {
 
 
     //color data, using HSV colorspace, H=0-180, S=0-255, V=0-255
-    public static int max_H = 110;
-    public static int max_S = 200;
+    public static int max_H = 175;
+    public static int max_S = 255;
     public static int max_V = 255;
 
     public static Rect largestRect;
 
-    public static int min_H = 85;
-    public static int min_S = 130;
-    public static int min_V = 150;
+    public static int min_H = 105;
+    public static int min_S = 90;
+    public static int min_V = 30;
 
     //sets up for erode/dilate to get rid of stray pixels
-    public static int erodeConstant = 1;
-    public static int dilateConstant = 1;
+    public static int erodeConstant = 3;
+    public static int dilateConstant = 3;
 
     public Rect rectangleOutline;
 
     public static boolean targetDetected = false;
 
+    public static double offset = 0;
 
     private static int IMG_HEIGHT = 0;
     private static int IMG_WIDTH = 0;
@@ -66,6 +71,8 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
     private Mat hierarchy = new Mat();
     //stuff for variables
+
+    public List<Rect> rects = new ArrayList<>();
 
 
     // colour settings to set up output image, you will see these colors if you choose to output camera stream to dashboard
@@ -80,7 +87,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     private final AtomicReference<Bitmap> lastFrame =
             new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
     //this is for camera stream, don't fully understand yet
-
 
 
     @Override
@@ -107,7 +113,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified);
 
 
-
         Rect submatRect = new Rect(new Point(4, 4), new Point(IMG_WIDTH, IMG_HEIGHT));
         modified = modified.submat(submatRect);
         //actual threshold thing to correct for top of screen being wierd and glitchy
@@ -126,7 +131,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //figures out all the pixels on the edges of the blob, useful for finding center
 
 
-        List<Rect> rects = new ArrayList<>();
         for (int i = 0; i < contours.size(); i++) {
             Rect rect = boundingRect(contours.get(i));
             rects.add(rect);
@@ -148,26 +152,42 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         //draws contours around shapes
         drawContours(modified, contours, -1, lightBlue);
 
-        Bitmap b = Bitmap.createBitmap(modified.width(), modified.height(), Bitmap.Config.RGB_565);
-        Utils.matToBitmap(modified, b);
+        Bitmap b = Bitmap.createBitmap(output.width(), output.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(output, b);
         lastFrame.set(b);
 
 
         return modified;
 
     }
+
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
         //just here to make the class happy, not actually being used
     }
+
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
 //this is not used, can be used to draw on image but not really that useful, easier to just do in the main area
     }
+
     @Override
     public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
         continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
 
+    public static double getCenterX() {
+        double centerRectX = 0;
+        if (largestRect != null) {
+            centerRectX = largestRect.x + (largestRect.width / 2) + offset;
+        }
+        return centerRectX;
+    }
+
+    public static double moveToMiddle() {
+        double middle = IMG_WIDTH / 2;
+        double correction = getCenterX() - middle;
+        return correction;
+    }
 }
 

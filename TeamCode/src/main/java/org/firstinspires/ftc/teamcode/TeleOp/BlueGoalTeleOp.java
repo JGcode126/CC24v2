@@ -10,13 +10,14 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseOpMode;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
-import org.firstinspires.ftc.teamcode.Vision.BasicVisionProcessor;
+import org.firstinspires.ftc.teamcode.Vision.BlueCone;
+import org.firstinspires.ftc.teamcode.Vision.BlueGoal;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 
-@TeleOp(name="AAAA vision", group="Iterative Opmode")
-public class BasicVisionTeliOp extends BaseOpMode {
+@TeleOp(name="Blue Goal", group="Iterative Opmode")
+public class BlueGoalTeleOp extends BaseOpMode {
 
 
 
@@ -25,10 +26,10 @@ public class BasicVisionTeliOp extends BaseOpMode {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     private WebcamName webcam1;
-    Size camRev = new Size(1280, 720);
-    private BasicVisionProcessor visionProcessor = new BasicVisionProcessor();
+    Size camRev = new Size(400, 300);
+    private BlueGoal visionProcessorBlue = new BlueGoal();
 
-    Size size = new Size(1280,720);
+    Size size = new Size(400,300);
     @Override
     public void externalInit() {
         telemetry.update();
@@ -36,18 +37,17 @@ public class BasicVisionTeliOp extends BaseOpMode {
         visionPortal = new VisionPortal.Builder()
                 //setup for using webcam, there is a different way to set up a phone camera
                 .setCamera(webcam1)
-                .addProcessor(visionProcessor)
+                .addProcessor(visionProcessorBlue)
                 .setCameraResolution(size)
                 .enableLiveView(true)
                 .build();
-        FtcDashboard.getInstance().startCameraStream(visionProcessor, 0);
+        FtcDashboard.getInstance().startCameraStream(visionProcessorBlue, 0);
 
         waitForStart();
     }
 
     @Override
     public void externalLoop() {
-
-
+        multTelemetry.addData("Correction", BlueGoal.moveToMiddle());
     }
 }
