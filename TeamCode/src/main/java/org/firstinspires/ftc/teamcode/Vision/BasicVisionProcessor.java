@@ -202,5 +202,5 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
 
     }
-}
+
 
