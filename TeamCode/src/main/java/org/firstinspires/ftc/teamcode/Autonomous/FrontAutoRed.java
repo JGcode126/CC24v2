@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import static org.firstinspires.ftc.teamcode.Autonomous.AAA_Paths.Path.RedAuotoFrontDepositRings;
 import static org.firstinspires.ftc.teamcode.Autonomous.AAA_Paths.Path.RedAutoFrontForward;
 import static org.firstinspires.ftc.teamcode.Autonomous.AAA_Paths.Path.RedAutoFrontGetRings;
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.KCP.Movement;
 import org.firstinspires.ftc.teamcode.Subsystems.Scoring;
+import org.firstinspires.ftc.teamcode.Utilities.DashConstants.AutoDash;
 
 @Autonomous(name="Front auto blue", group="Op mode")
 public class FrontAutoRed extends BaseOpMode {
@@ -15,6 +17,7 @@ public class FrontAutoRed extends BaseOpMode {
     Movement drive;
     Scoring scoring;
     ElapsedTime timer;
+    boolean pathDone = false;
     @Override
     public void externalInit() {
         drive = new Movement(-6.3,109,Math.toRadians(90));
@@ -24,6 +27,7 @@ public class FrontAutoRed extends BaseOpMode {
 
         RedAutoFrontForward.compile();
         RedAutoFrontGetRings.compile();
+        RedAuotoFrontDepositRings.compile();
     }
 
     @Override
@@ -35,7 +39,7 @@ public class FrontAutoRed extends BaseOpMode {
 
     @Override
     public void externalStart(){
-
+        timer.reset();
     }
 
 
@@ -47,6 +51,7 @@ public class FrontAutoRed extends BaseOpMode {
         BaseOpMode.addData("y",drive.getY());
         BaseOpMode.addData("heading", Math.toDegrees(drive.getHeading()));
         BaseOpMode.addData("armState", scoring.getState());
+        BaseOpMode.addData("time", timer.seconds());
     }
     public void stateMachine(){
         switch (path) {
@@ -56,29 +61,53 @@ public class FrontAutoRed extends BaseOpMode {
             case RedAutoFrontGetRings:
                 getRings();
                 break;
+            case RedAuotoFrontDepositRings:
+                depositRing();
+                break;
         }
     }
     public void driveForward(){
         scoring.setArmState(Scoring.ArmSwitchStatement.DOWNCLOSED);
-        if(!drive.followPath(RedAutoFrontForward,0.6, Math.toRadians(135),.85, false)){
-            if(scoring.clawColorYellow()){
+        if (!pathDone) {
+            if(!drive.followPath(RedAutoFrontForward, 0.6, Math.toRadians(135), 1, false)){
+                pathDone = true;
+            }
+        } else {
+            drive.holdPosition(AutoDash.depositX,AutoDash.depositY,Math.toRadians(135));
+            if(scoring.clawDistClose() && scoring.clawColorYellow() || scoring.clawColorBlue()) {
                 scoring.setArmState(Scoring.ArmSwitchStatement.DOWNOPEN);
-                timer.reset();
-                if (timer.seconds()>1) {
+                if (timer.seconds() > 4) {
                     setState(RedAutoFrontGetRings);
                 }
-            } else {
-                drive.holdPosition(-63,88,Math.toRadians(135));
             }
-
         }
     }
-    public void getRings(){
-        if(!drive.followPath(RedAutoFrontGetRings, 0.3,Math.toRadians(0),1,true) && scoring.getBeam());
+    public void getRings() {
+        if (!pathDone) {
+            if (!drive.followPath(RedAutoFrontGetRings, 0.6, Math.toRadians(90), 1, false)){
+                pathDone = true;
+            }
+        } else{
+            scoring.setArmState(Scoring.ArmSwitchStatement.UPOPEN);
+            if(scoring.getBeam()){
+                scoring.setArmState(Scoring.ArmSwitchStatement.UPCLOSED);
+                setState(RedAuotoFrontDepositRings);
+            }
+        }
+    }
+    public void depositRing(){
+        if(!pathDone){
+            if(!drive.followPath(RedAuotoFrontDepositRings, .6, Math.toRadians(90),1,true));
+            {
+                pathDone = true;
+                setState(RedAutoFrontGetRings);
+            }
+        }
     }
     public void setState(AAA_Paths.Path state) {
         path = state;
         timer.reset();
+        pathDone = false;
     }
 }
 

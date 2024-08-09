@@ -30,7 +30,7 @@ public class MecanumDrive extends StaticDriveTrain {
         public static double ppP = -0, ppI = -0, ppD = -0;
         //Values for Test Chassis
         //public static double holdP = 0.25 , holdI = 0.05, holdD = 0.08; TODO This could be tuned better (at full battery)
-        public static double holdP = 0.12, holdI = 0, holdD = 0.04;
+        public static double holdP = 0.08, holdI = 0, holdD = 0.04;
         public static double driveMinimumPower = 0.05, headingMaxPower = 1;
 
         public static double vecX = .10, vecY = .10;

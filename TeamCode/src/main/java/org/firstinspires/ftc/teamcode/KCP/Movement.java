@@ -113,14 +113,12 @@ public class Movement extends Subsystem {
             path.resetPath();
             velocityWasHigh = false;
             stoppedCount = 0;
-            BaseOpMode.addData("stopped path", " 000000000000000000000");
             return false;
         }
 
         //If time to target end point instead of following path (stop at end true)
         if(path.targeting || (stopAtEnd && ((path.t >= tThreshold && (predictedStoppingVectorMagnitude > path.distanceToTarget())) || path.t>=1))){
             path.targeting = true;
-            BaseOpMode.addData("Using this thingy", "stupid");
 //TODO
 //            System.out.println("Heading Velocity : " + headingVelocity + "\tVelocity : " + velocityMagnitude);
 
@@ -193,8 +191,6 @@ public class Movement extends Subsystem {
             double pathDisplacementAngle = (new Rotation2d(Math.atan2(path.y-Location.y(), path.x-Location.x()) - pathVectorAngle)).getRadians();
 
             //correcting PID, uses distance from the path the apply a power perpendicular to the secant line
-            BaseOpMode.addData("PathDisplacementAngle",pathDisplacementAngle);
-            BaseOpMode.addData("dist", dist);
             double pathDisplacement = Math.sqrt(dist) * Math.signum(pathDisplacementAngle);
             if(path.curvy){
                 //radius of curvature of the path
