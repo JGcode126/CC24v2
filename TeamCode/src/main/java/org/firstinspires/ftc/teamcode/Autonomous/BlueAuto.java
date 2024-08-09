@@ -92,8 +92,8 @@ public class BlueAuto extends CuddleOpMode {
             case LEFT:
 
                 if(!tasksQueued){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
-                    queue.addTask(new PointTask(new Waypoint(new Pose(6106.6,1750.6,0.0),0.5), ptpController));
+                    //queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
+                    //queue.addTask(new PointTask(new Waypoint(new Pose(6106.6,1750.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -104,7 +104,7 @@ public class BlueAuto extends CuddleOpMode {
             case MIDDLE:
 
                 if(!tasksQueued){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,2050.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,750.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -114,8 +114,8 @@ public class BlueAuto extends CuddleOpMode {
             case RIGHT:
 
                 if(!tasksQueued){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
-                    queue.addTask(new PointTask(new Waypoint(new Pose(-6106.6,1750.6,0.0),0.5), ptpController));
+                    //queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
+                    //queue.addTask(new PointTask(new Waypoint(new Pose(-6106.6,1750.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
