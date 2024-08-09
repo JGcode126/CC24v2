@@ -97,9 +97,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     public double centerS = 0;
     public double centerV = 0;
     public static Rect largestRect;
-    public double inLeftThird;
-    public double inMiddleThird;
-    public double inRightThird;
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
