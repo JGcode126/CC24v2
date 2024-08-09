@@ -18,7 +18,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -98,6 +97,9 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     public double centerS = 0;
     public double centerV = 0;
     public static Rect largestRect;
+    public double inLeftThird;
+    public double inMiddleThird;
+    public double inRightThird;
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
@@ -218,7 +220,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         }
         return whichThird();
     }
-
 
    /* private double[] getLeftThird() {
         double leftThirdx = (IMG_WIDTH / 3);

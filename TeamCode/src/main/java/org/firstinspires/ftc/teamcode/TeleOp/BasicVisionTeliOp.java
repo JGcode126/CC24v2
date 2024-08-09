@@ -33,6 +33,7 @@ public class BasicVisionTeliOp extends BaseOpMode {
                 .addProcessor(visionProcessor)
                 .build();
         FtcDashboard.getInstance().startCameraStream(visionProcessor, 0);
+        BasicVisionProcessor.visionTimer.reset();
         waitForStart();
     }
 
