@@ -102,6 +102,15 @@ public static ElapsedTime visionTimer;
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
         input.copyTo(output);
+    int max_H;
+    int max_S;
+    int max_V;
+
+    int min_H;
+    int min_S;
+    int min_V;
+        if(visionTimer.seconds > 2) {
+            
 
         IMG_HEIGHT = input.rows();
         IMG_WIDTH = input.cols();
