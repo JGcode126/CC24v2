@@ -12,6 +12,7 @@ import static org.opencv.imgproc.Imgproc.dilate;
 import static org.opencv.imgproc.Imgproc.drawContours;
 import static org.opencv.imgproc.Imgproc.erode;
 import static org.opencv.imgproc.Imgproc.findContours;
+import static org.opencv.imgproc.Imgproc.putText;
 import static org.opencv.imgproc.Imgproc.rectangle;
 
 import android.graphics.Bitmap;
@@ -100,6 +101,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
+
         input.copyTo(output);
 
         IMG_HEIGHT = input.rows();
@@ -196,26 +198,30 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
         continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
     private double[] getCenterRect(){
+        if(largestRect!=null){
         double centerx = largestRect.x - (largestRect.width/2);
         double centery = largestRect.height/2;
         double centerRect[] = {centerx,centery};
-        return  centerRect;
+        return  centerRect;}
+        else{return null;}
     }
     public int situationOne(){
 
         return situationOne();
     }
     public int whichThird() {
+        int pos = 2;
+        if(getCenterRect()!=null){
         if(getCenterRect()[0] < IMG_WIDTH/3) {
-            int situationOne;
+            pos = 1;
         }
         else if (getCenterRect()[0] < IMG_WIDTH/3*2) {
-            int situationTwo;
+            pos = 3;
         }
         else {
-            int situationThree;
-        }
-        return whichThird();
+            pos = 2;
+        }}
+        return pos;
     }
 
    /* private double[] getLeftThird() {

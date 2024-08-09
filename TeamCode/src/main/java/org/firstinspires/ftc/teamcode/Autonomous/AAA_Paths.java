@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
+import org.firstinspires.ftc.teamcode.Utilities.DashConstants.AutoDash;
 
 
 public class AAA_Paths {
@@ -9,7 +10,11 @@ public class AAA_Paths {
         Forth(new double[][]{{0,0}, {0,100}}),
         Back(new double [][]{{0,100}, {0,0}}),
         RedAutoFrontForward(new double [][]{{-6.3,109}, {-63,88}}),
-        RedAutoFrontGetRings(new double [][]{{-70,82}, {-36,132}}),
+        RedAutoFrontGetRings(new double [][]{{-70,82}, {-36,130}}),
+        RedAuotoFrontDepositRings(new double [][]{{-36,130}, {AutoDash.depositX,AutoDash.depositY}}),
+        RedAutoParkPos2(new double [][]{{-63, 88}, {18.3, 109}}),
+        RedAutoParkPos3(new double [][]{{-63, 88}, {-36,130}}),
+        RedAutoParkPos1(new double [][]{{-63, 88}, {-36, 97}}),
         Stop;
 
 
