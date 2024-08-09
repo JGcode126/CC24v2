@@ -72,14 +72,14 @@ public class BlueAuto extends CuddleOpMode {
 
         if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 1){
             //currentVisionState = VisionState.LEFT;
-            currentVisionState = VisionState.MIDDLE;
+            currentVisionState = VisionState.RIGHT;
         } else if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 2) {
-            currentVisionState = VisionState.MIDDLE;
+            currentVisionState = VisionState.RIGHT;
         } else if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 3) {
             //currentVisionState = VisionState.RIGHT;
-            currentVisionState = VisionState.MIDDLE;
+            currentVisionState = VisionState.RIGHT;
         } else {
-            currentVisionState = VisionState.MIDDLE;
+            currentVisionState = VisionState.RIGHT;
         }
     }
 
@@ -106,7 +106,7 @@ public class BlueAuto extends CuddleOpMode {
             case MIDDLE:
 
                 if(!tasksQueued){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(900.0,900,0.0),0.5), ptpController));
+                    //queue.addTask(new PointTask(new Waypoint(new Pose(900.0,900,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -116,8 +116,9 @@ public class BlueAuto extends CuddleOpMode {
             case RIGHT:
 
                 if(!tasksQueued){
-                    //queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
-                    //queue.addTask(new PointTask(new Waypoint(new Pose(-6106.6,1750.6,0.0),0.5), ptpController));
+
+                    queue.addTask(new PointTask(new Waypoint(new Pose(-19000.0,1000.0,0.0),0.5), ptpController));
+
                 }
                 tasksQueued = true;
 
@@ -127,7 +128,7 @@ public class BlueAuto extends CuddleOpMode {
             case NODETECT:
 
                 if(tasksQueued == false){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1009.6,0.0),0.5), ptpController));
+                    //queue.addTask(new PointTask(new Waypoint(new Pose(900.0,900,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
