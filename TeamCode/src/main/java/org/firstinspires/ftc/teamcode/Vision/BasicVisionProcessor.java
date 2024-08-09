@@ -55,7 +55,7 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     public static int min_V = 150;*/
 
     //sets up for erode/dilate to get rid of stray pixels
-  double  RECT_HEIGHT;
+    double  RECT_HEIGHT;
     double RECT_WIDTH;
     public static int erodeConstant = 1;
     public static int dilateConstant = 1;
@@ -97,9 +97,6 @@ public class BasicVisionProcessor implements VisionProcessor, CameraStreamSource
     public double centerS = 0;
     public double centerV = 0;
     public static Rect largestRect;
-    public double inLeftThird;
-    public double inMiddleThird;
-    public double inRightThird;
 
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
