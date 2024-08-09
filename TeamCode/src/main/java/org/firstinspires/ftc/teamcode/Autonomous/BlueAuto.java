@@ -71,11 +71,13 @@ public class BlueAuto extends CuddleOpMode {
         visionPortal.resumeLiveView();
 
         if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 1){
-            currentVisionState = VisionState.LEFT;
+            //currentVisionState = VisionState.LEFT;
+            currentVisionState = VisionState.MIDDLE;
         } else if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 2) {
             currentVisionState = VisionState.MIDDLE;
         } else if (org.firstinspires.ftc.teamcode.Vision.blueProcessor.returnPos() == 3) {
-            currentVisionState = VisionState.RIGHT;
+            //currentVisionState = VisionState.RIGHT;
+            currentVisionState = VisionState.MIDDLE;
         } else {
             currentVisionState = VisionState.MIDDLE;
         }
@@ -104,7 +106,7 @@ public class BlueAuto extends CuddleOpMode {
             case MIDDLE:
 
                 if(!tasksQueued){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,750.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(900.0,900,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
