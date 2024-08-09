@@ -92,8 +92,8 @@ public class BlueAuto extends CuddleOpMode {
             case LEFT:
 
                 if(tasksQueued == false){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
-                    queue.addTask(new PointTask(new Waypoint(new Pose(2006.6,0.0,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(6106.6,9009.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -104,7 +104,7 @@ public class BlueAuto extends CuddleOpMode {
             case MIDDLE:
 
                 if(tasksQueued == false){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1009.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -114,8 +114,8 @@ public class BlueAuto extends CuddleOpMode {
             case RIGHT:
 
                 if(tasksQueued == false){
-                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,609.6,0.0),0.5), ptpController));
-                    queue.addTask(new PointTask(new Waypoint(new Pose(-606.6,0.0,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(0.0,1750.6,0.0),0.5), ptpController));
+                    queue.addTask(new PointTask(new Waypoint(new Pose(-6106.6,9009.6,0.0),0.5), ptpController));
                 }
                 tasksQueued = true;
 
@@ -132,9 +132,5 @@ public class BlueAuto extends CuddleOpMode {
                 //robot should park in the middle so we have some chance of scoring
                 break;
         }
-
-
-
-        
     }
 }
