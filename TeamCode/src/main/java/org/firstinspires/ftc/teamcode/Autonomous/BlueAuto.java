@@ -37,7 +37,7 @@ public class BlueAuto extends CuddleOpMode {
 
     blueProcessor blueProcessor = new blueProcessor();
     private VisionPortal visionPortal;
-    AprilTagProcessor aprilTagProcessor;
+    //AprilTagProcessor aprilTagProcessor;
     private WebcamName webcam1;
     Size size = new Size(1280,720);
 
@@ -53,10 +53,10 @@ public class BlueAuto extends CuddleOpMode {
         // Initialize Subsystems
         setOpMode(this);
         telemetry.update();
-        aprilTagProcessor = new AprilTagProcessor.Builder()
-                .setLensIntrinsics(601.169,601.169,278.814,259.214)
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
-                .build();
+        //aprilTagProcessor = new AprilTagProcessor.Builder()
+//                .setLensIntrinsics(601.169,601.169,278.814,259.214)
+//                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+//                .build();
         webcam1 = hardwareMap.get(WebcamName.class, "Webcam 1");
         visionPortal = new VisionPortal.Builder()
                 //setup for using webcam, there is a different way to set up a phone camera
