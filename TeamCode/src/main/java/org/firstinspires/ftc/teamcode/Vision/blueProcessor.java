@@ -145,7 +145,7 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
         int position = 0;
         if (largestRect!= null){
 
-        if ((largestRect.x - (largestRect.width / 2) / 3) <= (IMG_HEIGHT * IMG_WIDTH) / 3 ) {
+        if ((largestRect.x - (largestRect.width / 2)) <= (IMG_HEIGHT * IMG_WIDTH) / 3 ) {
             position = 1;
         } else if ((largestRect.x - (largestRect.width / 2)) <= ((IMG_HEIGHT * IMG_WIDTH) / 3) * 2) {
             position = 3;
@@ -182,7 +182,7 @@ public class blueProcessor implements VisionProcessor, CameraStreamSource {
         inRange(modified, MIN_THRESH_PROP, MAX_THRESH_PROP, modified);
 
 
-        Rect submatRect = new Rect(new Point(4, 4), new Point(IMG_WIDTH, IMG_HEIGHT));
+        Rect submatRect = new Rect(new Point(4, 100), new Point(IMG_WIDTH, IMG_HEIGHT));
         modified = modified.submat(submatRect);
         //actual threshold thing to correct for top of screen being wierd and glitchy
 
